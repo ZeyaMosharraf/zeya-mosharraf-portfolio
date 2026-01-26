@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ExternalLink, Building2, Briefcase, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ExternalLink, Building2, Briefcase, ChevronLeft, ChevronRight } from "lucide-react";
 import { certificates } from "@/data/Certificatedata";
-import { useRef } from "react";
+import useEmblaCarousel from 'embla-carousel-react';
+import { useCallback, useEffect, useState } from 'react';
 
 // Filter for experience entries
 const experienceEntries = certificates.filter(cert => cert.category === "experience");
@@ -28,23 +29,47 @@ const parseStartDate = (dateString: string) => {
 };
 
 const ExperienceSection = () => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { 
+      loop: true,
+      align: 'start',
+      skipSnaps: false,
+      dragFree: false
+    }
+  );
+  
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
-  };
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  const scrollTo = useCallback((index: number) => {
+    if (emblaApi) emblaApi.scrollTo(index);
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    setScrollSnaps(emblaApi.scrollSnapList());
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+    
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   const headerVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -58,40 +83,26 @@ const ExperienceSection = () => {
     }
   };
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -400,
-        behavior: 'smooth'
-      });
-    }
-    if (mobileScrollContainerRef.current) {
-      mobileScrollContainerRef.current.scrollBy({
-        left: -300,
-        behavior: 'smooth'
-      });
+  const carouselVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.8,
+        ease: "easeOut",
+        delay: 0.2
+      }
     }
   };
 
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: 400,
-        behavior: 'smooth'
-      });
-    }
-    if (mobileScrollContainerRef.current) {
-      mobileScrollContainerRef.current.scrollBy({
-        left: 300,
-        behavior: 'smooth'
-      });
-    }
-  };
+  const sortedExperiences = experienceEntries
+    .sort((a, b) => parseStartDate(b.date).getTime() - parseStartDate(a.date).getTime());
 
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Compact Section Header */}
+        {/* Section Header */}
         <motion.div
           variants={headerVariants}
           initial="hidden"
@@ -114,168 +125,88 @@ const ExperienceSection = () => {
           </p>
         </motion.div>
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-center gap-4 mb-8">
-          <motion.button
-            onClick={scrollLeft}
-            className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300"
-            whileHover={{ scale: 1.05, rotate: -5 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-          </motion.button>
-          <motion.button
-            onClick={scrollRight}
-            className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300"
-            whileHover={{ scale: 1.05, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ChevronRight className="w-5 h-5" />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-          </motion.button>
-        </div>
-
-        {/* Horizontal Timeline Experience */}
+        {/* Carousel Container */}
         <motion.div
-          variants={container}
+          variants={carouselVariants}
           initial="hidden"
-          whileInView="show"
+          whileInView="visible"
           viewport={{ once: true }}
           className="relative"
         >
-          {/* Desktop & Tablet: Horizontal scrollable timeline */}
-          <div className="hidden md:block">
-            {/* Timeline Line */}
-            <div className="relative mb-16">
-              {/* Horizontal scrollable container */}
-              <div ref={scrollContainerRef} className="relative overflow-x-auto pb-4 scrollbar-hide">
-                <div className="flex gap-6 min-w-max px-4">
-                  {experienceEntries
-                    .sort((a, b) => parseStartDate(a.date).getTime() - parseStartDate(b.date).getTime())
-                    .map((experience, index) => (
-                    <motion.div
-                      key={experience.id}
-                      variants={item}
-                      className="relative flex-shrink-0 w-80"
-                    >
-                      {/* Timeline line above card */}
-                      {index > 0 && (
-                        <div className="absolute top-6 right-80 w-6 h-0.5 bg-gray-300 dark:bg-gray-700" />
-                      )}
-                      
-                      {/* Timeline dot */}
-                      <motion.div
-                        className="absolute top-4 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full z-10 shadow-lg border-4 border-white dark:border-gray-900"
-                        initial={{ scale: 0, rotate: 0 }}
-                        whileInView={{ scale: 1, rotate: 360 }}
-                        transition={{ duration: 0.6, delay: index * 0.2 }}
-                        viewport={{ once: true }}
-                      >
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
-                          animate={{ 
-                            boxShadow: [
-                              "0 0 0 0 rgba(34, 197, 94, 0.4)",
-                              "0 0 0 10px rgba(34, 197, 94, 0)",
-                              "0 0 0 0 rgba(34, 197, 94, 0)"
-                            ] 
-                          }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
-                      </motion.div>
-                      
-                      {/* Experience card */}
-                      <motion.div
-                        className="mt-12"
-                        whileHover={{ y: -8, scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      >
-                        <ExperienceCard experience={experience} index={index} />
-                      </motion.div>
-                      
-                      {/* Timeline label */}
-                      <motion.div
-                        className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-green-600 dark:text-green-400 bg-white dark:bg-gray-900 px-2 py-1 rounded-full whitespace-nowrap"
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.2 + 0.2 }}
-                        viewport={{ once: true }}
-                      >
-                        {experience.date.split(/\s*[-–]\s*/)[0]}
-                      </motion.div>
-                    </motion.div>
-                  ))}
-                  
-                  {/* Future indicator */}
-                  <motion.div
-                    className="flex-shrink-0 w-32 flex items-start justify-center pt-6"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="flex flex-col items-center text-green-600 dark:text-green-400">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mb-2 animate-pulse"></div>
-                      <span className="text-sm font-medium">Growing...</span>
-                    </div>
-                  </motion.div>
+          {/* Navigation Buttons */}
+          <div className="flex justify-center gap-4 mb-6">
+            <motion.button
+              onClick={scrollPrev}
+              className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300"
+              whileHover={{ scale: 1.05, rotate: -5 }}
+              whileTap={{ scale: 0.95 }}
+              data-testid="button-carousel-prev"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+            </motion.button>
+            <motion.button
+              onClick={scrollNext}
+              className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
+              data-testid="button-carousel-next"
+            >
+              <ChevronRight className="w-5 h-5" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+            </motion.button>
+          </div>
+
+          {/* Embla Carousel */}
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-6">
+              {sortedExperiences.map((experience, index) => (
+                <div 
+                  key={experience.id} 
+                  className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_100%] md:flex-[0_0_calc(50%_-_12px)] lg:flex-[0_0_calc(33.333%_-_16px)]"
+                >
+                  <ExperienceCard experience={experience} index={index} />
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Mobile: Horizontal scrollable */}
-          <div className="md:hidden">
-            <div ref={mobileScrollContainerRef} className="overflow-x-auto pb-4 scrollbar-hide">
-              <div className="flex gap-4 min-w-max px-2">
-                {experienceEntries
-                  .sort((a, b) => parseStartDate(a.date).getTime() - parseStartDate(b.date).getTime())
-                  .map((experience, index) => (
-                  <motion.div
-                    key={experience.id}
-                    variants={item}
-                    className="flex-shrink-0 w-72"
-                  >
-                    <ExperienceCard experience={experience} index={index} />
-                  </motion.div>
-                ))}
-                
-                {/* Future indicator */}
-                <motion.div
-                  className="flex-shrink-0 w-24 flex items-center justify-center"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="flex flex-col items-center text-green-600 dark:text-green-400">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mb-2 animate-pulse"></div>
-                    <span className="text-xs font-medium">Growing...</span>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
+          {/* Pagination Dots */}
+          <div className="flex justify-center gap-2 mt-8">
+            {scrollSnaps.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`transition-all duration-300 rounded-full ${
+                  index === selectedIndex
+                    ? 'w-8 h-3 bg-green-600 dark:bg-green-500'
+                    : 'w-3 h-3 bg-gray-300 dark:bg-gray-600 hover:bg-green-400 dark:hover:bg-green-700'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+                data-testid={`button-pagination-${index}`}
+              />
+            ))}
           </div>
         </motion.div>
 
-        {/* Compact CTA */}
+        {/* Complete Work History Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           viewport={{ once: true }}
-          className="text-center mt-8"
+          className="text-center mt-12"
         >
           <motion.a
             href="/certificates?tab=experience"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-medium transition-all duration-300"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-medium transition-all duration-300 shadow-lg"
             whileHover={{ 
               scale: 1.05, 
               y: -2,
               boxShadow: "0 10px 25px rgba(34, 197, 94, 0.3)"
             }}
             whileTap={{ scale: 0.95 }}
+            data-testid="button-complete-work-history"
           >
             <motion.div
               animate={{ rotate: [0, 5, -5, 0] }}
@@ -292,104 +223,130 @@ const ExperienceSection = () => {
   );
 };
 
-// Modern Experience Card Component with Animated Gradient Border
+// 3D Flip Card Component
 const ExperienceCard = ({ experience, index }: { experience: any; index: number }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleFlip = () => {
+    if (isMobile) {
+      setIsFlipped(!isFlipped);
+    }
+  };
+
   return (
-    <motion.div
-      className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 relative overflow-hidden group"
-      whileHover={{ 
-        scale: 1.02,
-        transition: { type: "spring", stiffness: 300, damping: 20 }
-      }}
+    <div
+      className="relative h-[400px] cursor-pointer perspective-1000"
+      onMouseEnter={() => !isMobile && setIsFlipped(true)}
+      onMouseLeave={() => !isMobile && setIsFlipped(false)}
+      onClick={handleFlip}
+      data-testid={`card-experience-${experience.id}`}
     >
-      {/* Animated Gradient Border */}
       <motion.div
-        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: "linear-gradient(90deg, #10b981, #059669, #047857, #10b981)",
-          backgroundSize: "400% 100%",
-          padding: "2px",
-        }}
-        animate={{
-          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        className="relative w-full h-full"
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+        style={{ transformStyle: "preserve-3d" }}
       >
-        <div className="w-full h-full bg-white dark:bg-gray-800 rounded-xl" />
-      </motion.div>
-
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 to-emerald-50/30 dark:from-green-900/5 dark:to-emerald-900/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate">
-              {experience.title}
-            </h3>
-            <div className="flex items-center text-green-600 dark:text-green-400 mb-1">
-              <Building2 className="h-3 w-3 mr-1 flex-shrink-0" />
-              <span className="font-medium text-sm truncate">{experience.issuer}</span>
+        {/* Front Side */}
+        <div
+          className="absolute w-full h-full backface-hidden"
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <div className="h-full bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700 flex flex-col">
+            {/* Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 truncate">
+                  {experience.title}
+                </h3>
+                <div className="flex items-center text-green-600 dark:text-green-400 mb-2">
+                  <Building2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="font-semibold text-sm truncate">{experience.issuer}</span>
+                </div>
+                <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm">
+                  <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>{experience.date}</span>
+                </div>
+              </div>
+              <div className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-3 py-1.5 rounded-lg text-xs font-semibold ml-3 flex-shrink-0">
+                Work
+              </div>
             </div>
-            <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs">
-              <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
-              <span>{experience.date}</span>
+
+            {/* Description */}
+            <div className="mb-4 flex-grow">
+              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                {experience.description}
+              </p>
             </div>
-          </div>
-          <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded text-xs font-medium ml-2 flex-shrink-0">
-            Work
+
+            {/* Flip Indicator */}
+            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-auto">
+              {isMobile ? 'Tap to see skills' : 'Hover to see skills'}
+            </div>
           </div>
         </div>
 
-        {/* Description */}
-        <div className="mb-3">
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-            {experience.description.length > 100 
-              ? `${experience.description.substring(0, 100)}...` 
-              : experience.description}
-          </p>
-        </div>
+        {/* Back Side */}
+        <div
+          className="absolute w-full h-full backface-hidden"
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+        >
+          <div className="h-full bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-xl border border-green-200 dark:border-green-700 flex flex-col">
+            {/* Header */}
+            <div className="mb-4">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                Key Skills & Technologies
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {experience.title}
+              </p>
+            </div>
 
-        {/* Skills */}
-        <div className="mb-3">
-          <div className="flex flex-wrap gap-1">
-            {experience.skills.slice(0, 4).map((skill: string, idx: number) => (
-              <span
-                key={idx}
-                className="px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-md"
-              >
-                {skill}
-              </span>
-            ))}
-            {experience.skills.length > 4 && (
-              <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-md">
-                +{experience.skills.length - 4}
-              </span>
+            {/* Skills Grid */}
+            <div className="flex-grow overflow-y-auto">
+              <div className="flex flex-wrap gap-2">
+                {experience.skills.map((skill: string, idx: number) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1.5 text-xs font-semibold bg-white dark:bg-gray-700 text-green-700 dark:text-green-300 rounded-lg border border-green-300 dark:border-green-600 shadow-sm"
+                    data-testid={`tag-skill-${idx}`}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Button */}
+            {experience.credentialLink && experience.credentialLink !== "#" && (
+              <div className="mt-4 pt-4 border-t border-green-200 dark:border-green-700">
+                <a
+                  href={experience.credentialLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg"
+                  data-testid={`button-view-details-${experience.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  View Details
+                </a>
+              </div>
             )}
           </div>
         </div>
-
-        {/* Action Button */}
-        {experience.credentialLink && experience.credentialLink !== "#" && (
-          <motion.a
-            href={experience.credentialLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-medium text-xs transition-all duration-300 shadow-sm hover:shadow-md"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ExternalLink className="w-3 h-3 mr-2" />
-            View Details
-          </motion.a>
-        )}
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 

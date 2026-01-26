@@ -612,4 +612,14 @@
   .border-brand {
     border-color: var(--color-border);
   }
+
+  /* 3D Flip Card Utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .backface-hidden {
+    backfaceVisibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Send, X, Bot, User } from 'lucide-react';
+import { MessageCircle, Send, X, Bot, User, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
@@ -177,6 +177,17 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
     if (e.key === 'Enter') {
       handleSendMessage();
     }
+  };
+
+  const clearConversation = () => {
+    setMessages([
+      {
+        id: '1',
+        text: "Hi! I'm your Portfolio Assistant. Ask me about Zeya's work, skills, projects, or experience. I can help you learn more about his data analytics expertise!",
+        isBot: true,
+        timestamp: new Date()
+      }
+    ]);
   };
 
   const quickQuestions = [
