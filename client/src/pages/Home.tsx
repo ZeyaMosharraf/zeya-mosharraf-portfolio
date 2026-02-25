@@ -6,9 +6,6 @@ import ExperienceSection from "@/components/sections/ExperienceSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ContactSection from "@/components/sections/ContactSection";
-import SectionDivider from "@/components/ui/SectionDivider";
-import AnimatedGradientDivider from "@/components/ui/AnimatedGradientDivider";
-
 import CertificatesScrolling from "@/components/ui/CertificatesScrolling";
 import { motion } from "framer-motion";
 
