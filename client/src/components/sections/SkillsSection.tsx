@@ -1,18 +1,8 @@
-import { motion, useAnimation } from "framer-motion";
-import { useEffect } from "react";
+import { motion } from "framer-motion";
 import SkillBar from "@/components/ui/SkillBar";
 import { programmingSkills, visualizationSkills, additionalSkills } from "@/data/skillsData";
 
 const SkillsSection = () => {
-  const controls = useAnimation();
-
-  useEffect(() => {
-    controls.start((i) => ({
-      width: `${i}%`,
-      transition: { duration: 1, delay: 0.3 }
-    }));
-  }, [controls]);
-
   const sectionVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -75,8 +65,6 @@ const SkillsSection = () => {
                   name={skill.name}
                   percentage={skill.percentage}
                   color="primary"
-                  custom={skill.percentage}
-                  controls={controls}
                 />
               ))}
             </div>
@@ -97,8 +85,6 @@ const SkillsSection = () => {
                   name={skill.name}
                   percentage={skill.percentage}
                   color="secondary"
-                  custom={skill.percentage}
-                  controls={controls}
                 />
               ))}
             </div>
