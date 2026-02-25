@@ -1,8 +1,7 @@
-import { Route, Switch, useParams } from "wouter";
+import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
-import Projects from "@/pages/Projects";
 import AllProjects from "@/pages/AllProjects";
 import ProjectDetails from "@/pages/ProjectDetails";
 import ProjectCategory from "@/pages/ProjectCategory";
