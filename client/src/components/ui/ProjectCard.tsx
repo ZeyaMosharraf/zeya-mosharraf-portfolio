@@ -1,15 +1,30 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { FaGithub, FaArrowRight, FaEye } from "react-icons/fa";
-import { Calendar, Clock, Star } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Project } from "@/data/projectsData";
 
 interface ProjectCardProps {
   project: Project;
 }
 
+// Category-specific tech accent colors
+const getCategoryAccent = (category: string) => {
+  switch (category) {
+    case "SQL":            return { badge: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",   bar: "from-amber-400 to-orange-500" };
+    case "Python":         return { badge: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",       bar: "from-blue-400 to-cyan-500" };
+    case "Machine Learning": return { badge: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400", bar: "from-purple-400 to-violet-600" };
+    case "Power BI":       return { badge: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400", bar: "from-yellow-400 to-orange-400" };
+    case "Excel":          return { badge: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",   bar: "from-green-400 to-emerald-600" };
+    case "Tableau":        return { badge: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400", bar: "from-indigo-400 to-blue-600" };
+    case "Looker Studio":  return { badge: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400",     bar: "from-teal-400 to-cyan-600" };
+    default:               return { badge: "bg-gray-100 text-gray-700 dark:bg-gray-700/50 dark:text-gray-300",       bar: "from-gray-400 to-gray-600" };
+  }
+};
+
 const ProjectCard = ({ project }: ProjectCardProps) => {
   const [, setLocation] = useLocation();
+  const accent = getCategoryAccent(project.category);
 
   const handleViewProject = () => {
     setLocation(`/project/${project.slug}`);
@@ -17,43 +32,27 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
 
   return (
     <motion.div
-      className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl project-card cursor-pointer transition-all duration-500 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
-      whileHover={{ 
-        y: -12, 
-        scale: 1.02,
-        rotateX: 5,
-        rotateY: 2,
-        transition: { type: "spring", stiffness: 300, damping: 20 }
-      }}
+      className="group relative bg-white dark:bg-gray-800/90 rounded-2xl overflow-hidden shadow-md hover:shadow-xl cursor-pointer transition-all duration-400 border border-gray-200/80 dark:border-gray-700/60 flex flex-col h-full"
+      whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       onClick={handleViewProject}
       layout
-      style={{ 
-        transformStyle: "preserve-3d",
-        perspective: "1000px"
-      }}
     >
-      {/* Thumbnail/Image Section */}
+      {/* Category color bar at top */}
+      <div className={`h-1 w-full bg-gradient-to-r ${accent.bar}`} />
+
+      {/* Thumbnail */}
       {project.thumbhnailUrl && (
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative h-44 overflow-hidden bg-gray-100 dark:bg-gray-900">
           <img
             src={project.thumbhnailUrl}
             alt={project.title + ' preview'}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          {/* Category Badge */}
-          <div className="absolute top-4 right-4">
-            <span className={`px-3 py-1 text-xs font-medium rounded-full bg-white/90 backdrop-blur-sm ${project.tagColor.replace('bg-', 'text-')}`}>
-              {project.category}
-            </span>
-          </div>
-
-          {/* View Project Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-3">
               <FaEye className="text-white text-xl" />
@@ -62,115 +61,79 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
       )}
 
-      {/* Content Section */}
-      <div className="p-6">
-        {/* Title and Quick Info */}
-        <div className="mb-4">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-2 mb-2">
-            {project.title}
-          </h3>
-          
-          {/* Quick Stats */}
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              <span>2-3 weeks</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4" />
-              <span>Advanced</span>
-            </div>
-          </div>
-        </div>
-        
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-5">
+        {/* Category badge */}
+        <span className={`self-start px-2.5 py-1 text-xs font-semibold rounded-md mb-3 ${accent.badge}`}>
+          {project.category}
+        </span>
+
+        {/* Title */}
+        <h3 className="text-base font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-2 mb-2 leading-snug">
+          {project.title}
+        </h3>
+
         {/* Description */}
-        <p className="text-gray-600 dark:text-gray-300 mb-6 line-clamp-3 leading-relaxed">
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-4 flex-1">
           {project.description}
         </p>
 
-        {/* Skills Tags */}
-        {project.skills && project.skills.length > 0 && (
-          <div className="mb-6">
-            <div className="flex flex-wrap gap-2">
-              {project.skills.slice(0, 3).map((skill, idx) => (
-                <motion.span
-                  key={idx}
-                  className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-md"
-                  whileHover={{ 
-                    scale: 1.1, 
-                    y: -2,
-                    transition: { type: "spring", stiffness: 400, damping: 10 }
-                  }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: idx * 0.1 }}
-                >
-                  {skill}
-                </motion.span>
-              ))}
-              {project.skills.length > 3 && (
-                <motion.span 
-                  className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-md"
-                  whileHover={{ scale: 1.05 }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.3 }}
-                >
-                  +{project.skills.length - 3} more
-                </motion.span>
-              )}
-            </div>
+        {/* Impact metric */}
+        {project.resultsAndImpact && (
+          <div className="flex items-start gap-2 mb-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700/50">
+            <TrendingUp className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
+              {project.resultsAndImpact}
+            </p>
           </div>
         )}
-        
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between gap-3">
+
+        {/* Skills */}
+        {project.skills && project.skills.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {project.skills.slice(0, 3).map((skill, idx) => (
+              <span
+                key={idx}
+                className="px-2 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-700/70 text-gray-600 dark:text-gray-300 rounded-md"
+              >
+                {skill}
+              </span>
+            ))}
+            {project.skills.length > 3 && (
+              <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-700/70 text-gray-500 dark:text-gray-400 rounded-md">
+                +{project.skills.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex items-center gap-2 mt-auto">
           <motion.button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleViewProject();
-            }}
-            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2.5 rounded-xl font-medium flex items-center justify-center transition-all duration-300"
-            whileHover={{ 
-              scale: 1.02,
-              boxShadow: "0 8px 25px rgba(59, 130, 246, 0.3)",
-              transition: { type: "spring", stiffness: 400, damping: 10 }
-            }}
-            whileTap={{ scale: 0.98 }}
+            onClick={(e) => { e.stopPropagation(); handleViewProject(); }}
+            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all duration-300"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <motion.div
-              initial={{ x: -2 }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <FaEye className="mr-2" />
-            </motion.div>
-            View Project
+            <FaEye className="text-xs" /> View Project
           </motion.button>
-          
           <motion.a
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 w-11 h-11 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-white transition-all duration-300"
+            className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-white transition-all duration-300"
             aria-label="GitHub repository"
             onClick={(e) => e.stopPropagation()}
-            whileHover={{ 
-              scale: 1.1,
-              rotate: 10,
-              transition: { type: "spring", stiffness: 400, damping: 10 }
-            }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            <FaGithub className="text-lg" />
+            <FaGithub className="text-sm" />
           </motion.a>
         </div>
       </div>
-
-      {/* Hover Glow Effect */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-indigo-600/5" />
     </motion.div>
   );
 };
 
 export default ProjectCard;
+

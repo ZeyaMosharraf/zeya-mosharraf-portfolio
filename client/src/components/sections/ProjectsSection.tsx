@@ -83,21 +83,6 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
   const categoryTitle = currentCategory ? currentCategory.name : "All Projects";
 
   return (
-    /*
-      <>
-        <Helmet>
-          <title>{categoryTitle} | Projects | Zeya Mosharraf</title>
-          <meta
-            name="description"
-            content={`Explore my ${categoryTitle} projects showcasing skills in data analytics, automation, and visualization.`}
-          />
-          <meta
-            name="keywords"
-            content={`${categoryTitle}, Projects, Data Analytics, Python, SQL, Portfolio, Zeya Mosharraf`}
-          />
-        </Helmet>
-        */
-
     <section id="projects" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-blue-50/20 to-purple-50/15 dark:from-gray-900 dark:via-blue-950/10 dark:to-purple-950/10 transition-colors duration-300 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-20 right-10 w-80 h-80 bg-gradient-to-l from-blue-400/8 to-purple-400/8 rounded-full blur-3xl"></div>
@@ -110,9 +95,9 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
             </span>
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8 transition-colors duration-300">
-            {showFeaturedOnly 
-              ? "Highlights of my best data analysis projects showcasing key skills and business impact"
-              : "A complete collection of data analysis projects showcasing my skills in visualization, statistical analysis, and business intelligence"
+            {showFeaturedOnly
+              ? "End-to-end data solutions spanning SQL pipelines, Python automation, Power BI dashboards, and machine learning models — each built to drive real business decisions."
+              : "A curated collection of data engineering and analytics projects across SQL, Python, Power BI, Machine Learning, and more — each with measurable impact."
             }
           </p>
 
