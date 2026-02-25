@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, ExternalLink, Building2, Briefcase, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ExternalLink, Building2, Briefcase } from "lucide-react";
 import { certificates } from "@/data/Certificatedata";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -40,14 +40,6 @@ const ExperienceSection = () => {
   
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
 
   const scrollTo = useCallback((index: number) => {
     if (emblaApi) emblaApi.scrollTo(index);
@@ -133,30 +125,6 @@ const ExperienceSection = () => {
           viewport={{ once: true }}
           className="relative"
         >
-          {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 mb-6">
-            <motion.button
-              onClick={scrollPrev}
-              className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300"
-              whileHover={{ scale: 1.05, rotate: -5 }}
-              whileTap={{ scale: 0.95 }}
-              data-testid="button-carousel-prev"
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            </motion.button>
-            <motion.button
-              onClick={scrollNext}
-              className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300"
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
-              data-testid="button-carousel-next"
-            >
-              <ChevronRight className="w-5 h-5" />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            </motion.button>
-          </div>
-
           {/* Embla Carousel */}
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-6">
