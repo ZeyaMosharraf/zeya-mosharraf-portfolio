@@ -47,10 +47,6 @@ export function ThemeProvider({
     }
     
     root.classList.add(theme);
-    
-    // For debugging
-    console.log("Theme changed to:", theme);
-    console.log("Current classes on HTML element:", root.className);
   }, [theme]);
 
   const value = {

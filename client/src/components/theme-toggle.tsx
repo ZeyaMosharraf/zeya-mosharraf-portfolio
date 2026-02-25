@@ -34,8 +34,6 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     
     // Save preference to localStorage
     localStorage.setItem("theme", newTheme ? "dark" : "light");
-    
-    console.log("Theme toggled to:", newTheme ? "dark" : "light");
   };
 
   return (

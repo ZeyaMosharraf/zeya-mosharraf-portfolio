@@ -62,7 +62,6 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
   useEffect(() => {
     const newProjectsToShow = selectFeaturedProjects();
     setProjectsData(newProjectsToShow || []);
-    console.log("Projects data loaded:", newProjectsToShow ? newProjectsToShow.length : 0);
   }, [showFeaturedOnly]);
 
   // Filter projects based on selected category
