@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, ExternalLink, Building2, Briefcase } from "lucide-react";
+import { Calendar, Building2, Briefcase, ExternalLink } from "lucide-react";
 import { certificates } from "@/data/Certificatedata";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -250,16 +250,16 @@ const ExperienceCard = ({ experience, index }: { experience: any; index: number 
               </div>
             </div>
 
-            {/* Description */}
-            <div className="mb-4 flex-grow">
-              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+            {/* Description — truncated */}
+            <div className="mb-4 flex-grow overflow-hidden">
+              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-3">
                 {experience.description}
               </p>
             </div>
 
             {/* Flip Indicator */}
-            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-auto">
-              {isMobile ? 'Tap to see skills' : 'Hover to see skills'}
+            <div className="flex items-center justify-center gap-1.5 text-xs text-green-600 dark:text-green-400 mt-auto font-medium">
+              <span>{isMobile ? '↑ Tap to read full experience' : '↑ Hover to read full experience'}</span>
             </div>
           </div>
         </div>
@@ -270,45 +270,43 @@ const ExperienceCard = ({ experience, index }: { experience: any; index: number 
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="h-full bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-xl border border-green-200 dark:border-green-700 flex flex-col">
-            {/* Header */}
-            <div className="mb-4">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                Key Skills & Technologies
-              </h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            {/* Role + company header */}
+            <div className="mb-3 flex-shrink-0">
+              <h4 className="text-base font-bold text-gray-900 dark:text-white leading-tight">
                 {experience.title}
+              </h4>
+              <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-0.5">
+                {experience.issuer} &middot; {experience.date}
               </p>
             </div>
 
-            {/* Skills Grid */}
-            <div className="flex-grow overflow-y-auto">
-              <div className="flex flex-wrap gap-2">
-                {experience.skills.map((skill: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1.5 text-xs font-semibold bg-white dark:bg-gray-700 text-green-700 dark:text-green-300 rounded-lg border border-green-300 dark:border-green-600 shadow-sm"
-                    data-testid={`tag-skill-${idx}`}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+            {/* Full description */}
+            <div className="flex-grow overflow-y-auto mb-3 pr-1">
+              <p className="text-gray-700 dark:text-gray-300 text-xs leading-relaxed">
+                {experience.description}
+              </p>
             </div>
 
-            {/* Action Button */}
-            {experience.credentialLink && experience.credentialLink !== "#" && (
-              <div className="mt-4 pt-4 border-t border-green-200 dark:border-green-700">
-                <a
-                  href={experience.credentialLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg"
-                  data-testid={`button-view-details-${experience.id}`}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  View Details
-                </a>
+            {/* Skills */}
+            {experience.skills && experience.skills.length > 0 && (
+              <div className="flex-shrink-0 pt-3 border-t border-green-200 dark:border-green-700">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wide">Skills</p>
+                <div className="flex flex-wrap gap-1">
+                  {experience.skills.slice(0, 8).map((skill: string, idx: number) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-0.5 text-xs font-medium bg-white dark:bg-gray-700 text-green-700 dark:text-green-300 rounded-md border border-green-200 dark:border-green-600"
+                      data-testid={`tag-skill-${idx}`}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {experience.skills.length > 8 && (
+                    <span className="px-2 py-0.5 text-xs font-medium bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-md border border-gray-200 dark:border-gray-600">
+                      +{experience.skills.length - 8}
+                    </span>
+                  )}
+                </div>
               </div>
             )}
           </div>
