@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Sparkles, TrendingUp, Eye } from "lucide-react";
+import { Sparkles, TrendingUp, Eye } from "lucide-react";
 import { caseStudies } from "../../data/CaseStudiesdata";
 import CaseStudyCard from "../ui/CaseStudyCard";
 
@@ -9,6 +9,16 @@ const FeaturedCaseStudySection = () => {
   const [, setLocation] = useLocation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const scrollToIndex = (index: number) => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        left: index * 420,
+        behavior: 'smooth'
+      });
+      setCurrentIndex(index);
+    }
+  };
   
   // Show all case studies instead of just 2
   const featuredCaseStudies = caseStudies;
@@ -31,36 +41,6 @@ const FeaturedCaseStudySection = () => {
       y: 0,
       opacity: 1,
       transition: { duration: 0.5 }
-    }
-  };
-
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -400, // Enhanced card width + gap
-        behavior: 'smooth'
-      });
-      setCurrentIndex(Math.max(0, currentIndex - 1));
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: 400, // Enhanced card width + gap
-        behavior: 'smooth'
-      });
-      setCurrentIndex(Math.min(featuredCaseStudies.length - 1, currentIndex + 1));
-    }
-  };
-
-  const scrollToIndex = (index: number) => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({
-        left: index * 400,
-        behavior: 'smooth'
-      });
-      setCurrentIndex(index);
     }
   };
 
@@ -120,73 +100,8 @@ const FeaturedCaseStudySection = () => {
           </motion.div>
         </div>
 
-        {/* Enhanced Navigation and Carousel */}
+        {/* Enhanced Carousel */}
         <div className="relative mb-16">
-          {/* Enhanced Navigation Controls */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <motion.div 
-                className="flex gap-3"
-                variants={itemVariants}
-              >
-                <motion.button
-                  onClick={scrollLeft}
-                  disabled={currentIndex === 0}
-                  className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-gray-700 dark:disabled:hover:text-gray-300"
-                  whileHover={{ scale: 1.05, rotate: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                  data-testid="button-scroll-left"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                </motion.button>
-                <motion.button
-                  onClick={scrollRight}
-                  disabled={currentIndex >= featuredCaseStudies.length - 1}
-                  className="group relative p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-gray-700 dark:disabled:hover:text-gray-300"
-                  whileHover={{ scale: 1.05, rotate: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                  data-testid="button-scroll-right"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                </motion.button>
-              </motion.div>
-              
-              {/* Pagination Dots */}
-              <motion.div 
-                className="hidden sm:flex gap-2"
-                variants={itemVariants}
-              >
-                {featuredCaseStudies.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => scrollToIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentIndex === index 
-                        ? 'bg-blue-600 w-8' 
-                        : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                    }`}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                  />
-                ))}
-              </motion.div>
-            </div>
-
-            <motion.div 
-              className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400"
-              variants={itemVariants}
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="font-medium text-gray-900 dark:text-white">{currentIndex + 1}</span>
-                <span>/</span>
-                <span>{featuredCaseStudies.length}</span>
-              </div>
-              <span className="hidden sm:inline">Case Studies</span>
-            </motion.div>
-          </div>
 
           {/* Enhanced Carousel Container */}
           <motion.div
@@ -198,16 +113,12 @@ const FeaturedCaseStudySection = () => {
               className="flex gap-8 overflow-x-auto pb-6 scrollbar-hide scroll-smooth px-1"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {featuredCaseStudies.map((caseStudy, index) => (
+              {featuredCaseStudies.map((caseStudy) => (
                 <motion.div
                   key={caseStudy.id}
                   className="flex-none w-80 md:w-96 lg:w-[420px]"
                   variants={itemVariants}
-                  custom={index}
-                  whileInView={{ 
-                    scale: currentIndex === index ? 1.02 : 0.95,
-                    opacity: currentIndex === index ? 1 : 0.7
-                  }}
+                  whileInView={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
                   <CaseStudyCard caseStudy={caseStudy} />
@@ -215,7 +126,22 @@ const FeaturedCaseStudySection = () => {
               ))}
             </div>
             
-            {/* Gradient fade edges */}
+            {/* Pagination Dots */}
+            <div className="flex justify-center gap-2 mt-6">
+              {featuredCaseStudies.map((_, index) => (
+                <motion.button
+                  key={index}
+                  onClick={() => scrollToIndex(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    currentIndex === index
+                      ? 'bg-blue-600 w-8'
+                      : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 w-2'
+                  }`}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                />
+              ))}
+            </div>
             <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-transparent pointer-events-none z-10"></div>
             <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-gray-50 dark:from-gray-900 to-transparent pointer-events-none z-10"></div>
           </motion.div>
