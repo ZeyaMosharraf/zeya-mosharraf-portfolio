@@ -105,12 +105,12 @@ const FeaturedCaseStudySection = () => {
 
           {/* Enhanced Carousel Container */}
           <motion.div
-            className="relative overflow-hidden rounded-2xl"
+            className="relative rounded-2xl"
             variants={itemVariants}
           >
             <div 
               ref={scrollContainerRef}
-              className="flex gap-8 overflow-x-auto pb-6 scrollbar-hide scroll-smooth px-1"
+              className="flex gap-8 overflow-x-auto py-4 scrollbar-hide scroll-smooth px-1"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {featuredCaseStudies.map((caseStudy) => (
