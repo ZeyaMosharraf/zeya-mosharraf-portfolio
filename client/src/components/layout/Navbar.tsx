@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, ChevronDown, Award, FileText, BookOpen, Home, FolderOpen, Users, Mail, Zap, Brain } from "lucide-react";
+import { Menu, X, ChevronDown, Award, FileText, BookOpen, Home, FolderOpen, Users, Mail } from "lucide-react";
 import { ThemeToggle } from "../theme-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 

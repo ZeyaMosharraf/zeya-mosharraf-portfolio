@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
-import { FaEnvelope, FaMapMarkerAlt, FaClock, FaLinkedin, FaGithub, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaClock, FaLinkedin, FaGithub } from "react-icons/fa";
 
 const ContactSection = () => {
   const sectionVariants = {
