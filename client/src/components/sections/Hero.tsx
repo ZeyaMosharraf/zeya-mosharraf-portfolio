@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import { useEffect, useRef } from "react";
 import Typed from "typed.js";
-import HeroDataVisualization from "@/components/ui/HeroDataVisualization";
 
 const Hero = () => {
   const typedRef = useRef<HTMLSpanElement>(null);
