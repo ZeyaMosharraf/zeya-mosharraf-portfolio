@@ -7,11 +7,10 @@ interface SkillBarProps {
   name: string;
   percentage: number;
   color: "primary" | "secondary";
-  custom?: number;
   controls?: AnimationControls;
 }
 
-const SkillBar = ({ name, percentage, color, custom, controls }: SkillBarProps) => {
+const SkillBar = ({ name, percentage, color, controls }: SkillBarProps) => {
   const barRef = useRef(null);
   const isInView = useInView(barRef, { once: true, amount: 0.5 });
   const localControls = useAnimation();
@@ -41,7 +40,6 @@ const SkillBar = ({ name, percentage, color, custom, controls }: SkillBarProps) 
           }`}
           initial={{ width: "0%" }}
           animate={controls || localControls}
-          custom={custom}
           style={{ width: "0%" }}
         >
           {/* Animated shine effect */}
