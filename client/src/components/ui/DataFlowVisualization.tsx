@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Target, Database, Settings, BarChart3, Brain, TrendingUp, Monitor, CheckCircle, ArrowRight } from "lucide-react";
+import { Target, Database, Settings, BarChart3, Brain, TrendingUp, Monitor, CheckCircle } from "lucide-react";
 
 export const DataFlowVisualization = () => {
   const workflowSteps = [
@@ -140,80 +140,168 @@ export const DataFlowVisualization = () => {
         </div>
       </div>
 
-      {/* Desktop: Grid layout */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-        {workflowSteps.map((step, index) => {
-          const IconComponent = step.icon;
-          
-          return (
-            <motion.div
-              key={index}
-              className="relative group"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.15 }}
-            >
-              {/* Step Card */}
-              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 h-full">
-                {/* Step Number */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center text-white text-sm font-bold">
-                    {step.step}
-                  </div>
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${step.color} flex items-center justify-center text-white shadow-md`}>
-                    <IconComponent size={20} />
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <h4 className="font-bold text-gray-800 dark:text-gray-200 text-sm mb-2">
-                  {step.title}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-400 text-xs mb-3 leading-relaxed">
-                  {step.description}
-                </p>
-                
-                {/* Tools */}
-                <div className="space-y-1">
-                  {step.tools.map((tool, toolIndex) => (
-                    <div 
-                      key={toolIndex}
-                      className="text-xs text-gray-500 dark:text-gray-500 bg-gray-100 dark:bg-gray-700/50 px-2 py-1 rounded-md inline-block mr-1 mb-1"
-                    >
-                      {tool}
+      {/* Desktop: Two-row grid with flowing pipeline lines */}
+      <div className="hidden md:block space-y-0">
+
+        {/* ROW 1: Steps 1–4 */}
+        <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-6">
+
+          {/* Pipeline track — row 1 */}
+          <div className="hidden lg:block absolute top-1/2 left-6 right-6 -translate-y-1/2 -z-10">
+            {/* Base track */}
+            <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-blue-900/60 via-purple-900/60 to-pink-900/60" />
+            {/* Flowing shimmer */}
+            <div className="absolute inset-0 overflow-hidden rounded-full">
+              <motion.div
+                className="absolute top-0 h-full w-1/3 rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, transparent 0%, rgba(96,165,250,0.9) 30%, rgba(167,139,250,1) 50%, rgba(236,72,153,0.9) 70%, transparent 100%)",
+                  filter: "blur(1px)",
+                  boxShadow: "0 0 8px 2px rgba(167,139,250,0.6)",
+                }}
+                animate={{ left: ["-33%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 0.4 }}
+              />
+            </div>
+            {/* Glow */}
+            <div className="absolute inset-0 overflow-hidden rounded-full opacity-40">
+              <motion.div
+                className="absolute top-0 h-full w-1/4 rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.8), transparent)",
+                  filter: "blur(4px)",
+                }}
+                animate={{ left: ["-25%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 0.4 }}
+              />
+            </div>
+          </div>
+
+          {workflowSteps.slice(0, 4).map((step, index) => {
+            const IconComponent = step.icon;
+            return (
+              <motion.div
+                key={index}
+                className="relative group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.15 }}
+              >
+                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center text-white text-sm font-bold">
+                      {step.step}
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Arrow for flow (except last item) */}
-              {index < workflowSteps.length - 1 && (
-                <motion.div
-                  className="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.15 + 0.5 }}
-                >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white shadow-lg">
-                    <ArrowRight size={12} />
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${step.color} flex items-center justify-center text-white shadow-md`}>
+                      <IconComponent size={20} />
+                    </div>
                   </div>
-                </motion.div>
-              )}
-            </motion.div>
-          );
-        })}
+                  <h4 className="font-bold text-gray-800 dark:text-gray-200 text-sm mb-2">{step.title}</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs mb-3 leading-relaxed">{step.description}</p>
+                  <div className="space-y-1">
+                    {step.tools.map((tool, toolIndex) => (
+                      <div key={toolIndex} className="text-xs text-gray-500 dark:text-gray-500 bg-gray-100 dark:bg-gray-700/50 px-2 py-1 rounded-md inline-block mr-1 mb-1">
+                        {tool}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Vertical snake connector: right side, row1 → row2 */}
+        <div className="hidden lg:flex justify-end pr-6 relative" style={{ height: "2.5rem" }}>
+          <div className="relative w-[3px]">
+            {/* Track */}
+            <div className="absolute inset-0 bg-gradient-to-b from-pink-900/60 to-indigo-900/60 rounded-full" />
+            {/* Flowing shimmer */}
+            <div className="absolute inset-0 overflow-hidden rounded-full">
+              <motion.div
+                className="absolute w-full rounded-full"
+                style={{
+                  height: "50%",
+                  background: "linear-gradient(180deg, transparent, rgba(236,72,153,0.9), rgba(129,140,248,0.9), transparent)",
+                  filter: "blur(1px)",
+                  boxShadow: "0 0 6px 2px rgba(167,139,250,0.5)",
+                }}
+                animate={{ top: ["-50%", "100%"] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "linear", repeatDelay: 1.2 }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ROW 2: Steps 5–8 */}
+        <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-6">
+
+          {/* Pipeline track — row 2 */}
+          <div className="hidden lg:block absolute top-1/2 left-6 right-6 -translate-y-1/2 -z-10">
+            {/* Base track */}
+            <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-indigo-900/60 via-teal-900/60 to-green-900/60" />
+            {/* Flowing shimmer */}
+            <div className="absolute inset-0 overflow-hidden rounded-full">
+              <motion.div
+                className="absolute top-0 h-full w-1/3 rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, transparent 0%, rgba(129,140,248,0.9) 30%, rgba(45,212,191,1) 50%, rgba(74,222,128,0.9) 70%, transparent 100%)",
+                  filter: "blur(1px)",
+                  boxShadow: "0 0 8px 2px rgba(45,212,191,0.6)",
+                }}
+                animate={{ left: ["-33%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 0.4, delay: 0.6 }}
+              />
+            </div>
+            {/* Glow */}
+            <div className="absolute inset-0 overflow-hidden rounded-full opacity-40">
+              <motion.div
+                className="absolute top-0 h-full w-1/4 rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(45,212,191,0.8), transparent)",
+                  filter: "blur(4px)",
+                }}
+                animate={{ left: ["-25%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 0.4, delay: 0.6 }}
+              />
+            </div>
+          </div>
+
+          {workflowSteps.slice(4, 8).map((step, index) => {
+            const IconComponent = step.icon;
+            return (
+              <motion.div
+                key={index + 4}
+                className="relative group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: (index + 4) * 0.15 }}
+              >
+                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center text-white text-sm font-bold">
+                      {step.step}
+                    </div>
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${step.color} flex items-center justify-center text-white shadow-md`}>
+                      <IconComponent size={20} />
+                    </div>
+                  </div>
+                  <h4 className="font-bold text-gray-800 dark:text-gray-200 text-sm mb-2">{step.title}</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs mb-3 leading-relaxed">{step.description}</p>
+                  <div className="space-y-1">
+                    {step.tools.map((tool, toolIndex) => (
+                      <div key={toolIndex} className="text-xs text-gray-500 dark:text-gray-500 bg-gray-100 dark:bg-gray-700/50 px-2 py-1 rounded-md inline-block mr-1 mb-1">
+                        {tool}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
       </div>
-
-      {/* Flow Connection Line */}
-      <div className="hidden lg:block absolute top-1/2 left-8 right-8 h-0.5 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 dark:from-blue-800 dark:via-purple-800 dark:to-pink-800 opacity-30 -z-10"></div>
-
-      {/* Animated Progress Line */}
-      <motion.div
-        className="hidden lg:block absolute top-1/2 left-8 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 -z-10"
-        initial={{ width: 0 }}
-        animate={{ width: "calc(100% - 4rem)" }}
-        transition={{ delay: 1, duration: 3, ease: "easeInOut" }}
-      />
 
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
