@@ -97,8 +97,6 @@ const AboutSection = () => {
                 <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white transition-colors duration-300 text-center lg:text-left">Education</h3>
                 <div className="space-y-3">
                   <div className="flex">
-                  </div>
-                  <div className="flex">
                     <div className="flex-shrink-0 h-5 w-5 text-primary mt-1">
                       <FaGraduationCap />
                     </div>
