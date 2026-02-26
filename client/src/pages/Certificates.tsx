@@ -56,7 +56,6 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
     if (activeTab === "courses") return cert.category === "course";
     if (activeTab === "achievements") return cert.category === "achievement";
     if (activeTab === "experience") return cert.category === "experience";
-    if (activeTab === "extracurricular") return cert.category === "extracurricular";
     return true;
   });
 
@@ -318,20 +317,6 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                     <span className="sm:hidden">Work</span>
                   </motion.span>
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="extracurricular" 
-                  className="relative rounded-xl px-2 py-2 sm:px-4 sm:py-3 font-semibold text-xs sm:text-sm transition-all duration-300 data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 border-0"
-                >
-                  <motion.span
-                    className="relative z-10 flex items-center justify-center"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Award className="w-4 h-4 mr-1 sm:mr-2" />
-                    <span className="hidden sm:inline">Extracurricular</span>
-                    <span className="sm:hidden">Extra</span>
-                  </motion.span>
-                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="courses" className="mt-0">
@@ -576,84 +561,6 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                 </motion.div>
               </TabsContent>
               
-              <TabsContent value="extracurricular" className="mt-0">
-                <motion.div
-                  variants={container}
-                  initial="hidden"
-                  animate="show"
-                  className="grid grid-cols-1 gap-6"
-                >
-                  {filteredCertificates.map((cert, index) => (
-                    <motion.div 
-                      key={cert.slug} 
-                      variants={item}
-                      className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer"
-                      whileHover={{ y: -4, scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setLocation(`/certificate/${cert.slug}`)}
-                    >
-                      <div className="relative p-6 pb-4 bg-gradient-to-br from-purple-50/50 to-purple-100/30 dark:from-purple-900/20 dark:to-purple-800/20">
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-purple-600 h-1 top-0"></div>
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <motion.div 
-                              className="inline-flex items-center px-3 py-1 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/50 rounded-full mb-3"
-                              whileHover={{ scale: 1.05 }}
-                            >
-                              <Award className="w-3 h-3 mr-1" />
-                              Extracurricular
-                            </motion.div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 leading-tight">
-                              {cert.title}
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{cert.issuer}</p>
-                          </div>
-                          <div className="text-right ml-4">
-                            <motion.span 
-                              className="inline-flex items-center px-3 py-1 text-sm font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-lg"
-                              whileHover={{ scale: 1.05 }}
-                            >
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {cert.date}
-                            </motion.span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-6 pt-0">
-                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 line-clamp-2">
-                          {cert.description}
-                        </p>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
-                          {cert.credentialLink && cert.credentialLink !== "#" ? (
-                            <motion.a 
-                              href={cert.credentialLink} 
-                              target="_blank" 
-                              rel="noreferrer" 
-                              className="inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium text-sm transition-colors duration-300"
-                              whileHover={{ x: 2 }}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <ExternalLink className="w-4 h-4 mr-1" />
-                              View Certificate
-                            </motion.a>
-                          ) : (
-                            <span className="text-gray-400 dark:text-gray-500 text-sm">Certificate Available</span>
-                          )}
-                          <motion.div
-                            className="flex items-center text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 font-medium text-sm transition-colors duration-300"
-                            whileHover={{ x: 4 }}
-                          >
-                            View Details
-                            <ExternalLink className="w-4 h-4 ml-1" />
-                          </motion.div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </TabsContent>
             </Tabs>
           </div>
         </div>

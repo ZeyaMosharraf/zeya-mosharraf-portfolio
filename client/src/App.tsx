@@ -7,7 +7,6 @@ import ProjectDetails from "@/pages/ProjectDetails";
 import ProjectCategory from "@/pages/ProjectCategory";
 import CaseStudies from "@/pages/CaseStudies";
 import Blog from "@/pages/Blog";
-import Certificates from "@/pages/Certificates";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PortfolioAssistant from "@/components/PortfolioAssistant";
@@ -59,12 +58,6 @@ function App() {
           </Route>
           <Route path="/blog/:slug">
             {(params) => <Blog viewMode="detail" params={params} />}
-          </Route>
-          <Route path="/certificates">
-            {() => <Certificates />}
-          </Route>
-          <Route path="/certificate/:slug">
-            {(params) => <Certificates viewMode="detail" params={params} />}
           </Route>
           <Route component={NotFound} />
         </Switch>

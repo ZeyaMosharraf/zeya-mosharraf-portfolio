@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useLocation } from "wouter";
-import { ArrowLeft, FileText, Calendar, Award, ExternalLink } from "lucide-react";
+import { ArrowLeft, FileText, Calendar, Award, ExternalLink, Search, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { caseStudies } from "@/data/CaseStudiesdata";
 import { Helmet } from "react-helmet-async";
@@ -32,8 +32,16 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
-  
-  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [cardViewMode, setCardViewMode] = useState<"grid" | "list">("grid");
+
+  const filteredCaseStudies = caseStudies.filter(cs =>
+    cs.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cs.shortDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cs.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cs.toolsUsed.some(tool => tool.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   useEffect(() => {
     window.scrollTo(0, 0);
     
@@ -279,6 +287,54 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
           </div>
         </div>
 
+        {/* Search Bar */}
+        <div className="relative px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg -mt-8 relative z-10 border border-gray-100 dark:border-gray-700"
+            >
+              <div className="flex flex-row gap-4 items-center justify-between w-full">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search case studies..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  />
+                </div>
+                {/* View Mode Toggle */}
+                <div className="flex items-center gap-1 bg-gray-200 dark:bg-gray-600 rounded-lg p-1 shrink-0">
+                  <button
+                    onClick={() => setCardViewMode("grid")}
+                    className={`p-2 rounded-md transition-colors ${
+                      cardViewMode === "grid"
+                        ? "bg-white dark:bg-blue-600 text-blue-600 dark:text-white shadow-sm"
+                        : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <Grid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setCardViewMode("list")}
+                    className={`p-2 rounded-md transition-colors ${
+                      cardViewMode === "list"
+                        ? "bg-white dark:bg-blue-600 text-blue-600 dark:text-white shadow-sm"
+                        : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
           {/* Floating background elements */}
@@ -290,14 +346,26 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
               variants={container}
               initial="hidden"
               animate="show"
-              className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8"
+              className={cardViewMode === "grid" ? "grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8" : "flex flex-col gap-4"}
             >
-              {caseStudies.map((caseStudy, index) => (
+              {filteredCaseStudies.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="col-span-2 text-center py-16 text-gray-500 dark:text-gray-400"
+                >
+                  <Search className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                  <p className="text-lg font-medium">No case studies found for "{searchTerm}"</p>
+                  <p className="text-sm mt-1">Try a different keyword</p>
+                </motion.div>
+              ) : filteredCaseStudies.map((caseStudy, index) => (
                 <motion.div 
                   key={caseStudy.slug}
                   variants={item} 
-                  className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer"
-                  whileHover={{ y: -12, scale: 1.02 }}
+                  className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer ${
+                    cardViewMode === "list" ? "flex flex-row" : ""
+                  }`}
+                  whileHover={{ y: cardViewMode === "grid" ? -6 : 0, x: cardViewMode === "list" ? 4 : 0 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
                   initial={{ opacity: 0, y: 20 }}
@@ -305,7 +373,9 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   {/* Header with gradient */}
-                  <div className="relative p-6 pb-4 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20">
+                  <div className={`relative p-6 pb-4 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-950/30 dark:to-blue-900/20 ${
+                    cardViewMode === "list" ? "w-48 shrink-0 flex flex-col justify-center pb-6" : ""
+                  }`}>
                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-full blur-2xl"></div>
                     <motion.div 
                       className="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 rounded-full mb-4"

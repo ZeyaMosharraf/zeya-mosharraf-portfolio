@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, ChevronDown, Award, FileText, BookOpen, Home, FolderOpen, Users, Mail } from "lucide-react";
+import { Menu, X, ChevronDown, FileText, BookOpen, Home, FolderOpen, Users, Mail } from "lucide-react";
 import { ThemeToggle } from "../theme-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,12 +9,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
-  const [isCertificatesDropdownOpen, setIsCertificatesDropdownOpen] = useState(false);
   const [isMobileProjectsOpen, setIsMobileProjectsOpen] = useState(false);
-  const [isMobileCertificatesOpen, setIsMobileCertificatesOpen] = useState(false);
   const [location, setLocation] = useLocation();
   const projectsDropdownRef = useRef<HTMLDivElement>(null);
-  const certificatesDropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -23,7 +20,6 @@ const Navbar = () => {
   const closeMenu = () => {
     setIsOpen(false);
     setIsMobileProjectsOpen(false);
-    setIsMobileCertificatesOpen(false);
   };
 
   // Check if we're on the home page
@@ -78,12 +74,6 @@ const Navbar = () => {
     setLocation(`/category/${category.toLowerCase().replace(' ', '-')}`);
   };
   
-  const handleCertificateTabClick = (tab: string) => {
-    setIsCertificatesDropdownOpen(false);
-    closeMenu();
-    setLocation(`/certificates?tab=${tab.toLowerCase()}`);
-  };
-
   const navigateToPage = (path: string) => {
     closeMenu();
     setLocation(path);
@@ -94,9 +84,6 @@ const Navbar = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (projectsDropdownRef.current && !projectsDropdownRef.current.contains(event.target as Node)) {
         setIsProjectsDropdownOpen(false);
-      }
-      if (certificatesDropdownRef.current && !certificatesDropdownRef.current.contains(event.target as Node)) {
-        setIsCertificatesDropdownOpen(false);
       }
     };
     
@@ -110,8 +97,6 @@ const Navbar = () => {
       setActiveSection("case-studies");
     } else if (location.startsWith("/blog")) {
       setActiveSection("blog");
-    } else if (location.startsWith("/certificate")) {
-      setActiveSection("certificates");
     } else if (location.startsWith("/project") || location.startsWith("/category")) {
       setActiveSection("projects");
     } else if (location === "/") {
@@ -433,51 +418,6 @@ const Navbar = () => {
           
           <NavItem section="about" label="About" />
           
-          {/* Certificates */}
-          <motion.button
-            onClick={() => navigateToPage("/certificates")}
-            className={cn(
-              "relative nav-item px-4 py-2.5 flex items-center space-x-2 rounded-xl font-medium transition-all duration-300 group overflow-hidden",
-              activeSection === "certificates" 
-                ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/20" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-            )}
-            whileHover={{ 
-              scale: 1.05, 
-              y: -2,
-              boxShadow: activeSection === "certificates" 
-                ? "0 6px 20px -3px rgb(59 130 246 / 0.3), 0 2px 6px -2px rgb(59 130 246 / 0.1)"
-                : "0 4px 15px -3px rgb(0 0 0 / 0.1), 0 2px 6px -2px rgb(0 0 0 / 0.05)"
-            }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            <motion.div
-              animate={{ 
-                rotate: activeSection === "certificates" ? [0, 10, -10, 0] : 0,
-                scale: activeSection === "certificates" ? 1.1 : 1
-              }}
-              transition={{ duration: 0.3 }}
-              className={cn(
-                "transition-colors duration-300",
-                activeSection === "certificates" ? "text-white" : ""
-              )}
-            >
-              <Award className="h-4 w-4" />
-            </motion.div>
-            <span className="relative z-10">Certificates</span>
-            
-            {/* Animated background */}
-            {activeSection !== "certificates" && (
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 0.1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              />
-            )}
-          </motion.button>
-          
           <NavItem section="contact" label="Contact" />
           
           {/* Separator */}
@@ -616,60 +556,6 @@ const Navbar = () => {
           <BookOpen className={`h-4 w-4 mr-2 ${activeSection === "blog" ? "text-primary dark:text-primary" : ""}`} />
           Blog
         </button>
-        
-        {/* Mobile Certificates Dropdown */}
-        <div className="py-2">
-          <button
-            onClick={() => setIsMobileCertificatesOpen(!isMobileCertificatesOpen)}
-            className={`flex items-center justify-between w-full text-left py-2 ${
-              activeSection === "certificates" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-            } hover:text-primary dark:hover:text-primary transition-colors font-medium`}
-          >
-            <span className="flex items-center">
-              <Award className={`h-4 w-4 mr-2 ${activeSection === "certificates" ? "text-primary dark:text-primary" : ""}`} />
-              Certificates
-            </span>
-            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMobileCertificatesOpen ? 'rotate-180' : ''}`} />
-          </button>
-          
-          <div className={`overflow-hidden transition-all duration-300 ${isMobileCertificatesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pl-4 py-1">
-              <button
-                onClick={() => navigateToPage("/certificates")}
-                className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
-              >
-                All Certificates
-              </button>
-              
-              <div className="h-px bg-gray-200 dark:bg-gray-600 my-1"></div>
-              
-              <button
-                onClick={() => handleCertificateTabClick("courses")}
-                className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
-              >
-                Courses
-              </button>
-              <button
-                onClick={() => handleCertificateTabClick("achievements")}
-                className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
-              >
-                Achievements
-              </button>
-              <button
-                onClick={() => handleCertificateTabClick("experience")}
-                className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
-              >
-                Experience
-              </button>
-              <button
-                onClick={() => handleCertificateTabClick("extracurricular")}
-                className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
-              >
-                Extracurricular
-              </button>
-            </div>
-          </div>
-        </div>
         
         <button
           onClick={() => handleSectionClick("about")}

@@ -39,7 +39,7 @@ const getCategoryDescription = (category: string): string => {
     case "SQL":
       return "Advanced database projects using SQL to extract, transform, and analyze data for business insights.";
     case "Python":
-      return "Python-based data analysis projects using libraries like Pandas, NumPy, and Matplotlib.";
+      return "A curated portfolio of Python-driven solutions that solve real business or technical problems — from automating repetitive tasks and integrating external systems via APIs to processing and transforming data efficiently. Each project includes clear objectives, the technologies used, and measurable outcomes to show exactly how Python delivered value for each task.";
     case "Machine Learning":
       return "Projects implementing machine learning algorithms for predictive analytics and pattern recognition.";
     case "Power BI":
