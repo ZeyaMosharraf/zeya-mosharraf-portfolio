@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-  root: "client",
+  root: path.resolve(__dirname, "client"),
   plugins: [
     react(),
   ],
@@ -19,7 +19,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "dist",
+    outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },
 });
