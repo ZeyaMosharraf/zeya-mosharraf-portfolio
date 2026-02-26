@@ -42,8 +42,8 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
 
   return (
     <motion.div
-      className="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200 dark:border-gray-700 p-6 h-full flex flex-col overflow-hidden cursor-pointer"
-      whileHover={{ y: -8, scale: 1.02 }}
+      className="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700 p-6 h-full flex flex-col cursor-pointer"
+      whileHover={{ y: -6 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
       initial={{ opacity: 0, y: 20 }}
@@ -51,7 +51,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
       transition={{ duration: 0.5 }}
     >
       {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-pink-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/40 via-transparent to-transparent dark:from-blue-950/20 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
       
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full">
@@ -85,13 +85,13 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
             {caseStudy.toolsUsed.slice(0, 3).map((tool, index) => (
               <span 
                 key={index}
-                className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md"
+                className="px-2 py-1 text-xs font-medium border border-blue-200/70 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 rounded-md hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:border-blue-500 dark:hover:text-blue-300 transition-all duration-200 cursor-default"
               >
                 {tool}
               </span>
             ))}
             {caseStudy.toolsUsed.length > 3 && (
-              <span className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-md">
+              <span className="px-2 py-1 text-xs font-medium border border-blue-300 dark:border-blue-500 bg-white/80 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-md hover:bg-blue-100 hover:border-blue-500 hover:text-blue-700 transition-all duration-200 cursor-default">
                 +{caseStudy.toolsUsed.length - 3}
               </span>
             )}
@@ -120,8 +120,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
         </motion.button>
       </div>
 
-      {/* Hover effect border */}
-      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${getCategoryColor(caseStudy.category)} opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none`}></div>
+
     </motion.div>
   );
 };

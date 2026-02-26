@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Sparkles, TrendingUp, Eye } from "lucide-react";
 import { caseStudies } from "../../data/CaseStudiesdata";
 import CaseStudyCard from "../ui/CaseStudyCard";
@@ -10,15 +10,28 @@ const FeaturedCaseStudySection = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const CARD_WIDTH = 452; // 420px card + 32px gap
+
   const scrollToIndex = (index: number) => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({
-        left: index * 420,
+        left: index * CARD_WIDTH,
         behavior: 'smooth'
       });
       setCurrentIndex(index);
     }
   };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const handleScroll = () => {
+      const index = Math.round(container.scrollLeft / CARD_WIDTH);
+      setCurrentIndex(index);
+    };
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
   
   // Show all case studies instead of just 2
   const featuredCaseStudies = caseStudies;
@@ -45,7 +58,7 @@ const FeaturedCaseStudySection = () => {
   };
 
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/10 overflow-hidden">
+    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/10">
       {/* Enhanced Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br from-blue-200/30 to-purple-200/20 dark:from-blue-600/10 dark:to-purple-600/5 rounded-full blur-3xl animate-pulse"></div>
@@ -110,7 +123,7 @@ const FeaturedCaseStudySection = () => {
           >
             <div 
               ref={scrollContainerRef}
-              className="flex gap-8 overflow-x-auto py-4 scrollbar-hide scroll-smooth px-1"
+              className="flex gap-8 overflow-x-auto py-8 scrollbar-hide scroll-smooth px-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {featuredCaseStudies.map((caseStudy) => (
@@ -142,8 +155,6 @@ const FeaturedCaseStudySection = () => {
                 />
               ))}
             </div>
-            <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-gray-50 dark:from-gray-900 to-transparent pointer-events-none z-10"></div>
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-gray-50 dark:from-gray-900 to-transparent pointer-events-none z-10"></div>
           </motion.div>
         </div>
 
