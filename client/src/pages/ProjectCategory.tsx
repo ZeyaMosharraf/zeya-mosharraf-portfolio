@@ -112,7 +112,7 @@ const ProjectCategory = ({ params }: ProjectCategoryProps) => {
   };
 
   return (
-    <div className="pt-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/40 dark:from-gray-900 dark:via-blue-950/20 dark:to-indigo-950/30">
+    <div className="pt-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-gradient-to-br from-gray-50 via-red-50/30 to-orange-50/40 dark:from-[#0d0d0d] dark:via-red-950/20 dark:to-orange-950/30">
       <div className="container mx-auto py-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -121,7 +121,7 @@ const ProjectCategory = ({ params }: ProjectCategoryProps) => {
         >
           <motion.button
             onClick={() => setLocation("/projects")}
-            className="mb-8 inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-white bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+            className="mb-8 inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-white bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gradient-to-r hover:from-red-600 hover:to-orange-600 border border-gray-200 dark:border-red-900/20 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >

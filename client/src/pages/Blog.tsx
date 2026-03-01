@@ -68,7 +68,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Blog Post Not Found</h2>
             <Button 
               onClick={() => setLocation("/blog")} 
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Blog
             </Button>
@@ -78,9 +78,9 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     }
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
@@ -133,7 +133,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg mb-8"
+              className="bg-white dark:bg-gray-900/80 rounded-2xl p-8 shadow-lg mb-8 border border-gray-200 dark:border-red-900/20"
             >
               <div className="prose prose-lg max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: selectedPost.fullContent }}>
               </div>
@@ -143,10 +143,10 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
+              className="bg-white dark:bg-gray-900/80 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-red-900/20"
             >
               <h2 className="text-xl font-bold mb-4 flex items-center text-gray-900 dark:text-gray-100">
-                <Tag className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
+                <Tag className="h-5 w-5 mr-2 text-red-600 dark:text-red-400" />
                 Tags
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -156,7 +156,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.8 + index * 0.1 }}
-                    className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium"
+                    className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200 px-3 py-1 rounded-full text-sm font-medium"
                   >
                     {tag}
                   </motion.span>
@@ -173,16 +173,16 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   const renderListView = () => {
     // Define a mapping of categories to gradients
     const categoryGradients: Record<string, string> = {
-      "DATA SCIENCE": "from-blue-500 to-blue-600",
-      "VISUALIZATION": "from-purple-500 to-purple-600",
-      "SQL": "from-green-500 to-green-600",
-      "PYTHON": "from-orange-500 to-orange-600"
+      "DATA SCIENCE": "from-red-600 to-red-700",
+      "VISUALIZATION": "from-orange-500 to-orange-600",
+      "SQL": "from-red-700 to-red-800",
+      "PYTHON": "from-orange-600 to-red-600"
     };
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
@@ -231,7 +231,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   {/* Header with category gradient */}
-                  <div className={`relative p-6 pb-4 bg-gradient-to-r ${categoryGradients[post.category] || "from-blue-500 to-blue-600"} text-white`}>
+                  <div className={`relative p-6 pb-4 bg-gradient-to-r ${categoryGradients[post.category] || "from-red-600 to-red-700"} text-white`}>
                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
                     <motion.div 
                       className="inline-flex items-center px-3 py-1 text-xs font-semibold text-white bg-white/20 rounded-full mb-4"
@@ -261,7 +261,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                         {post.tags.slice(0, 3).map((tag, tagIndex) => (
                           <motion.span 
                             key={tagIndex}
-                            className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 rounded-md"
+                            className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200 rounded-md"
                             whileHover={{ scale: 1.05 }}
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -285,7 +285,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                         {post.author}
                       </div>
                       <motion.div
-                        className="flex items-center text-blue-600 font-medium text-sm group-hover:text-blue-700 transition-colors duration-300"
+                        className="flex items-center text-red-600 font-medium text-sm group-hover:text-red-700 transition-colors duration-300"
                         whileHover={{ x: 4 }}
                       >
                         Read Article
@@ -296,7 +296,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
 
                   {/* Hover overlay */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                   />

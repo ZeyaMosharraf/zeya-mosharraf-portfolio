@@ -30,7 +30,7 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
           <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Project Not Found</h2>
           <button 
             onClick={() => setLocation("/")}
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+            className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
           >
             Back to Home
           </button>
@@ -50,11 +50,11 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
         {project.imageUrl && <meta property="og:image" content={project.imageUrl} />}
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-950/20">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
           {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/95 to-blue-700/95">
+          <div className="absolute inset-0 bg-gradient-to-r from-red-700/95 to-red-900/95">
             <div className="absolute inset-0" style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}></div>
@@ -118,8 +118,8 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
           {/* Floating background elements */}
-          <div className="absolute top-20 right-10 w-24 h-24 bg-blue-200/20 dark:bg-blue-800/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-40 left-10 w-32 h-32 bg-purple-200/20 dark:bg-purple-800/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+          <div className="absolute top-20 right-10 w-24 h-24 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-40 left-10 w-32 h-32 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
           
           <div className="max-w-6xl mx-auto relative z-10">
             {/* Project Stats Cards */}
@@ -130,10 +130,10 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 -mt-8 relative z-10"
             >
               {[
-                { icon: Calendar, label: "Duration", value: "2-3 weeks", color: "from-blue-500 to-cyan-500" },
+                { icon: Calendar, label: "Duration", value: "2-3 weeks", color: "from-red-500 to-orange-500" },
                 { icon: Target, label: "Impact", value: "High", color: "from-green-500 to-emerald-500" },
-                { icon: Zap, label: "Complexity", value: "Advanced", color: "from-purple-500 to-pink-500" },
-                { icon: Award, label: "Status", value: "Complete", color: "from-orange-500 to-red-500" }
+                { icon: Zap, label: "Complexity", value: "Advanced", color: "from-orange-500 to-red-500" },
+                { icon: Award, label: "Status", value: "Complete", color: "from-red-600 to-red-500" }
               ].map((stat, index) => (
                 <motion.div 
                   key={index} 
@@ -315,12 +315,12 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
                   className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
                 >
                   <div className="flex items-center mb-4">
-                    <FaTags className="text-blue-600 mr-3" />
+                    <FaTags className="text-red-600 mr-3" />
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Skills Applied</h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {project.skills?.map((skill, idx) => (
-                      <span key={idx} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium">
+                      <span key={idx} className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-full text-sm font-medium">
                         {skill}
                       </span>
                     ))}
@@ -334,13 +334,13 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
                   className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
                 >
                   <div className="flex items-center mb-4">
-                    <FaTools className="text-purple-600 mr-3" />
+                    <FaTools className="text-red-600 mr-3" />
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">Tools Used</h3>
                   </div>
                   <div className="space-y-2">
                     {project.tools?.map((tool, idx) => (
                       <div key={idx} className="flex items-center p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <div className="w-2 h-2 bg-purple-600 rounded-full mr-3"></div>
+                        <div className="w-2 h-2 bg-red-600 rounded-full mr-3"></div>
                         <span className="text-gray-700 dark:text-gray-300">{tool}</span>
                       </div>
                     ))}

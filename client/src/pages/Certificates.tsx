@@ -83,7 +83,7 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Certificate Not Found</h2>
             <Button 
               onClick={() => setLocation("/certificates")} 
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Certificates
             </Button>
@@ -93,9 +93,9 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
     }
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
@@ -162,7 +162,7 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                 className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
               >
                 <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex items-center">
-                  <Tag className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
+                  <Tag className="h-5 w-5 mr-2 text-red-600 dark:text-red-400" />
                   Skills Learned
                 </h3>
                 <div className="space-y-2">
@@ -172,9 +172,9 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3, delay: 0.8 + idx * 0.1 }}
-                      className="flex items-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg"
+                      className="flex items-center p-3 bg-red-50 dark:bg-red-900/30 rounded-lg"
                     >
-                      <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-red-600 dark:bg-red-400 rounded-full mr-3"></div>
                       <span className="text-gray-700 dark:text-gray-300 font-medium">{skill}</span>
                     </motion.div>
                   ))}
@@ -195,9 +195,9 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                       <span className="font-semibold text-gray-900 dark:text-gray-100">{selectedCertificate.duration}</span>
                     </div>
                   )}
-                  <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/30 rounded-lg">
                     <span className="text-gray-600 dark:text-gray-400">Type</span>
-                    <span className="font-semibold text-blue-600 dark:text-blue-400">
+                    <span className="font-semibold text-red-600 dark:text-red-400">
                       {selectedCertificate.category === 'course' ? 'Online Course' : 
                        selectedCertificate.category === 'achievement' ? 'Achievement' : 
                        selectedCertificate.category === 'experience' ? 'Professional Experience' : 'Extracurricular Activity'}
@@ -210,7 +210,7 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                         href={selectedCertificate.credentialLink} 
                         target="_blank" 
                         rel="noreferrer" 
-                        className="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        className="w-full inline-flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         View Credential
@@ -241,9 +241,9 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
   // List view rendering function
   const renderListView = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
@@ -277,7 +277,7 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1 mb-8 bg-gray-100 dark:bg-gray-800 backdrop-blur-sm border border-gray-300 dark:border-gray-700 rounded-2xl p-1 shadow-lg">
                 <TabsTrigger 
                   value="courses" 
-                  className="relative rounded-xl px-2 py-2 sm:px-4 sm:py-3 font-semibold text-xs sm:text-sm transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 border-0"
+                  className="relative rounded-xl px-2 py-2 sm:px-4 sm:py-3 font-semibold text-xs sm:text-sm transition-all duration-300 data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 border-0"
                 >
                   <motion.span
                     className="relative z-10 flex items-center justify-center"
@@ -338,25 +338,25 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                       data-aos-delay={index * 80}
                     >
                       {/* Header */}
-                      <div className="relative p-6 pb-4 bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-900/20 dark:to-blue-800/20">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 h-1 top-0"></div>
+                      <div className="relative p-6 pb-4 bg-gradient-to-br from-red-50/50 to-red-100/30 dark:from-red-900/20 dark:to-red-800/20">
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 h-1 top-0"></div>
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <motion.div 
-                              className="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 rounded-full mb-3"
+                              className="inline-flex items-center px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/50 rounded-full mb-3"
                               whileHover={{ scale: 1.05 }}
                             >
                               <Award className="w-3 h-3 mr-1" />
                               Course
                             </motion.div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-300 leading-tight">
                               {cert.title}
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{cert.issuer}</p>
                           </div>
                           <div className="text-right ml-4">
                             <motion.span 
-                              className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-lg"
+                              className="inline-flex items-center px-3 py-1 text-sm font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 rounded-lg"
                               whileHover={{ scale: 1.05 }}
                             >
                               <Calendar className="w-3 h-3 mr-1" />
@@ -379,7 +379,7 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                               href={cert.credentialLink} 
                               target="_blank" 
                               rel="noreferrer" 
-                              className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm transition-colors duration-300"
+                              className="inline-flex items-center text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-sm transition-colors duration-300"
                               whileHover={{ x: 2 }}
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -390,7 +390,7 @@ const Certificates = ({ viewMode = "list", params: routeParams }: CertificatesPr
                             <span className="text-gray-400 dark:text-gray-500 text-sm">Certificate Available</span>
                           )}
                           <motion.div
-                            className="flex items-center text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 font-medium text-sm transition-colors duration-300"
+                            className="flex items-center text-gray-500 dark:text-gray-400 group-hover:text-red-600 dark:group-hover:text-red-400 font-medium text-sm transition-colors duration-300"
                             whileHover={{ x: 4 }}
                           >
                             View Details

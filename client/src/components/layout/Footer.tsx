@@ -15,9 +15,10 @@ const Footer = () => {
   const handleSectionClick = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offsetTop = element.offsetTop - 80;
+      const rect = element.getBoundingClientRect();
+      const absoluteTop = rect.top + window.scrollY - 80;
       window.scrollTo({
-        top: offsetTop,
+        top: absoluteTop,
         behavior: "smooth"
       });
     }

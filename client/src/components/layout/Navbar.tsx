@@ -45,9 +45,10 @@ const Navbar = () => {
         const element = document.getElementById(sectionId);
         if (element) {
           setActiveSection(sectionId);
-          const offsetTop = element.offsetTop - 80;
+          const rect = element.getBoundingClientRect();
+          const absoluteTop = rect.top + window.scrollY - 80;
           window.scrollTo({
-            top: offsetTop,
+            top: absoluteTop,
             behavior: "smooth"
           });
         }
@@ -58,9 +59,10 @@ const Navbar = () => {
       if (element) {
         closeMenu();
         setActiveSection(sectionId);
-        const offsetTop = element.offsetTop - 80;
+        const rect = element.getBoundingClientRect();
+        const absoluteTop = rect.top + window.scrollY - 80;
         window.scrollTo({
-          top: offsetTop,
+          top: absoluteTop,
           behavior: "smooth"
         });
       }
@@ -99,30 +101,8 @@ const Navbar = () => {
     } else if (location.startsWith("/project") || location.startsWith("/category")) {
       setActiveSection("projects");
     } else if (location === "/") {
-      // If on home page, we'll let the scroll handler determine the active section
-      const handleScroll = () => {
-        const sections = ["home", "projects", "about", "contact"];
-        const scrollPosition = window.scrollY + 100;
-  
-        for (const section of sections) {
-          const element = document.getElementById(section);
-          if (element) {
-            const offsetTop = element.offsetTop;
-            const offsetHeight = element.offsetHeight;
-  
-            if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-              setActiveSection(section);
-              break;
-            }
-          }
-        }
-      };
-  
-      window.addEventListener("scroll", handleScroll);
-      // Initial check
-      handleScroll();
-      
-      return () => window.removeEventListener("scroll", handleScroll);
+      // On home page, default to "home" — only change on explicit click
+      setActiveSection("home");
     }
   }, [location]);
 

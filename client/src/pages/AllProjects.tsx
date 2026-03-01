@@ -54,10 +54,10 @@ const AllProjects = () => {
         keywords="Data Analytics Projects, SQL Projects, Python Projects, Power BI Dashboards, Machine Learning, Excel Analysis, Tableau Visualizations, Looker Studio Reports"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-950/20">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/95 to-blue-700/95">
+        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-red-700/95 to-red-900/95">
             <div className="absolute inset-0" style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}></div>
@@ -88,8 +88,8 @@ const AllProjects = () => {
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
           {/* Floating background elements */}
-          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200/20 dark:bg-blue-800/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-purple-200/20 dark:bg-purple-800/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-10 left-10 w-32 h-32 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-40 h-40 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
           
           <div className="max-w-7xl mx-auto relative z-10">
             {/* Search and Filter Bar */}
@@ -97,7 +97,7 @@ const AllProjects = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg mb-8 -mt-8 relative z-10"
+              className="bg-white dark:bg-gray-900/80 rounded-2xl p-6 shadow-lg mb-8 -mt-8 relative z-10 border border-gray-200 dark:border-red-900/20"
             >
               <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
                 {/* Search */}
@@ -108,7 +108,7 @@ const AllProjects = () => {
                     placeholder="Search projects..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-red-900/30 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   />
                 </div>
 
@@ -118,7 +118,7 @@ const AllProjects = () => {
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-md transition-colors ${
                       viewMode === "grid"
-                        ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm"
+                        ? "bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 shadow-sm"
                         : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
                     }`}
                   >
@@ -128,7 +128,7 @@ const AllProjects = () => {
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-md transition-colors ${
                       viewMode === "list"
-                        ? "bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm"
+                        ? "bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 shadow-sm"
                         : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
                     }`}
                   >
@@ -152,8 +152,8 @@ const AllProjects = () => {
                     onClick={() => setActiveCategory(category.id)}
                     className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
                       activeCategory === category.id
-                        ? "bg-blue-600 text-white shadow-lg"
-                        : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+                        ? "bg-gradient-to-r from-red-600 to-orange-500 text-white shadow-lg shadow-red-500/25"
+                        : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-red-900/20"
                     }`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -227,7 +227,7 @@ const AllProjects = () => {
                       setSearchTerm("");
                       setActiveCategory("all");
                     }}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                    className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
                   >
                     Clear Filters
                   </button>
