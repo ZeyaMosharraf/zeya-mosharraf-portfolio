@@ -36,5 +36,9 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     .join("")}
 </urlset>`;
 
-fs.writeFileSync(path.resolve("dist", "sitemap.xml"), sitemap);
-console.log("✅ Sitemap generated!");
+const outDir = path.resolve("dist", "public");
+if (!fs.existsSync(outDir)) {
+  fs.mkdirSync(outDir, { recursive: true });
+}
+fs.writeFileSync(path.resolve(outDir, "sitemap.xml"), sitemap);
+console.log("✅ Sitemap generated at dist/public/sitemap.xml");
