@@ -338,26 +338,23 @@ const CertificatesScrolling = ({
   };
 
   return (
-    <section className={`relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-blue-50/20 to-purple-50/15 dark:from-gray-900 dark:via-blue-950/10 dark:to-purple-950/10 transition-colors duration-300 overflow-hidden ${className}`}>
-      {/* Background decorative elements */}
-      <div className="absolute top-20 right-10 w-80 h-80 bg-gradient-to-l from-blue-400/8 to-purple-400/8 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-r from-purple-400/8 to-pink-400/8 rounded-full blur-3xl"></div>
+    <section className={`relative py-24 lg:py-32 overflow-hidden ${className}`} style={{ background: '#0d0d0d' }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 40% 50%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
       
-      <div className="container mx-auto max-w-7xl relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {title && (
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-14"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-                {title}
-              </span>
+            <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4">
+              Certifications &{" "}
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Achievements</span>
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto transition-colors duration-300">
+            <p className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed">
               Professional certifications and continuous learning achievements showcasing expertise in data analytics
             </p>
           </motion.div>
@@ -369,32 +366,28 @@ const CertificatesScrolling = ({
           {canScrollLeft && (
             <Button
               onClick={scrollLeft}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full p-0 
-                         bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/20
-                         hover:bg-white/30 dark:hover:bg-black/30 hover:scale-110 transition-all duration-300
-                         shadow-lg hover:shadow-xl"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300"
+              style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}
               variant="ghost"
             >
-              <ChevronLeft className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+              <ChevronLeft className="h-5 w-5 text-gray-400" />
             </Button>
           )}
           
           {canScrollRight && (
             <Button
               onClick={scrollRight}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full p-0
-                         bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/20
-                         hover:bg-white/30 dark:hover:bg-black/30 hover:scale-110 transition-all duration-300
-                         shadow-lg hover:shadow-xl"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300"
+              style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}
               variant="ghost"
             >
-              <ChevronRight className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+              <ChevronRight className="h-5 w-5 text-gray-400" />
             </Button>
           )}
 
-          {/* Gradient overlays for scroll indication */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 z-10 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 z-10 pointer-events-none"></div>
+          {/* Gradient overlays */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #0d0d0d, transparent)' }} />
+          <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, #0d0d0d, transparent)' }} />
           
           <div 
             ref={scrollContainerRef}
@@ -423,7 +416,7 @@ const CertificatesScrolling = ({
 
         {/* Mobile swipe instruction */}
         <div className="text-center mt-6 lg:hidden">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-[12px] text-gray-600">
             Swipe to see more certificates
           </p>
         </div>
@@ -442,60 +435,51 @@ const CertificatesScrolling = ({
 const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; onClick?: () => void }) => {
   return (
     <motion.div
-      className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 h-full w-80 cursor-pointer"
-      whileHover={{ 
-        y: -8, 
-        scale: 1.01,
-        transition: { type: "spring", stiffness: 300, damping: 20 }
-      }}
+      className="group rounded-xl overflow-hidden h-full w-80 cursor-pointer transition-all duration-300 relative"
+      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+      whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
     >
-      {/* Certificate Image Section */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
+      {/* Top glow line on hover */}
+      <div className="absolute top-0 left-0 right-0 h-px z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+      {/* Certificate Image */}
+      <div className="relative h-48 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)' }}>
         {certificate.imageUrl ? (
-          <img
-            src={certificate.imageUrl}
-            alt={certificate.title}
-            className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-          />
+          <img src={certificate.imageUrl} alt={certificate.title} className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
-                <span className="text-2xl">🏆</span>
+              <div className="w-14 h-14 mx-auto mb-2 rounded-xl flex items-center justify-center" style={{ background: 'rgba(220,38,38,0.08)' }}>
+                <span className="text-xl">🏆</span>
               </div>
-              <h3 className="font-bold text-gray-900 dark:text-white">{certificate.title}</h3>
+              <h3 className="font-medium text-gray-300 text-[13px]">{certificate.title}</h3>
             </div>
           </div>
         )}
         
-        {/* Category Badge */}
-        <div className="absolute top-4 right-4">
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-white/90 backdrop-blur-sm text-blue-700 border border-blue-200">
+        <div className="absolute top-3 right-3">
+          <span className="px-2 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide" style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}>
             {certificate.category}
           </span>
         </div>
 
-        {/* Zoom Icon on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-3">
-            <ZoomIn className="text-white text-xl" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div className="rounded-full p-2.5" style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <ZoomIn className="text-white w-4 h-4" />
           </div>
         </div>
       </div>
 
-      {/* Content Section */}
-      <div className="p-6">
-        {/* Title and Issuer */}
-        <div className="mb-4">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 mb-2">
+      {/* Content */}
+      <div className="p-5">
+        <div className="mb-3">
+          <h3 className="text-[15px] font-bold text-white group-hover:text-red-400 transition-colors duration-200 mb-1.5 line-clamp-2">
             {certificate.title}
           </h3>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-2 text-[12px] text-gray-500">
             <span className="font-medium">{certificate.issuer}</span>
-            <span>•</span>
+            <span>·</span>
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               <span>{certificate.date}</span>
@@ -503,67 +487,37 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
           </div>
         </div>
 
-        {/* Skills Tags */}
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-2">
+        {/* Skills */}
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-1">
             {certificate.skills.slice(0, 3).map((skill, idx) => (
-              <motion.span
-                key={idx}
-                className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-md"
-                whileHover={{ 
-                  scale: 1.1, 
-                  y: -2,
-                  transition: { type: "spring", stiffness: 400, damping: 10 }
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: idx * 0.1 }}
-              >
+              <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
                 {skill}
-              </motion.span>
+              </span>
             ))}
             {certificate.skills.length > 3 && (
-              <motion.span 
-                className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-md"
-                whileHover={{ scale: 1.05 }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-              >
-                +{certificate.skills.length - 3} more
-              </motion.span>
+              <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
+                +{certificate.skills.length - 3}
+              </span>
             )}
           </div>
         </div>
         
-        {/* View Credential Button */}
+        {/* View Link */}
         {certificate.credentialLink && (
-          <motion.a
+          <a
             href={certificate.credentialLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2.5 rounded-xl font-medium flex items-center justify-center transition-all duration-300"
-            whileHover={{ 
-              scale: 1.02,
-              boxShadow: "0 8px 25px rgba(59, 130, 246, 0.3)",
-              transition: { type: "spring", stiffness: 400, damping: 10 }
-            }}
-            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center justify-center gap-2 h-[34px] rounded-lg text-[12px] font-medium text-white transition-all duration-200"
+            style={{ background: '#DC2626' }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              initial={{ x: -2 }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-            </motion.div>
+            <ExternalLink className="w-3 h-3" />
             View Credential
-          </motion.a>
+          </a>
         )}
       </div>
-
-      {/* Hover Glow Effect */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-indigo-600/5" />
     </motion.div>
   );
 };
@@ -617,96 +571,90 @@ const CertificateModal = ({
 
         {/* Modal Content */}
         <motion.div
-          className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700"
+          className="relative rounded-xl overflow-hidden max-w-4xl max-h-[90vh]"
+          style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/20 backdrop-blur-sm text-white hover:bg-black/40 transition-colors duration-200 flex items-center justify-center"
+            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-200"
+            style={{ background: 'rgba(255,255,255,0.06)' }}
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
 
-          {/* Modal Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-            <div className="flex items-start justify-between">
+          {/* Header */}
+          <div className="p-6" style={{ background: 'rgba(220,38,38,0.04)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="flex items-start justify-between pr-10">
               <div>
-                <h2 className="text-2xl font-bold mb-2">{certificate.title}</h2>
-                <div className="flex items-center gap-2 text-blue-100">
+                <h2 className="text-xl font-bold text-white mb-1.5">{certificate.title}</h2>
+                <div className="flex items-center gap-2 text-[13px] text-gray-500">
                   <span className="font-medium">{certificate.issuer}</span>
-                  <span>•</span>
+                  <span>·</span>
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-3 h-3" />
                     <span>{certificate.date}</span>
                   </div>
                 </div>
               </div>
-              <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium">
+              <span className="px-2 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide" style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}>
                 {certificate.category}
               </span>
             </div>
           </div>
 
-          {/* Certificate Image */}
-          <div className="relative bg-white dark:bg-gray-900 p-8">
+          {/* Image */}
+          <div className="relative p-6" style={{ background: 'rgba(255,255,255,0.01)' }}>
             {certificate.imageUrl ? (
               <div className="flex justify-center">
-                <img
-                  src={certificate.imageUrl}
-                  alt={certificate.title}
-                  className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-lg"
-                />
+                <img src={certificate.imageUrl} alt={certificate.title} className="max-w-full max-h-[60vh] object-contain rounded-lg" />
               </div>
             ) : (
-              <div className="flex items-center justify-center h-64 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg">
+              <div className="flex items-center justify-center h-64 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)' }}>
                 <div className="text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
-                    <span className="text-3xl">🏆</span>
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-xl flex items-center justify-center" style={{ background: 'rgba(220,38,38,0.08)' }}>
+                    <span className="text-2xl">🏆</span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{certificate.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">Certificate image not available</p>
+                  <h3 className="text-lg font-bold text-white mb-1">{certificate.title}</h3>
+                  <p className="text-gray-600 text-[13px]">Certificate image not available</p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Modal Footer */}
-          <div className="bg-gray-50 dark:bg-gray-800/50 p-6 border-t border-gray-200 dark:border-gray-700">
-            {/* Skills */}
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Skills & Competencies</h3>
-              <div className="flex flex-wrap gap-2">
+          {/* Footer */}
+          <div className="p-6" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="mb-5">
+              <h3 className="text-[12px] font-semibold text-gray-400 mb-2 uppercase tracking-wider">Skills & Competencies</h3>
+              <div className="flex flex-wrap gap-1">
                 {certificate.skills.map((skill, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-md"
-                  >
+                  <span key={idx} className="px-2 py-0.5 text-[11px] font-medium text-gray-400 rounded" style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
                     {skill}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               {certificate.credentialLink && (
                 <a
                   href={certificate.credentialLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-medium flex items-center justify-center transition-all duration-300"
+                  className="flex-1 flex items-center justify-center gap-2 h-[38px] rounded-lg text-[13px] font-medium text-white transition-all duration-200"
+                  style={{ background: '#DC2626' }}
                 >
-                  <ExternalLink className="w-4 h-4 mr-2" />
+                  <ExternalLink className="w-3.5 h-3.5" />
                   View Credential
                 </a>
               )}
               <button
                 onClick={onClose}
-                className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200"
+                className="h-[38px] px-5 rounded-lg text-[13px] font-medium text-gray-400 transition-all duration-200"
+                style={{ border: '1px solid rgba(255,255,255,0.06)' }}
               >
                 Close
               </button>

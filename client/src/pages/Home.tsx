@@ -9,36 +9,55 @@ import ContactSection from "@/components/sections/ContactSection";
 import CertificatesScrolling from "@/components/ui/CertificatesScrolling";
 import { motion } from "framer-motion";
 
-const Home = () => {
-  const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } }
-  };
+/* Staggered section reveal — each section slides up as it enters the viewport */
+const sectionReveal = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
+const Home = () => {
   return (
-    <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={fadeIn}
-    >
+    <div style={{ background: "#0B0F14" }}>
+      {/* Hero — no wrapper needed, it animates itself */}
       <Hero />
-      
-      <FeaturedCaseStudySection />
-      
-      <AnalyticsDashboard />
-      
-      <ExperienceSection />
-      
-      <ProjectsSection showFeaturedOnly={true} />
-      
-      <SkillsSection />
-      
-      <CertificatesScrolling />
-      
-      <AboutSection />
-      
-      <ContactSection />
-    </motion.div>
+
+      {/* Each section gets a scroll-triggered upward reveal */}
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <FeaturedCaseStudySection />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <AnalyticsDashboard />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <ExperienceSection />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <ProjectsSection showFeaturedOnly={true} />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <SkillsSection />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <CertificatesScrolling />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <AboutSection />
+      </motion.div>
+
+      <motion.div variants={sectionReveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.08 }}>
+        <ContactSection />
+      </motion.div>
+    </div>
   );
 };
 

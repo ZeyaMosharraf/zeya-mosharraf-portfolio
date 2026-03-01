@@ -1,362 +1,138 @@
 import { motion, useInView } from "framer-motion";
-
 import { Database, BarChart3, Brain, Monitor, Zap, TrendingUp, FolderOpen, Award, Users, Clock, Star } from "lucide-react";
 import { projects } from "@/data/projectsData";
 import { useRef } from "react";
 import { DataFlowVisualization } from "@/components/ui/DataFlowVisualization";
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const AnalyticsDashboard = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  // Calculate technology-based project counts
   const technologyStats = projects.reduce((acc, project) => {
-    const category = project.category;
-    acc[category] = (acc[category] || 0) + 1;
+    acc[project.category] = (acc[project.category] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
-  // Technology cards data
   const technologyCards = [
-    {
-      name: "Power BI",
-      count: technologyStats["Power BI"] || 0,
-      icon: Monitor,
-      color: "from-yellow-500 to-orange-500",
-      description: "Interactive Dashboards"
-    },
-    {
-      name: "SQL",
-      count: technologyStats["SQL"] || 0,
-      icon: Database,
-      color: "from-blue-500 to-cyan-500",
-      description: "Database Analysis"
-    },
-    {
-      name: "Python",
-      count: technologyStats["Python"] || 0,
-      icon: Brain,
-      color: "from-green-500 to-emerald-500",
-      description: "Data Processing"
-    },
-    {
-      name: "Machine Learning",
-      count: technologyStats["Machine Learning"] || 0,
-      icon: Zap,
-      color: "from-purple-500 to-pink-500",
-      description: "AI & ML Models"
-    },
-    {
-      name: "Excel",
-      count: technologyStats["Excel"] || 0,
-      icon: BarChart3,
-      color: "from-indigo-500 to-purple-500",
-      description: "Advanced Analytics"
-    },
-    {
-      name: "Tableau",
-      count: technologyStats["Tableau"] || 0,
-      icon: TrendingUp,
-      color: "from-pink-500 to-red-500",
-      description: "Data Visualization"
-    }
+    { name: "Power BI", count: technologyStats["Power BI"] || 0, icon: Monitor, description: "Interactive Dashboards" },
+    { name: "SQL", count: technologyStats["SQL"] || 0, icon: Database, description: "Database Analysis" },
+    { name: "Python", count: technologyStats["Python"] || 0, icon: Brain, description: "Data Processing" },
+    { name: "Machine Learning", count: technologyStats["Machine Learning"] || 0, icon: Zap, description: "AI & ML Models" },
+    { name: "Excel", count: technologyStats["Excel"] || 0, icon: BarChart3, description: "Advanced Analytics" },
+    { name: "Tableau", count: technologyStats["Tableau"] || 0, icon: TrendingUp, description: "Data Visualization" },
   ];
 
-
-
-
-
-  // Metrics data
   const metrics = [
-    {
-      icon: FolderOpen,
-      value: projects.length.toString(),
-      label: "Projects Completed",
-      color: "from-blue-500 to-cyan-500",
-      trend: "+12%"
-    },
-    {
-      icon: Award,
-      value: "15+",
-      label: "Certifications",
-      color: "from-purple-500 to-pink-500",
-      trend: "+5"
-    },
-    {
-      icon: Users,
-      value: "50+",
-      label: "Clients Served",
-      color: "from-green-500 to-emerald-500",
-      trend: "+23%"
-    },
-    {
-      icon: TrendingUp,
-      value: "85%",
-      label: "Accuracy Rate",
-      color: "from-orange-500 to-red-500",
-      trend: "+2%"
-    },
-    {
-      icon: Clock,
-      value: "2+",
-      label: "Years Experience",
-      color: "from-indigo-500 to-purple-500",
-      trend: "Growing"
-    },
-    {
-      icon: Star,
-      value: "4.9",
-      label: "Client Rating",
-      color: "from-yellow-500 to-orange-500",
-      trend: "★★★★★"
-    }
+    { icon: FolderOpen, value: projects.length.toString(), label: "Projects Completed", trend: "+12%" },
+    { icon: Award, value: "15+", label: "Certifications", trend: "+5" },
+    { icon: Users, value: "50+", label: "Clients Served", trend: "+23%" },
+    { icon: TrendingUp, value: "85%", label: "Accuracy Rate", trend: "+2%" },
+    { icon: Clock, value: "2+", label: "Years Experience", trend: "Growing" },
+    { icon: Star, value: "4.9", label: "Client Rating", trend: "★★★★★" },
   ];
-
-
 
   return (
-    <section 
-      ref={ref}
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden"
-    >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
+    <section ref={ref} className="relative py-24 lg:py-32 overflow-hidden" style={{ background: '#0B0F14' }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section Header */}
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-14"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Analytics Dashboard
-            </span>
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
+            style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}
+          >
+            <motion.div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
+              animate={{ x: ['-100%', '200%'] }}
+              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
+            />
+            <BarChart3 className="w-3 h-3 relative z-10" />
+            <span className="relative z-10">Analytics</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4">
+            Analytics{" "}
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Dashboard</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          <p className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed">
             Data-driven insights into my portfolio performance and technical expertise
           </p>
         </motion.div>
 
-        {/* Metrics Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16">
+        {/* Metrics */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
           {metrics.map((metric, index) => {
-            const IconComponent = metric.icon;
+            const Icon = metric.icon;
             return (
               <motion.div
                 key={index}
-                className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-6 rounded-3xl text-center group hover:scale-105 transition-all duration-500 border border-gray-200/30 dark:border-gray-700/30 shadow-xl hover:shadow-2xl"
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.9 }}
-                transition={{ 
-                  delay: index * 0.1 + 0.3,
-                  duration: 0.6,
-                  type: "spring",
-                  stiffness: 100
-                }}
-                whileHover={{ 
-                  y: -10,
-                  scale: 1.05,
-                  transition: { duration: 0.2 }
-                }}
+                className="rounded-xl p-5 text-center group transition-all duration-300 relative overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+                initial={{ opacity: 0, y: 24 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: index * 0.08 + 0.2, duration: 0.6, ease }}
+                whileHover={{ y: -4, borderColor: 'rgba(220,38,38,0.2)' }}
               >
-                <motion.div 
-                  className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${metric.color} flex items-center justify-center text-white mx-auto mb-4 shadow-lg`}
-                  whileHover={{ 
-                    scale: 1.15,
-                    rotate: 5,
-                    transition: { duration: 0.2 }
-                  }}
-                  animate={{
-                    boxShadow: [
-                      "0 4px 20px rgba(0,0,0,0.1)",
-                      "0 8px 30px rgba(0,0,0,0.15)",
-                      "0 4px 20px rgba(0,0,0,0.1)"
-                    ]
-                  }}
-                  transition={{
-                    boxShadow: {
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
-                  }}
-                >
-                  <IconComponent size={24} />
-                </motion.div>
-                
-                <motion.div 
-                  className="text-3xl font-bold text-gray-900 dark:text-white mb-2"
-                  initial={{ scale: 0 }}
-                  animate={isInView ? { scale: 1 } : { scale: 0 }}
-                  transition={{ 
-                    delay: index * 0.1 + 0.8,
-                    type: "spring",
-                    stiffness: 200
-                  }}
-                >
-                  {metric.value}
-                </motion.div>
-                
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  {metric.label}
+                {/* Top glow line on hover */}
+                <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
+                  <Icon size={18} />
                 </div>
-                
-                <div className="text-xs text-green-600 dark:text-green-400 font-medium">
-                  {metric.trend}
-                </div>
+                <div className="text-2xl font-bold text-white mb-1">{metric.value}</div>
+                <div className="text-[11px] text-gray-500 mb-1">{metric.label}</div>
+                <div className="text-[10px] font-medium text-red-400/60">{metric.trend}</div>
               </motion.div>
             );
           })}
         </div>
 
-        {/* Technology-Based Project Counter */}
-        <motion.div 
+        {/* Technology Cards */}
+        <motion.div
           className="mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ delay: 1.0, duration: 0.8, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.8, duration: 0.8, ease }}
         >
-          <div className="text-center mb-12">
-
-            <motion.h3 
-              className="text-4xl md:text-5xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 1.2, duration: 0.6 }}
-            >
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Projects by Technology
-              </span>
-            </motion.h3>
-            <motion.p 
-              className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 1.3, duration: 0.6 }}
-            >
+          <div className="text-center mb-10">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">Projects by{" "}
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Technology</span>
+            </h3>
+            <p className="text-[14px] text-gray-500 max-w-lg mx-auto">
               Comprehensive expertise across cutting-edge data analysis and visualization technologies
-            </motion.p>
+            </p>
           </div>
 
-          {/* Mobile: Horizontal scroll, Desktop: Grid */}
+          {/* Mobile: scroll */}
           <div className="md:hidden">
-            {/* Mobile horizontal scroll container */}
-            <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
               {technologyCards.map((tech, index) => {
-                const IconComponent = tech.icon;
+                const Icon = tech.icon;
                 return (
                   <motion.div
                     key={index}
-                    className="flex-none w-48 relative group cursor-pointer"
+                    className="flex-none w-44 rounded-xl p-5 text-center group transition-all duration-300"
+                    style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
                     initial={{ opacity: 0, x: 20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-                    transition={{ 
-                      delay: index * 0.15 + 1.4,
-                      duration: 0.8,
-                      type: "spring",
-                      stiffness: 80
-                    }}
-                    whileHover={{ 
-                      y: -15,
-                      scale: 1.05,
-                      transition: { duration: 0.3, ease: "easeOut" }
-                    }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: index * 0.1 + 1, duration: 0.6, ease }}
+                    whileHover={{ y: -6, borderColor: 'rgba(220,38,38,0.2)' }}
                   >
-                    {/* Glowing Background Effect */}
-                    <div className={`absolute -inset-1 bg-gradient-to-r ${tech.color} rounded-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 blur-lg`}></div>
-                    
-                    {/* Main Card */}
-                    <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-2xl rounded-2xl p-6 text-center border border-gray-200/50 dark:border-gray-700/50 shadow-2xl group-hover:shadow-3xl transition-all duration-500 h-full">
-                      
-                      {/* Animated Icon Container */}
-                      <motion.div 
-                        className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${tech.color} flex items-center justify-center text-white mx-auto mb-4 shadow-xl`}
-                        whileHover={{ 
-                          scale: 1.2,
-                          rotate: [0, -5, 5, 0],
-                          transition: { duration: 0.4 }
-                        }}
-                        animate={{
-                          boxShadow: [
-                            "0 8px 32px rgba(0,0,0,0.1)",
-                            "0 12px 48px rgba(0,0,0,0.2)",
-                            "0 8px 32px rgba(0,0,0,0.1)"
-                          ]
-                        }}
-                        transition={{
-                          boxShadow: {
-                            duration: 3,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }
-                        }}
-                      >
-                        <div className="absolute inset-0 bg-white/20 rounded-xl blur-sm"></div>
-                        <IconComponent size={20} className="relative z-10" />
-                      </motion.div>
-
-                      {/* Count Display */}
-                      <motion.div 
-                        className="mb-3"
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-                        transition={{ delay: index * 0.15 + 1.8, duration: 0.6, type: "spring" }}
-                      >
-                        <div className={`text-3xl font-black bg-gradient-to-br ${tech.color} bg-clip-text text-transparent mb-1`}>
-                          {tech.count}
-                        </div>
-                        <div className="text-lg font-bold text-gray-800 dark:text-gray-200">
-                          {tech.name}
-                        </div>
-                      </motion.div>
-
-                      {/* Description */}
-                      <motion.div 
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-3"
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                        transition={{ delay: index * 0.15 + 2.0, duration: 0.6 }}
-                      >
-                        {tech.description}
-                      </motion.div>
-
-                      {/* Project Label */}
-                      <motion.div 
-                        className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mt-3 font-semibold"
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                        transition={{ delay: index * 0.15 + 2.2, duration: 0.6 }}
-                      >
-                        {tech.count === 1 ? 'Project' : 'Projects'}
-                      </motion.div>
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
+                      <Icon size={18} />
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-1">{tech.count}</div>
+                    <div className="text-[13px] font-semibold text-gray-300 mb-0.5">{tech.name}</div>
+                    <div className="text-[11px] text-gray-500">{tech.description}</div>
+                    <div className="text-[10px] uppercase tracking-wider text-gray-600 mt-2 font-semibold">
+                      {tech.count === 1 ? 'Project' : 'Projects'}
                     </div>
                   </motion.div>
                 );
@@ -364,108 +140,30 @@ const AnalyticsDashboard = () => {
             </div>
           </div>
 
-          {/* Desktop: Grid layout */}
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8">
+          {/* Desktop: Grid */}
+          <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-6 gap-4">
             {technologyCards.map((tech, index) => {
-              const IconComponent = tech.icon;
+              const Icon = tech.icon;
               return (
-                <motion.div
+                  <motion.div
                   key={index}
-                  className="relative group cursor-pointer"
-                  initial={{ opacity: 0, y: 40, scale: 0.8 }}
-                  animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.8 }}
-                  transition={{ 
-                    delay: index * 0.15 + 1.4,
-                    duration: 0.8,
-                    type: "spring",
-                    stiffness: 80
-                  }}
-                  whileHover={{ 
-                    y: -15,
-                    scale: 1.05,
-                    transition: { duration: 0.3, ease: "easeOut" }
-                  }}
+                  className="rounded-xl p-5 text-center group cursor-default transition-all duration-300 relative overflow-hidden"
+                  style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: index * 0.1 + 1, duration: 0.6, ease }}
+                  whileHover={{ y: -6, borderColor: 'rgba(220,38,38,0.2)' }}
                 >
-                  {/* Glowing Background Effect */}
-                  <div className={`absolute -inset-1 bg-gradient-to-r ${tech.color} rounded-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 blur-lg`}></div>
-                  
-                  {/* Main Card */}
-                  <div className="relative bg-white/95 dark:bg-gray-800/95 backdrop-blur-2xl rounded-2xl p-6 text-center border border-gray-200/50 dark:border-gray-700/50 shadow-2xl group-hover:shadow-3xl transition-all duration-500">
-                    
-                    {/* Animated Icon Container */}
-                    <motion.div 
-                      className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${tech.color} flex items-center justify-center text-white mx-auto mb-4 shadow-xl`}
-                      whileHover={{ 
-                        scale: 1.2,
-                        rotate: [0, -5, 5, 0],
-                        transition: { duration: 0.4 }
-                      }}
-                      animate={{
-                        boxShadow: [
-                          "0 8px 32px rgba(0,0,0,0.1)",
-                          "0 12px 48px rgba(0,0,0,0.2)",
-                          "0 8px 32px rgba(0,0,0,0.1)"
-                        ]
-                      }}
-                      transition={{
-                        boxShadow: {
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }
-                      }}
-                    >
-                      {/* Icon Glow Effect */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${tech.color} rounded-2xl opacity-50 blur-md`}></div>
-                      <IconComponent size={16} className="relative z-10" />
-                    </motion.div>
-                    
-                    {/* Project Count with Counter Animation */}
-                    <motion.div 
-                      className="text-4xl font-black mb-2"
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={isInView ? { scale: 1, rotate: 0 } : { scale: 0, rotate: -180 }}
-                      transition={{ 
-                        delay: index * 0.15 + 1.8,
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 15
-                      }}
-                    >
-                      <span className={`bg-gradient-to-br ${tech.color} bg-clip-text text-transparent`}>
-                        {tech.count}
-                      </span>
-                    </motion.div>
-                    
-                    {/* Technology Name */}
-                    <motion.div 
-                      className="text-lg font-bold text-gray-900 dark:text-white mb-2"
-                      initial={{ opacity: 0 }}
-                      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                      transition={{ delay: index * 0.15 + 2.0, duration: 0.6 }}
-                    >
-                      {tech.name}
-                    </motion.div>
-                    
-                    {/* Description */}
-                    <motion.div 
-                      className="text-sm text-gray-600 dark:text-gray-400 font-medium"
-                      initial={{ opacity: 0 }}
-                      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                      transition={{ delay: index * 0.15 + 2.1, duration: 0.6 }}
-                    >
-                      {tech.description}
-                    </motion.div>
-
-                    {/* Project Label */}
-                    <motion.div 
-                      className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mt-3 font-semibold"
-                      initial={{ opacity: 0 }}
-                      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                      transition={{ delay: index * 0.15 + 2.2, duration: 0.6 }}
-                    >
-                      {tech.count === 1 ? 'Project' : 'Projects'}
-                    </motion.div>
+                  {/* Top glow line on hover */}
+                  <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
+                    <Icon size={18} />
+                  </div>
+                  <div className="text-3xl font-bold text-white mb-1">{tech.count}</div>
+                  <div className="text-[13px] font-semibold text-gray-300 mb-0.5">{tech.name}</div>
+                  <div className="text-[11px] text-gray-500">{tech.description}</div>
+                  <div className="text-[10px] uppercase tracking-wider text-gray-600 mt-2 font-semibold">
+                    {tech.count === 1 ? 'Project' : 'Projects'}
                   </div>
                 </motion.div>
               );
@@ -473,13 +171,8 @@ const AnalyticsDashboard = () => {
           </div>
         </motion.div>
 
-        {/* Data Science Workflow Visualization */}
+        {/* Data Science Workflow */}
         <DataFlowVisualization />
-
-
-
-
-
       </div>
     </section>
   );

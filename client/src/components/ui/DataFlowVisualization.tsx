@@ -9,7 +9,7 @@ export const DataFlowVisualization = () => {
       icon: Target,
       description: "Define business objectives and success metrics",
       tools: ["Stakeholder Analysis", "KPI Definition", "Success Criteria"],
-      color: "from-red-500 to-pink-500"
+      color: "from-red-500 to-rose-500"
     },
     {
       step: 2,
@@ -17,7 +17,7 @@ export const DataFlowVisualization = () => {
       icon: Database,
       description: "Gather and source relevant data",
       tools: ["SQL Queries", "APIs", "Web Scraping", "Surveys"],
-      color: "from-blue-500 to-cyan-500"
+      color: "from-red-600 to-red-400"
     },
     {
       step: 3,
@@ -25,7 +25,7 @@ export const DataFlowVisualization = () => {
       icon: Settings,
       description: "Clean, transform and prepare data",
       tools: ["Python/Pandas", "Data Cleaning", "Feature Engineering"],
-      color: "from-purple-500 to-violet-500"
+      color: "from-rose-500 to-red-500"
     },
     {
       step: 4,
@@ -33,7 +33,7 @@ export const DataFlowVisualization = () => {
       icon: BarChart3,
       description: "Analyze patterns and relationships",
       tools: ["Statistical Analysis", "Correlation", "Hypothesis Testing"],
-      color: "from-emerald-500 to-green-500"
+      color: "from-red-400 to-rose-600"
     },
     {
       step: 5,
@@ -41,7 +41,7 @@ export const DataFlowVisualization = () => {
       icon: Brain,
       description: "Build and train analytical models",
       tools: ["Machine Learning", "Deep Learning", "Model Selection"],
-      color: "from-indigo-500 to-blue-500"
+      color: "from-red-700 to-red-500"
     },
     {
       step: 6,
@@ -49,7 +49,7 @@ export const DataFlowVisualization = () => {
       icon: TrendingUp,
       description: "Test and validate model performance",
       tools: ["Cross-validation", "Performance Metrics", "A/B Testing"],
-      color: "from-orange-500 to-red-500"
+      color: "from-rose-600 to-red-400"
     },
     {
       step: 7,
@@ -57,7 +57,7 @@ export const DataFlowVisualization = () => {
       icon: Monitor,
       description: "Create insights and communicate results",
       tools: ["Power BI", "Tableau", "Python Plotly", "Dashboards"],
-      color: "from-teal-500 to-cyan-500"
+      color: "from-red-500 to-rose-400"
     },
     {
       step: 8,
@@ -65,7 +65,7 @@ export const DataFlowVisualization = () => {
       icon: CheckCircle,
       description: "Deploy solutions and monitor outcomes",
       tools: ["MLOps", "Production Deployment", "Monitoring"],
-      color: "from-green-500 to-emerald-500"
+      color: "from-rose-500 to-red-600"
     }
   ];
 
@@ -78,7 +78,7 @@ export const DataFlowVisualization = () => {
     >
       <div className="text-center mb-12">
         <h3 className="text-2xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-red-500 via-rose-500 to-red-400 bg-clip-text text-transparent">
             Data Science Problem-Solving Workflow
           </span>
         </h3>
@@ -149,15 +149,15 @@ export const DataFlowVisualization = () => {
           {/* Pipeline track — row 1 */}
           <div className="hidden lg:block absolute top-1/2 left-6 right-6 -translate-y-1/2 -z-10">
             {/* Base track */}
-            <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-blue-900/60 via-purple-900/60 to-pink-900/60" />
+            <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-red-900/60 via-rose-900/60 to-red-800/60" />
             {/* Flowing shimmer */}
             <div className="absolute inset-0 overflow-hidden rounded-full">
               <motion.div
                 className="absolute top-0 h-full w-1/3 rounded-full"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(96,165,250,0.9) 30%, rgba(167,139,250,1) 50%, rgba(236,72,153,0.9) 70%, transparent 100%)",
+                  background: "linear-gradient(90deg, transparent 0%, rgba(220,38,38,0.9) 30%, rgba(239,68,68,1) 50%, rgba(244,63,94,0.9) 70%, transparent 100%)",
                   filter: "blur(1px)",
-                  boxShadow: "0 0 8px 2px rgba(167,139,250,0.6)",
+                  boxShadow: "0 0 8px 2px rgba(220,38,38,0.6)",
                 }}
                 animate={{ left: ["-33%", "100%"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 0.4 }}
@@ -168,7 +168,7 @@ export const DataFlowVisualization = () => {
               <motion.div
                 className="absolute top-0 h-full w-1/4 rounded-full"
                 style={{
-                  background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.8), transparent)",
+                  background: "linear-gradient(90deg, transparent, rgba(220,38,38,0.8), transparent)",
                   filter: "blur(4px)",
                 }}
                 animate={{ left: ["-25%", "100%"] }}
@@ -215,16 +215,16 @@ export const DataFlowVisualization = () => {
         <div className="hidden lg:flex justify-end pr-6 relative" style={{ height: "2.5rem" }}>
           <div className="relative w-[3px]">
             {/* Track */}
-            <div className="absolute inset-0 bg-gradient-to-b from-pink-900/60 to-indigo-900/60 rounded-full" />
+            <div className="absolute inset-0 bg-gradient-to-b from-red-900/60 to-rose-900/60 rounded-full" />
             {/* Flowing shimmer */}
             <div className="absolute inset-0 overflow-hidden rounded-full">
               <motion.div
                 className="absolute w-full rounded-full"
                 style={{
                   height: "50%",
-                  background: "linear-gradient(180deg, transparent, rgba(236,72,153,0.9), rgba(129,140,248,0.9), transparent)",
+                  background: "linear-gradient(180deg, transparent, rgba(220,38,38,0.9), rgba(249,115,22,0.9), transparent)",
                   filter: "blur(1px)",
-                  boxShadow: "0 0 6px 2px rgba(167,139,250,0.5)",
+                  boxShadow: "0 0 6px 2px rgba(220,38,38,0.5)",
                 }}
                 animate={{ top: ["-50%", "100%"] }}
                 transition={{ duration: 1.2, repeat: Infinity, ease: "linear", repeatDelay: 1.2 }}
@@ -239,15 +239,15 @@ export const DataFlowVisualization = () => {
           {/* Pipeline track — row 2 */}
           <div className="hidden lg:block absolute top-1/2 left-6 right-6 -translate-y-1/2 -z-10">
             {/* Base track */}
-            <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-indigo-900/60 via-teal-900/60 to-green-900/60" />
+            <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-rose-900/60 via-red-900/60 to-orange-900/60" />
             {/* Flowing shimmer */}
             <div className="absolute inset-0 overflow-hidden rounded-full">
               <motion.div
                 className="absolute top-0 h-full w-1/3 rounded-full"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(129,140,248,0.9) 30%, rgba(45,212,191,1) 50%, rgba(74,222,128,0.9) 70%, transparent 100%)",
+                  background: "linear-gradient(90deg, transparent 0%, rgba(244,63,94,0.9) 30%, rgba(239,68,68,1) 50%, rgba(249,115,22,0.9) 70%, transparent 100%)",
                   filter: "blur(1px)",
-                  boxShadow: "0 0 8px 2px rgba(45,212,191,0.6)",
+                  boxShadow: "0 0 8px 2px rgba(239,68,68,0.6)",
                 }}
                 animate={{ left: ["-33%", "100%"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 0.4, delay: 0.6 }}
@@ -258,7 +258,7 @@ export const DataFlowVisualization = () => {
               <motion.div
                 className="absolute top-0 h-full w-1/4 rounded-full"
                 style={{
-                  background: "linear-gradient(90deg, transparent, rgba(45,212,191,0.8), transparent)",
+                  background: "linear-gradient(90deg, transparent, rgba(239,68,68,0.8), transparent)",
                   filter: "blur(4px)",
                 }}
                 animate={{ left: ["-25%", "100%"] }}
@@ -305,8 +305,8 @@ export const DataFlowVisualization = () => {
 
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-pink-500 to-red-500 blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-red-500 to-orange-500 blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-rose-500 to-red-500 blur-3xl"></div>
       </div>
     </motion.div>
   );

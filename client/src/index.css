@@ -97,11 +97,11 @@
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
 }
 
 /* Responsive container improvements */
@@ -211,7 +211,7 @@
 
 .gradient-border {
   position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
   border-radius: 12px;
   padding: 2px;
 }
@@ -240,7 +240,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -355,16 +355,16 @@
 
 /* Enhanced button styles */
 .gradient-button {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #3b82f6 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #DC2626 100%);
   background-size: 200% 200%;
   animation: gradient-shift 3s ease-in-out infinite;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
   transition: all 0.3s ease;
 }
 
 .gradient-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
 }
 
 @keyframes gradient-shift {
@@ -409,7 +409,7 @@
 
 /* Enhanced text gradients */
 .text-gradient-rainbow {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+  background: linear-gradient(135deg, #991B1B 0%, #DC2626 25%, #EF4444 50%, #F87171 75%, #DC2626 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;

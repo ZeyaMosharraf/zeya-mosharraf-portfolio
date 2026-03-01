@@ -208,7 +208,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
       >
         <Button
           onClick={() => setIsOpen(true)}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
           size="lg"
         >
           <MessageCircle className="h-6 w-6 text-white" />
@@ -226,7 +226,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
             className="fixed bottom-24 right-6 z-50 w-80 h-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white">
+            <div className="bg-gradient-to-r from-red-600 to-red-500 p-4 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Bot className="h-5 w-5" />
@@ -258,7 +258,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
                   <div className={`flex items-start space-x-2 max-w-[80%] ${message.isBot ? '' : 'flex-row-reverse space-x-reverse'}`}>
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                       message.isBot 
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600' 
+                        ? 'bg-gradient-to-r from-red-600 to-red-500' 
                         : 'bg-gray-300 dark:bg-gray-600'
                     }`}>
                       {message.isBot ? (
@@ -271,7 +271,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
                       className={`rounded-lg p-3 text-sm ${
                         message.isBot
                           ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-                          : 'bg-blue-500 text-white'
+                          : 'bg-red-600 text-white'
                       }`}
                     >
                       {message.text}
@@ -287,7 +287,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
                   className="flex justify-start"
                 >
                   <div className="flex items-start space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-center">
                       <Bot className="h-3 w-3 text-white" />
                     </div>
                     <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
@@ -314,7 +314,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
                         setInputValue(question);
                         setTimeout(handleSendMessage, 100);
                       }}
-                      className="w-full text-left text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 p-2 rounded bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                      className="w-full text-left text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 p-2 rounded bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
                     >
                       {question}
                     </button>

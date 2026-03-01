@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, Activity, Database, Zap, Clock, Wifi } from "lucide-react";
 import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import { useLocation } from "wouter";
@@ -70,6 +70,82 @@ const FloatingKeywords = () => (
 /* ═══════════════════════════════════════════════════════
    Terminal Output Data
    ═══════════════════════════════════════════════════════ */
+
+/* ── Rotating Words Animation ── */
+const ROTATING_WORDS = ["Scalable", "Reliable", "Intelligent", "Production"];
+
+const RotatingWord = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex(prev => (prev + 1) % ROTATING_WORDS.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <span className="inline-block relative" style={{ minWidth: '280px' }}>
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={ROTATING_WORDS[index]}
+          className="inline-block bg-clip-text text-transparent"
+          style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
+          initial={{ opacity: 0, y: 30, filter: 'blur(8px)', rotateX: 90 }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)', rotateX: 0 }}
+          exit={{ opacity: 0, y: -30, filter: 'blur(8px)', rotateX: -90 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {ROTATING_WORDS[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+};
+
+/* ── Scan Line Effect ── */
+const ScanLine = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
+    <motion.div
+      className="absolute left-0 right-0 h-[1px]"
+      style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.08) 30%, rgba(239,68,68,0.15) 50%, rgba(239,68,68,0.08) 70%, transparent 100%)' }}
+      animate={{ top: ['0%', '100%'] }}
+      transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+    />
+  </div>
+);
+
+/* ── Animated Border for Terminal ── */
+const AnimatedBorder = ({ children }: { children: React.ReactNode }) => {
+  const angle = useMotionValue(0);
+  const smoothAngle = useSpring(angle, { damping: 20, stiffness: 80 });
+
+  useEffect(() => {
+    let id: number;
+    let a = 0;
+    const tick = () => {
+      a = (a + 0.5) % 360;
+      angle.set(a);
+      id = requestAnimationFrame(tick);
+    };
+    id = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(id);
+  }, [angle]);
+
+  const background = useTransform(
+    smoothAngle,
+    (a: number) =>
+      `conic-gradient(from ${a}deg at 50% 50%, rgba(220,38,38,0.5) 0deg, transparent 60deg, transparent 180deg, rgba(239,68,68,0.3) 240deg, transparent 360deg)`
+  );
+
+  return (
+    <motion.div className="relative p-[1px] rounded-xl" style={{ background }}>
+      <div className="rounded-xl overflow-hidden relative" style={{ background: '#0D0D0D' }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+};
 
 interface TermLine {
   text: string;
@@ -424,6 +500,9 @@ const Hero = () => {
       {/* Floating data keywords */}
       <FloatingKeywords />
 
+      {/* Scan line effect */}
+      <ScanLine />
+
       {/* One-sided accent gradient glow (bottom-right) */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -448,43 +527,47 @@ const Hero = () => {
               visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
             }}
           >
-            {/* Badge with live pulse */}
+            {/* Badge with live pulse + shimmer */}
             <motion.div
               variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.45, ease: "easeOut" }}
             >
               <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold relative overflow-hidden"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent-primary)', border: '1px solid rgba(255,255,255,0.06)' }}
               >
+                {/* Shimmer sweep */}
+                <motion.div
+                  className="absolute inset-0"
+                  style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)' }}
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: 'easeInOut' }}
+                />
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: 'var(--accent-primary)' }} />
                   <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--accent-primary)' }} />
                 </span>
-                Analytics Engineer
+                <span className="relative z-10">Analytics Engineer</span>
               </div>
             </motion.div>
 
-            {/* Headline with gradient keywords */}
+            {/* Headline with rotating gradient keywords */}
             <motion.h1
               className="text-4xl md:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] tracking-tight text-white max-w-xl"
               variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.45, ease: "easeOut" }}
             >
               Building{" "}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-              >
-                Scalable
-              </span>
+              <RotatingWord />
               <br />
-              <span
+              <motion.span
                 className="bg-clip-text text-transparent"
                 style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
+                animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
               >
                 Data Systems
-              </span>
+              </motion.span>
             </motion.h1>
 
             <motion.p
@@ -494,7 +577,9 @@ const Hero = () => {
             >
               Designing reliable data pipelines, transformations, and analytics
               infrastructure that power{" "}
-              <span className="text-gray-200 font-medium">data-driven decisions</span>.
+              <span className="text-gray-200 font-medium">
+                data-driven decisions
+              </span>.
             </motion.p>
 
             {/* Metrics strip */}
@@ -582,13 +667,7 @@ const Hero = () => {
                 style={{ background: 'radial-gradient(ellipse at 50% 50%, var(--accent-glow), transparent 70%)' }}
               />
 
-              <div
-                className="rounded-xl overflow-hidden w-full"
-                style={{
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  boxShadow: '0 24px 50px rgba(0,0,0,0.55), 0 40px 80px rgba(0,0,0,0.3)',
-                }}
-              >
+              <AnimatedBorder>
                 {/* Title bar */}
                 <div className="flex items-center justify-between px-4 py-2.5" style={{ background: '#1A1A1A' }}>
                   <div className="flex items-center gap-3">
@@ -748,7 +827,7 @@ const Hero = () => {
                   </div>
                   <span>zsh · node v20.11</span>
                 </div>
-              </div>
+              </AnimatedBorder>
             </div>
           </motion.div>
         </div>

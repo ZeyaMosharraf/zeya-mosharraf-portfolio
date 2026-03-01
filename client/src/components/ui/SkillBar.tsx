@@ -17,33 +17,30 @@ const SkillBar = ({ name, percentage, color, controls }: SkillBarProps) => {
 
   useEffect(() => {
     if (isInView) {
-      const controlsToUse = controls || localControls;
-      controlsToUse.start({
-        width: `${percentage}%`,
-        transition: { duration: 1, delay: 0.2 }
-      });
+      const c = controls || localControls;
+      c.start({ width: `${percentage}%`, transition: { duration: 1.2, delay: 0.15, ease: [0.22, 1, 0.36, 1] } });
     }
   }, [isInView, percentage, controls, localControls]);
 
   return (
     <div ref={barRef} className="group">
-      <div className="flex justify-between mb-3">
-        <span className="font-semibold text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">{name}</span>
-        <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300 font-medium">{percentage}%</span>
+      <div className="flex justify-between mb-2">
+        <span className="text-[13px] font-medium text-gray-300 group-hover:text-white transition-colors duration-200">{name}</span>
+        <span className="text-[12px] font-medium text-gray-600">{percentage}%</span>
       </div>
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 transition-colors duration-300 overflow-hidden shadow-inner">
+      <div className="w-full h-[6px] rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
         <motion.div
-          className={`h-3 rounded-full relative overflow-hidden ${
-            color === "primary" 
-              ? "bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600" 
-              : "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
-          }`}
+          className="h-full rounded-full relative overflow-hidden"
+          style={{
+            width: "0%",
+            background: color === "primary"
+              ? 'linear-gradient(90deg, #DC2626, #EF4444)'
+              : 'linear-gradient(90deg, #991B1B, #DC2626)',
+          }}
           initial={{ width: "0%" }}
           animate={controls || localControls}
-          style={{ width: "0%" }}
         >
-          {/* Animated shine effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -skew-x-12 animate-shimmer" />
         </motion.div>
       </div>
     </div>
