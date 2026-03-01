@@ -6,7 +6,7 @@ import {blogPosts} from "./client/src/data/blogdata";
 import {certificates} from "./client/src/data/Certificatedata";
 import {caseStudies} from "./client/src/data/CaseStudiesdata";
 
-const baseUrl = "https://zeyamosharraf.github.io";
+const baseUrl = "https://zeyamosharraf.vercel.app";
 
 const staticRoutes = ["/", "/about", "/contact"];
 
