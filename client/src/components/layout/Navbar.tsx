@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, ChevronDown, FileText, BookOpen, Home, FolderOpen, Users, Mail } from "lucide-react";
-import { ThemeToggle } from "../theme-toggle";
+import { Menu, X, ChevronDown, FileText, BookOpen, Home, FolderOpen, Users, Mail, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
@@ -127,199 +126,101 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const getNavIcon = (section: string) => {
-    const iconClassName = cn(
-      "h-4 w-4 transition-colors duration-300",
-      activeSection === section ? "text-white" : "text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
-    );
-    
-    switch (section) {
-      case "home":
-        return <Home className={iconClassName} />;
-
-      case "about":
-        return <Users className={iconClassName} />;
-      case "contact":
-        return <Mail className={iconClassName} />;
-      default:
-        return null;
-    }
-  };
-
   const NavItem = ({ section, label }: { section: string; label: string }) => (
-    <motion.button
+    <button
       onClick={() => handleSectionClick(section)}
       className={cn(
-        "relative nav-item px-4 py-2.5 flex items-center space-x-2 rounded-xl font-medium transition-all duration-300 group overflow-hidden",
-        activeSection === section 
-          ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/20" 
-          : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+        "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300",
+        activeSection === section
+          ? "text-gray-100"
+          : "text-gray-400/60 hover:text-gray-200"
       )}
-      whileHover={{ 
-        scale: 1.05, 
-        y: -2,
-        boxShadow: activeSection === section 
-          ? "0 6px 20px -3px rgb(59 130 246 / 0.3), 0 2px 6px -2px rgb(59 130 246 / 0.1)"
-          : "0 4px 15px -3px rgb(0 0 0 / 0.1), 0 2px 6px -2px rgb(0 0 0 / 0.05)"
-      }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
-      <motion.div
-        animate={{ 
-          rotate: activeSection === section ? [0, 10, -10, 0] : 0,
-          scale: activeSection === section ? 1.1 : 1
-        }}
-        transition={{ duration: 0.3 }}
-        className={cn(
-          "transition-colors duration-300",
-          activeSection === section ? "text-white" : ""
-        )}
-      >
-        {getNavIcon(section)}
-      </motion.div>
-      <span className="relative z-10">{label}</span>
-      
-      {/* Animated background */}
-      {activeSection !== section && (
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-          initial={{ scale: 0, opacity: 0 }}
-          whileHover={{ scale: 1, opacity: 0.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 20 }}
-        />
+      {label}
+      {activeSection === section && (
+        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
       )}
-    </motion.button>
+    </button>
   );
 
   const categories = ["SQL", "Python", "Machine Learning", "Power BI", "Excel", "Tableau", "Looker Studio"];
 
   return (
     <motion.header 
-      className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/20 dark:border-gray-700/30 fixed w-full top-0 z-50 transition-all duration-300"
+      className="fixed w-full top-0 z-50 transition-all duration-300"
+      style={{ background: 'rgba(11,15,20,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 15 }}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-        <motion.button
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center">
+        <button
           onClick={goToHomePage}
-          className="flex items-center group"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          className="flex items-center gap-2.5 mr-8 shrink-0"
         >
-          <motion.div 
-            className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center text-lg font-bold mr-3 shadow-lg"
-            whileHover={{ 
-              scale: 1.1, 
-              rotate: [0, -5, 5, 0],
-              boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04)"
-            }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          <span 
+            className="w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-bold tracking-tight"
+            style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--accent-primary)', border: '1px solid rgba(239,68,68,0.25)' }}
           >
             ZM
-          </motion.div>
-          <div className="flex flex-col">
-            <span className="text-xl font-bold leading-tight">
-              <span className="text-blue-600 dark:text-blue-400">Zeya</span>
-              <span className="text-gray-800 dark:text-gray-200">Mosharraf</span>
-            </span>
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Data Analyst</span>
-          </div>
-        </motion.button>
+          </span>
+          <span className="flex items-center gap-0 text-[13px] leading-none">
+            <span className="font-semibold text-gray-100">Zeya Mosharraf</span>
+            <span className="text-gray-600 mx-1.5">·</span>
+            <span className="text-[11px] text-gray-500 font-normal">Analytics Engineer</span>
+          </span>
+        </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-1">
+        <div className="hidden md:flex items-center gap-0.5 ml-auto">
           <NavItem section="home" label="Home" />
           
           {/* Projects dropdown */}
           <div className="relative" ref={projectsDropdownRef}>
-            <motion.button
+            <button
               onClick={() => setIsProjectsDropdownOpen(!isProjectsDropdownOpen)}
               className={cn(
-                "relative nav-item px-4 py-2.5 flex items-center space-x-2 rounded-xl font-medium transition-all duration-300 group overflow-hidden shadow-none",
-                activeSection === "projects" 
-                  ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300 flex items-center gap-1",
+                activeSection === "projects"
+                  ? "text-gray-100"
+                  : "text-gray-400/60 hover:text-gray-200"
               )}
-              whileHover={{ 
-                scale: 1.05, 
-                y: -2
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <motion.div
-                animate={{ 
-                  rotate: activeSection === "projects" ? [0, 10, -10, 0] : 0,
-                  scale: activeSection === "projects" ? 1.1 : 1
-                }}
-                transition={{ duration: 0.3 }}
-                className={cn(
-                  "transition-colors duration-300",
-                  activeSection === "projects" ? "text-white" : ""
-                )}
-              >
-                <FolderOpen className="h-4 w-4" />
-              </motion.div>
-              <span className="relative z-10">Projects</span>
-              <motion.div
-                animate={{ rotate: isProjectsDropdownOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className={cn(
-                  "transition-colors duration-300",
-                  activeSection === "projects" ? "text-white" : ""
-                )}
-              >
-                <ChevronDown className="h-4 w-4" />
-              </motion.div>
-              
-              {/* Animated background */}
-              {activeSection !== "projects" && (
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileHover={{ scale: 1, opacity: 0.1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                />
+              Projects
+              <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", isProjectsDropdownOpen && "rotate-180")} />
+              {activeSection === "projects" && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
               )}
-            </motion.button>
+            </button>
             
-            {/* Enhanced Dropdown menu */}
+            {/* Dropdown menu */}
             <AnimatePresence>
               {isProjectsDropdownOpen && (
                 <motion.div 
-                  className="absolute left-0 mt-3 w-56 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl border border-gray-200/20 dark:border-gray-700/30 py-2 z-50"
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  className="absolute left-0 mt-2 w-48 rounded-lg py-1.5 z-50"
+                  style={{ background: 'rgba(20,20,20,0.95)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)' }}
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
                 >
-                  <motion.button
+                  <button
                     onClick={() => navigateToPage("/projects")}
-                    className="block w-full text-left px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium flex items-center"
-                    whileHover={{ x: 4 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className="w-full text-left px-3.5 py-2 text-[12px] text-gray-300 hover:text-[var(--accent-primary)] hover:bg-white/[0.03] transition-colors duration-150 font-medium"
                   >
-                    <FolderOpen className="h-4 w-4 mr-2" />
                     All Projects
-                  </motion.button>
+                  </button>
                   
-                  <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent my-2 mx-2"></div>
+                  <div className="h-px mx-2.5 my-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
                   
-                  {categories.map((category, index) => (
-                    <motion.button
+                  {categories.map((category) => (
+                    <button
                       key={category}
                       onClick={() => handleProjectCategoryClick(category)}
-                      className="block w-full text-left px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 flex items-center"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{ x: 4 }}
+                      className="w-full text-left px-3.5 py-1.5 text-[12px] text-gray-500 hover:text-gray-200 hover:bg-white/[0.03] transition-colors duration-150"
                     >
-                      <span className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 mr-3"></span>
                       {category}
-                    </motion.button>
+                    </button>
                   ))}
                 </motion.div>
               )}
@@ -327,152 +228,68 @@ const Navbar = () => {
           </div>
 
           {/* Case Studies */}
-          <motion.button
+          <button
             onClick={() => navigateToPage("/case-studies")}
             className={cn(
-              "relative nav-item px-4 py-2.5 flex items-center space-x-2 rounded-xl font-medium transition-all duration-300 group overflow-hidden",
-              activeSection === "case-studies" 
-                ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/20" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300",
+              activeSection === "case-studies"
+                ? "text-gray-100"
+                : "text-gray-400/60 hover:text-gray-200"
             )}
-            whileHover={{ 
-              scale: 1.05, 
-              y: -2,
-              boxShadow: activeSection === "case-studies" 
-                ? "0 6px 20px -3px rgb(59 130 246 / 0.3), 0 2px 6px -2px rgb(59 130 246 / 0.1)"
-                : "0 4px 15px -3px rgb(0 0 0 / 0.1), 0 2px 6px -2px rgb(0 0 0 / 0.05)"
-            }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            <motion.div
-              animate={{ 
-                rotate: activeSection === "case-studies" ? [0, 10, -10, 0] : 0,
-                scale: activeSection === "case-studies" ? 1.1 : 1
-              }}
-              transition={{ duration: 0.3 }}
-              className={cn(
-                "transition-colors duration-300",
-                activeSection === "case-studies" ? "text-white" : ""
-              )}
-            >
-              <FileText className="h-4 w-4" />
-            </motion.div>
-            <span className="relative z-10">Case Studies</span>
-            
-            {/* Animated background */}
-            {activeSection !== "case-studies" && (
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 0.1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              />
+            Case Studies
+            {activeSection === "case-studies" && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
             )}
-          </motion.button>
+          </button>
           
           {/* Blog */}
-          <motion.button
+          <button
             onClick={() => navigateToPage("/blog")}
             className={cn(
-              "relative nav-item px-4 py-2.5 flex items-center space-x-2 rounded-xl font-medium transition-all duration-300 group overflow-hidden",
-              activeSection === "blog" 
-                ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/20" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300",
+              activeSection === "blog"
+                ? "text-gray-100"
+                : "text-gray-400/60 hover:text-gray-200"
             )}
-            whileHover={{ 
-              scale: 1.05, 
-              y: -2,
-              boxShadow: activeSection === "blog" 
-                ? "0 6px 20px -3px rgb(59 130 246 / 0.3), 0 2px 6px -2px rgb(59 130 246 / 0.1)"
-                : "0 4px 15px -3px rgb(0 0 0 / 0.1), 0 2px 6px -2px rgb(0 0 0 / 0.05)"
-            }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            <motion.div
-              animate={{ 
-                rotate: activeSection === "blog" ? [0, 10, -10, 0] : 0,
-                scale: activeSection === "blog" ? 1.1 : 1
-              }}
-              transition={{ duration: 0.3 }}
-              className={cn(
-                "transition-colors duration-300",
-                activeSection === "blog" ? "text-white" : ""
-              )}
-            >
-              <BookOpen className="h-4 w-4" />
-            </motion.div>
-            <span className="relative z-10">Blog</span>
-            
-            {/* Animated background */}
-            {activeSection !== "blog" && (
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
-                initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 0.1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              />
+            Blog
+            {activeSection === "blog" && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
             )}
-          </motion.button>
+          </button>
           
           <NavItem section="about" label="About" />
           
           <NavItem section="contact" label="Contact" />
           
           {/* Separator */}
-          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2"></div>
+          <div className="w-px h-3.5 mx-2" style={{ background: 'rgba(255,255,255,0.06)' }} />
           
-          {/* Theme Toggle */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          {/* Resume button */}
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded transition-all duration-300 text-gray-400/60 hover:text-[var(--accent-primary)] hover:shadow-[0_0_8px_rgba(239,68,68,0.15)]"
+            style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
           >
-            <ThemeToggle />
-          </motion.div>
+            <Download className="h-2.5 w-2.5" />
+            Resume
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center space-x-2">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <ThemeToggle />
-          </motion.div>
-          
-          {/* Mobile Menu Button */}
-          <motion.button
-            className="md:hidden p-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition-colors duration-200"
+        <div className="md:hidden flex items-center">
+          <button
+            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-200 transition-colors duration-200"
             onClick={toggleMenu}
             aria-label={isOpen ? "Close menu" : "Open menu"}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
           >
-            <AnimatePresence mode="wait">
-              {isOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: 0 }}
-                  animate={{ rotate: 180 }}
-                  exit={{ rotate: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X className="h-6 w-6" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ rotate: 180 }}
-                  animate={{ rotate: 0 }}
-                  exit={{ rotate: 180 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Menu className="h-6 w-6" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
 
@@ -480,99 +297,95 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+            className="md:hidden"
+            style={{ background: 'rgba(11,15,20,0.95)', borderTop: '1px solid rgba(255,255,255,0.05)' }}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
           >
-            <div className="px-4 py-3 space-y-2">
-        <button
-          onClick={goToHomePage}
-          className={`flex items-center w-full text-left py-2 ${
-            activeSection === "home" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-          } hover:text-primary dark:hover:text-primary transition-colors`}
-        >
-          <Home className="h-4 w-4 mr-2" />
-          Home
-        </button>
-        
-        {/* Mobile Projects Dropdown */}
-        <div className="py-2">
-          <button
-            onClick={() => setIsMobileProjectsOpen(!isMobileProjectsOpen)}
-            className={`flex items-center justify-between w-full text-left py-2 ${
-              activeSection === "projects" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-            } hover:text-primary dark:hover:text-primary transition-colors font-medium`}
-          >
-            <span className="flex items-center">
-              Projects
-            </span>
-            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMobileProjectsOpen ? 'rotate-180' : ''}`} />
-          </button>
-          
-          <div className={`overflow-hidden transition-all duration-300 ${isMobileProjectsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pl-4 py-1">
-              <button
-                onClick={() => navigateToPage("/projects")}
-                className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
-              >
-                All Projects
-              </button>
-              
-              <div className="h-px bg-gray-200 dark:bg-gray-600 my-1"></div>
-              
-              {categories.map((category) => (
+            <div className="px-4 py-3 space-y-1">
+              {[
+                { label: "Home", action: () => { goToHomePage(); }, section: "home" },
+              ].map(item => (
                 <button
-                  key={category}
-                  onClick={() => handleProjectCategoryClick(category)}
-                  className="block w-full text-left py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                  key={item.section}
+                  onClick={item.action}
+                  className={cn(
+                    "block w-full text-left py-2 text-[13px] font-medium transition-colors duration-150",
+                    activeSection === item.section ? "text-[var(--accent-primary)]" : "text-gray-500 hover:text-gray-200"
+                  )}
                 >
-                  {category}
+                  {item.label}
                 </button>
               ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Case Studies */}
-        <button
-          onClick={() => navigateToPage("/case-studies")}
-          className={`flex items-center w-full text-left py-2 ${
-            activeSection === "case-studies" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-          } hover:text-primary dark:hover:text-primary transition-colors`}
-        >
-          <FileText className={`h-4 w-4 mr-2 ${activeSection === "case-studies" ? "text-primary dark:text-primary" : ""}`} />
-          Case Studies
-        </button>
-        
-        {/* Blog */}
-        <button
-          onClick={() => navigateToPage("/blog")}
-          className={`flex items-center w-full text-left py-2 ${
-            activeSection === "blog" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-          } hover:text-primary dark:hover:text-primary transition-colors`}
-        >
-          <BookOpen className={`h-4 w-4 mr-2 ${activeSection === "blog" ? "text-primary dark:text-primary" : ""}`} />
-          Blog
-        </button>
-        
-        <button
-          onClick={() => handleSectionClick("about")}
-          className={`block w-full text-left py-2 ${
-            activeSection === "about" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-          } hover:text-primary dark:hover:text-primary transition-colors`}
-        >
-          About
-        </button>
-        <button
-          onClick={() => handleSectionClick("contact")}
-          className={`block w-full text-left py-2 ${
-            activeSection === "contact" ? "text-primary dark:text-primary" : "text-gray-800 dark:text-gray-200"
-          } hover:text-primary dark:hover:text-primary transition-colors`}
-        >
-          Contact
-        </button>
+              {/* Mobile Projects Dropdown */}
+              <div>
+                <button
+                  onClick={() => setIsMobileProjectsOpen(!isMobileProjectsOpen)}
+                  className={cn(
+                    "flex items-center justify-between w-full text-left py-2 text-[13px] font-medium transition-colors duration-150",
+                    activeSection === "projects" ? "text-[var(--accent-primary)]" : "text-gray-500 hover:text-gray-200"
+                  )}
+                >
+                  Projects
+                  <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", isMobileProjectsOpen && "rotate-180")} />
+                </button>
+                
+                <div className={`overflow-hidden transition-all duration-200 ${isMobileProjectsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="pl-3 py-1">
+                    <button
+                      onClick={() => navigateToPage("/projects")}
+                      className="block w-full text-left py-1.5 text-[12px] text-gray-400 hover:text-[var(--accent-primary)] transition-colors"
+                    >
+                      All Projects
+                    </button>
+                    <div className="h-px my-1" style={{ background: 'rgba(255,255,255,0.05)' }} />
+                    {categories.map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => handleProjectCategoryClick(category)}
+                        className="block w-full text-left py-1.5 text-[12px] text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {[
+                { label: "Case Studies", action: () => navigateToPage("/case-studies"), section: "case-studies" },
+                { label: "Blog", action: () => navigateToPage("/blog"), section: "blog" },
+                { label: "About", action: () => handleSectionClick("about"), section: "about" },
+                { label: "Contact", action: () => handleSectionClick("contact"), section: "contact" },
+              ].map(item => (
+                <button
+                  key={item.section}
+                  onClick={item.action}
+                  className={cn(
+                    "block w-full text-left py-2 text-[13px] font-medium transition-colors duration-150",
+                    activeSection === item.section ? "text-[var(--accent-primary)]" : "text-gray-500 hover:text-gray-200"
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+
+              {/* Mobile Resume */}
+              <div className="pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded text-gray-400/60 transition-all duration-300"
+                  style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <Download className="h-2.5 w-2.5" />
+                  Resume
+                </a>
+              </div>
             </div>
           </motion.div>
         )}

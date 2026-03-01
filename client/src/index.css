@@ -5,6 +5,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Accent (locked: red) ── */
+:root {
+  --accent-primary: #EF4444;
+  --accent-glow: rgba(239, 68, 68, 0.35);
+  --accent-soft: rgba(239, 68, 68, 0.15);
+}
+
+/* Hero grid overlay */
+.hero-grid-overlay {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Editor tab active underline */
+.editor-tab-active {
+  position: relative;
+}
+.editor-tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  transition: background 300ms ease;
+}
+
 @layer base {
   :root {
     /* Brand Colors */
@@ -38,7 +68,8 @@
   }
 
   .dark {
-    /* Keep same variables for dark mode first approach */
+    /* Dark-first approach — inherits root vars */
+    color-scheme: dark;
   }
 
   body {
@@ -619,7 +650,7 @@
   }
 
   .backface-hidden {
-    backfaceVisibility: hidden;
+    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
 }
