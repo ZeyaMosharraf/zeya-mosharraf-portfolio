@@ -46,7 +46,7 @@ function App() {
           <Route path="/" component={Home} />
           <Route path="/projects" component={AllProjects} />
           <Route path="/project/:slug" component={ProjectDetails} />
-          <Route path="/category/:category" component={ProjectCategory} />
+          <Route path="/projects/:category" component={ProjectCategory} />
           <Route path="/case-studies">
             {() => <CaseStudies />}
           </Route>

@@ -3,24 +3,22 @@ import path from "path";
 
 import {projects} from "./client/src/data/projectsData";
 import {blogPosts} from "./client/src/data/blogdata";
-import {certificates} from "./client/src/data/Certificatedata";
 import {caseStudies} from "./client/src/data/CaseStudiesdata";
 
 const baseUrl = "https://zeyamosharraf.vercel.app";
 
-const staticRoutes = ["/", "/about", "/contact"];
+// Static pages (About & Contact are sections on Home, not separate routes)
+const staticRoutes = ["/", "/projects", "/case-studies", "/blog"];
 
 // Dynamic routes
 const projectRoutes = projects.map((p) => `/project/${p.slug}`);
 const blogRoutes = blogPosts.map((b) => `/blog/${b.slug}`);
-const certificateRoutes = certificates.map((c) => `/certificate/${c.slug}`);
 const caseStudyRoutes = caseStudies.map((cs) => `/case-study/${cs.slug}`);
 
 const allRoutes = [
   ...staticRoutes,
   ...projectRoutes,
   ...blogRoutes,
-  ...certificateRoutes,
   ...caseStudyRoutes,
 ];
 

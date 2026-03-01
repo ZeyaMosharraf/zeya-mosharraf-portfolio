@@ -54,7 +54,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
     ? projectsData
     : projectsData.filter(project => project.category.toLowerCase().replace(/\s+/g, "-") === activeCategory);
 
-  const navigateToCategory = (categoryId: string) => { if (categoryId !== "all") setLocation(`/category/${categoryId}`); };
+  const navigateToCategory = (categoryId: string) => { if (categoryId !== "all") setLocation(`/projects/${categoryId}`); };
 
   return (
     <section id="projects" className="relative py-24 lg:py-32 overflow-hidden" style={{ background: '#0B0F14' }}>

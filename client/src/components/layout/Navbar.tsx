@@ -72,7 +72,7 @@ const Navbar = () => {
   const handleProjectCategoryClick = (category: string) => {
     setIsProjectsDropdownOpen(false);
     closeMenu();
-    setLocation(`/category/${category.toLowerCase().replace(' ', '-')}`);
+    setLocation(`/projects/${category.toLowerCase().replace(' ', '-')}`);
   };
   
   const navigateToPage = (path: string) => {
@@ -98,7 +98,7 @@ const Navbar = () => {
       setActiveSection("case-studies");
     } else if (location.startsWith("/blog")) {
       setActiveSection("blog");
-    } else if (location.startsWith("/project") || location.startsWith("/category")) {
+    } else if (location.startsWith("/project")) {
       setActiveSection("projects");
     } else if (location === "/") {
       // On home page, default to "home" — only change on explicit click
@@ -107,8 +107,12 @@ const Navbar = () => {
   }, [location]);
 
   const NavItem = ({ section, label }: { section: string; label: string }) => (
-    <button
-      onClick={() => handleSectionClick(section)}
+    <a
+      href={`/#${section}`}
+      onClick={(e) => {
+        e.preventDefault();
+        handleSectionClick(section);
+      }}
       className={cn(
         "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300",
         activeSection === section
@@ -120,7 +124,7 @@ const Navbar = () => {
       {activeSection === section && (
         <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
       )}
-    </button>
+    </a>
   );
 
   const categories = ["SQL", "Python", "Machine Learning", "Power BI", "Excel", "Tableau", "Looker Studio"];
@@ -208,8 +212,9 @@ const Navbar = () => {
           </div>
 
           {/* Case Studies */}
-          <button
-            onClick={() => navigateToPage("/case-studies")}
+          <Link
+            href="/case-studies"
+            onClick={() => { closeMenu(); setActiveSection("case-studies"); }}
             className={cn(
               "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300",
               activeSection === "case-studies"
@@ -221,11 +226,12 @@ const Navbar = () => {
             {activeSection === "case-studies" && (
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
             )}
-          </button>
+          </Link>
           
           {/* Blog */}
-          <button
-            onClick={() => navigateToPage("/blog")}
+          <Link
+            href="/blog"
+            onClick={() => { closeMenu(); setActiveSection("blog"); }}
             className={cn(
               "relative px-2.5 py-1 text-[13px] font-medium transition-colors duration-300",
               activeSection === "blog"
@@ -237,7 +243,7 @@ const Navbar = () => {
             {activeSection === "blog" && (
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
             )}
-          </button>
+          </Link>
           
           <NavItem section="about" label="About" />
           
@@ -336,21 +342,22 @@ const Navbar = () => {
               </div>
 
               {[
-                { label: "Case Studies", action: () => navigateToPage("/case-studies"), section: "case-studies" },
-                { label: "Blog", action: () => navigateToPage("/blog"), section: "blog" },
-                { label: "About", action: () => handleSectionClick("about"), section: "about" },
-                { label: "Contact", action: () => handleSectionClick("contact"), section: "contact" },
+                { label: "Case Studies", action: () => navigateToPage("/case-studies"), section: "case-studies", href: "/case-studies" },
+                { label: "Blog", action: () => navigateToPage("/blog"), section: "blog", href: "/blog" },
+                { label: "About", action: () => handleSectionClick("about"), section: "about", href: "/#about" },
+                { label: "Contact", action: () => handleSectionClick("contact"), section: "contact", href: "/#contact" },
               ].map(item => (
-                <button
+                <a
                   key={item.section}
-                  onClick={item.action}
+                  href={item.href}
+                  onClick={(e) => { e.preventDefault(); item.action(); }}
                   className={cn(
                     "block w-full text-left py-2 text-[13px] font-medium transition-colors duration-150",
                     activeSection === item.section ? "text-[var(--accent-primary)]" : "text-gray-500 hover:text-gray-200"
                   )}
                 >
                   {item.label}
-                </button>
+                </a>
               ))}
 
               {/* Mobile Resume */}
