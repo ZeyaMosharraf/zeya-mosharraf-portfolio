@@ -89,12 +89,12 @@ const RotatingWord = () => {
       <AnimatePresence mode="wait">
         <motion.span
           key={ROTATING_WORDS[index]}
-          className="inline-block bg-clip-text text-transparent"
+          className="inline-block bg-clip-text text-transparent leading-relaxed"
           style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-          initial={{ opacity: 0, y: 30, filter: 'blur(8px)', rotateX: 90 }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)', rotateX: 0 }}
-          exit={{ opacity: 0, y: -30, filter: 'blur(8px)', rotateX: -90 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, filter: 'blur(10px)' }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
         >
           {ROTATING_WORDS[index]}
         </motion.span>

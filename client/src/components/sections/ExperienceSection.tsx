@@ -94,7 +94,7 @@ const ExperienceSection = () => {
         {/* Carousel */}
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-6">
+            <div className="flex gap-6 pt-5">
               {sortedExperiences.map((experience, index) => (
                 <div key={experience.id} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_100%] md:flex-[0_0_calc(50%_-_12px)] lg:flex-[0_0_calc(33.333%_-_16px)]">
                   <ExperienceCard experience={experience} index={index} />
