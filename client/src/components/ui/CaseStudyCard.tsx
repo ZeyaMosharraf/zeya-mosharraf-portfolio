@@ -33,7 +33,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
 
   return (
     <motion.div
-      className="group relative rounded-xl p-6 h-full flex flex-col cursor-pointer transition-all duration-[250ms] ease-out hover:-translate-y-1.5 overflow-hidden"
+      className="group relative rounded-xl p-6 h-full flex flex-col cursor-pointer transition-all duration-250 ease-out hover:-translate-y-1.5 overflow-hidden"
       style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
       onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
       onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.boxShadow = '0 12px 32px -8px rgba(0,0,0,0.3)'; }}
