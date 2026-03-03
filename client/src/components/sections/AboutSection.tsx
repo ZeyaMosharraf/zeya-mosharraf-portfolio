@@ -10,7 +10,7 @@ const AboutSection = () => {
   const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
 
   return (
-    <section id="about" className="relative py-24 lg:py-32 overflow-hidden" style={{ background: '#0d0d0d' }}>
+    <section id="about" className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0d0d0d' }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 50% at 25% 50%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

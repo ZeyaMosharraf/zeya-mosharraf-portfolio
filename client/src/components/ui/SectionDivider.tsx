@@ -32,7 +32,7 @@ const SectionDivider = ({ variant = 'wave', className = '', flip = false }: Sect
   );
 
   const GradientDivider = () => (
-    <div className={`w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 ${className}`} />
+    <div className={`w-full h-1 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 ${className}`} />
   );
 
   const renderPattern = () => {

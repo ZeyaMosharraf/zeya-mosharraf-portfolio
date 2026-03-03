@@ -134,9 +134,9 @@ const HeroDataVisualization = () => {
         />
         <defs>
           <linearGradient id="heroConnectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#EC4899" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#DC2626" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#EF4444" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#F97316" stopOpacity="0.4" />
           </linearGradient>
         </defs>
       </svg>

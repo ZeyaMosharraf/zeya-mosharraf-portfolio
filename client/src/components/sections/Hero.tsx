@@ -28,44 +28,7 @@ function useCountUp(target: number, duration = 2000, delay = 0) {
   return value;
 }
 
-/* ═══════════════════════════════════════════════════════
-   Floating Data Keywords (background ambiance)
-   ═══════════════════════════════════════════════════════ */
 
-const FLOAT_WORDS = [
-  "ETL", "Kafka", "dbt", "Airflow", "Spark", "SQL",
-  "BigQuery", "Snowflake", "Pipeline", "Schema",
-  "Transform", "Ingest", "Stream", "Warehouse",
-];
-
-const FloatingKeywords = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
-    {FLOAT_WORDS.map((word, i) => (
-      <motion.span
-        key={word}
-        className="absolute text-xs font-mono select-none"
-        style={{
-          color: 'var(--accent-primary)',
-          opacity: 0,
-          left: `${8 + (i * 6.5) % 85}%`,
-          top: `${12 + (i * 7.3) % 75}%`,
-        }}
-        animate={{
-          opacity: [0, 0.06, 0.06, 0],
-          y: [0, -20],
-        }}
-        transition={{
-          duration: 8,
-          delay: i * 1.2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        {word}
-      </motion.span>
-    ))}
-  </div>
-);
 
 /* ═══════════════════════════════════════════════════════
    Terminal Output Data
@@ -103,17 +66,7 @@ const RotatingWord = () => {
   );
 };
 
-/* ── Scan Line Effect ── */
-const ScanLine = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 3 }}>
-    <motion.div
-      className="absolute left-0 right-0 h-[1px]"
-      style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.08) 30%, rgba(239,68,68,0.15) 50%, rgba(239,68,68,0.08) 70%, transparent 100%)' }}
-      animate={{ top: ['0%', '100%'] }}
-      transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-    />
-  </div>
-);
+
 
 /* ── Animated Border for Terminal ── */
 const AnimatedBorder = ({ children }: { children: React.ReactNode }) => {
@@ -487,7 +440,7 @@ const Hero = () => {
     <section
       ref={sectionRef}
       id="home"
-      className="relative pt-24 md:pt-28 pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative pt-24 md:pt-28 pb-10 md:pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0B0F14 0%, #0B0F14 55%, #1a0a0a 100%)' }}
     >
       {/* Interactive canvas (full hero background) */}
@@ -497,11 +450,7 @@ const Hero = () => {
         style={{ zIndex: 1 }}
       />
 
-      {/* Floating data keywords */}
-      <FloatingKeywords />
 
-      {/* Scan line effect */}
-      <ScanLine />
 
       {/* One-sided accent gradient glow (bottom-right) */}
       <div

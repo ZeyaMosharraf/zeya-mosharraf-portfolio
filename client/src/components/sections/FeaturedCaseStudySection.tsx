@@ -81,11 +81,11 @@ const FeaturedCaseStudySection = () => {
 
       <div
         ref={sectionRef}
-        className="container mx-auto max-w-7xl relative z-10 px-4 sm:px-6 lg:px-8 py-24 lg:py-28"
+        className="container mx-auto max-w-7xl relative z-10 px-4 sm:px-6 lg:px-8 py-12 lg:py-16"
       >
         {/* ═══ TOP: Section Headline ═══ */}
         <motion.div
-          className="text-center mb-14"
+          className="text-center mb-10"
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease }}

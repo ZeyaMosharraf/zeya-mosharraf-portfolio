@@ -80,7 +80,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
@@ -173,16 +173,16 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   const renderListView = () => {
     // Define a mapping of categories to gradients
     const categoryGradients: Record<string, string> = {
-      "DATA SCIENCE": "from-red-600 to-red-700",
-      "VISUALIZATION": "from-orange-500 to-orange-600",
-      "SQL": "from-red-700 to-red-800",
-      "PYTHON": "from-orange-600 to-red-600"
+      "DATA SCIENCE": "from-red-600 to-orange-500",
+      "VISUALIZATION": "from-orange-500 to-red-600",
+      "SQL": "from-red-600 to-orange-500",
+      "PYTHON": "from-orange-500 to-red-600"
     };
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>

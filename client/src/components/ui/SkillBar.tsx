@@ -34,8 +34,8 @@ const SkillBar = ({ name, percentage, color, controls }: SkillBarProps) => {
           style={{
             width: "0%",
             background: color === "primary"
-              ? 'linear-gradient(90deg, #DC2626, #EF4444)'
-              : 'linear-gradient(90deg, #991B1B, #DC2626)',
+              ? 'linear-gradient(90deg, #DC2626, #F97316)'
+              : 'linear-gradient(90deg, #DC2626, #F97316)',
           }}
           initial={{ width: "0%" }}
           animate={controls || localControls}

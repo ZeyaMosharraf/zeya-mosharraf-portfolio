@@ -338,13 +338,13 @@ const CertificatesScrolling = ({
   };
 
   return (
-    <section className={`relative py-24 lg:py-32 overflow-hidden ${className}`} style={{ background: '#0d0d0d' }}>
+    <section className={`relative py-12 lg:py-16 overflow-hidden ${className}`} style={{ background: '#0d0d0d' }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 40% 50%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {title && (
           <motion.div 
-            className="text-center mb-14"
+            className="text-center mb-10"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

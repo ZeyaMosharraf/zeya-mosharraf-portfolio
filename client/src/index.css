@@ -38,9 +38,9 @@
 @layer base {
   :root {
     /* Brand Colors */
-    --color-brand: #2563EB; /* blue-600 */
+    --color-brand: #DC2626; /* red-600 */
     --color-brand-contrast: #0B1B33; /* deep navy for dark text on brand tints */
-    --color-brand-hover: #1D4ED8; /* blue-700 */
+    --color-brand-hover: #B91C1C; /* red-700 */
     --color-brand-fg: #FFFFFF; /* text on brand surfaces */
 
     /* Neutrals */
@@ -57,7 +57,7 @@
     --color-danger: #EF4444; /* red-500 */
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%); /* blue-600 → indigo-600 */
+    --gradient-primary: linear-gradient(135deg, #DC2626 0%, #F97316 100%); /* red-600 → orange-500 */
     --gradient-neutral: linear-gradient(135deg, #475569 0%, #374151 100%); /* slate-600 → gray-700 */
     --gradient-success: linear-gradient(135deg, #10B981 0%, #0F766E 100%); /* emerald-500 → teal-600 */
 
@@ -97,11 +97,11 @@
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #F97316 100%);
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  background: linear-gradient(135deg, #EF4444 0%, #FB923C 100%);
 }
 
 /* Responsive container improvements */
@@ -211,7 +211,7 @@
 
 .gradient-border {
   position: relative;
-  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #F97316 100%);
   border-radius: 12px;
   padding: 2px;
 }
@@ -240,7 +240,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #F97316 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -355,7 +355,7 @@
 
 /* Enhanced button styles */
 .gradient-button {
-  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #DC2626 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #F97316 50%, #DC2626 100%);
   background-size: 200% 200%;
   animation: gradient-shift 3s ease-in-out infinite;
   box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
@@ -364,7 +364,7 @@
 
 .gradient-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
 }
 
 @keyframes gradient-shift {
@@ -409,7 +409,7 @@
 
 /* Enhanced text gradients */
 .text-gradient-rainbow {
-  background: linear-gradient(135deg, #991B1B 0%, #DC2626 25%, #EF4444 50%, #F87171 75%, #DC2626 100%);
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 25%, #F97316 50%, #FB923C 75%, #DC2626 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;

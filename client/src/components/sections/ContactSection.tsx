@@ -11,12 +11,12 @@ const ContactSection = () => {
   const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
 
   return (
-    <section id="contact" className="relative py-24 lg:py-32 overflow-hidden" style={{ background: '#0B0F14' }}>
+    <section id="contact" className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0B0F14' }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 50% at 50% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div ref={headerRef} className="text-center mb-14">
+        <div ref={headerRef} className="text-center mb-10">
           <motion.div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
             style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}

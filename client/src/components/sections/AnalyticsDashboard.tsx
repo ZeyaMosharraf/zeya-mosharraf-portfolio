@@ -34,13 +34,13 @@ const AnalyticsDashboard = () => {
   ];
 
   return (
-    <section ref={ref} className="relative py-24 lg:py-32 overflow-hidden" style={{ background: '#0B0F14' }}>
+    <section ref={ref} className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0B0F14' }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          className="text-center mb-14"
+          className="text-center mb-10"
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease }}
@@ -68,7 +68,7 @@ const AnalyticsDashboard = () => {
         </motion.div>
 
         {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
           {metrics.map((metric, index) => {
             const Icon = metric.icon;
             return (
@@ -96,7 +96,7 @@ const AnalyticsDashboard = () => {
 
         {/* Technology Cards */}
         <motion.div
-          className="mb-20"
+          className="mb-12"
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.8, duration: 0.8, ease }}
