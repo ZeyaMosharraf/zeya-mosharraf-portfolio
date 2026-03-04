@@ -1,59 +1,24 @@
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import SkillBar from "@/components/ui/SkillBar";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { programmingSkills, visualizationSkills, additionalSkills } from "@/data/skillsData";
 import { Code2 } from "lucide-react";
-import { useRef } from "react";
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { ease } from "@/lib/animations";
 
 const SkillsSection = () => {
-  const headerRef = useRef(null);
-  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
-
   return (
     <section id="skills" className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0d0d0d' }}>
       {/* Background accent */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 30% 60%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div ref={headerRef} className="text-center mb-10">
-          <motion.div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
-            style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
-              animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
-            />
-            <Code2 className="w-3 h-3 relative z-10" />
-            <span className="relative z-10">Skills</span>
-          </motion.div>
-
-          <motion.h2
-            className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.06 }}
-          >
-            Technical{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Skills</span>
-          </motion.h2>
-
-          <motion.p
-            className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.12 }}
-          >
-            My professional toolkit includes programming languages, data analysis tools, and visualization platforms.
-          </motion.p>
-        </div>
+        <SectionHeader
+          icon={Code2}
+          badge="Skills"
+          title="Technical"
+          highlight="Skills"
+          subtitle="My professional toolkit includes programming languages, data analysis tools, and visualization platforms."
+        />
 
         {/* Skill bars grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">

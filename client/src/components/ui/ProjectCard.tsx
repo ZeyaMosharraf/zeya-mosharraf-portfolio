@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { FaGithub, FaEye } from "react-icons/fa";
 import { TrendingUp } from "lucide-react";
 import { Project } from "@/data/projectsData";
+import CardGlow from "@/components/ui/CardGlow";
 
 interface ProjectCardProps {
   project: Project;
@@ -38,7 +39,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
       layout
     >
       {/* Top glow line on hover */}
-      <div className="absolute top-0 left-0 right-0 h-px z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+      <CardGlow />
       {/* Thumbnail */}
       {project.thumbhnailUrl && (
         <div className="relative h-40 overflow-hidden" style={{ background: '#0a0a0a' }}>

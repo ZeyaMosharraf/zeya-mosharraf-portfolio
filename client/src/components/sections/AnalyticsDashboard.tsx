@@ -3,8 +3,9 @@ import { Database, BarChart3, Brain, Monitor, Zap, TrendingUp, FolderOpen, Award
 import { projects } from "@/data/projectsData";
 import { useRef } from "react";
 import { DataFlowVisualization } from "@/components/ui/DataFlowVisualization";
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import SectionHeader from "@/components/ui/SectionHeader";
+import CardGlow from "@/components/ui/CardGlow";
+import { ease } from "@/lib/animations";
 
 const AnalyticsDashboard = () => {
   const ref = useRef(null);
@@ -45,26 +46,13 @@ const AnalyticsDashboard = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease }}
         >
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
-            style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
-              animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
-            />
-            <BarChart3 className="w-3 h-3 relative z-10" />
-            <span className="relative z-10">Analytics</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4">
-            Analytics{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Dashboard</span>
-          </h2>
-          <p className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed">
-            Data-driven insights into my portfolio performance and technical expertise
-          </p>
+          <SectionHeader
+            icon={BarChart3}
+            badge="Analytics"
+            title="Analytics"
+            highlight="Dashboard"
+            subtitle="Data-driven insights into my portfolio performance and technical expertise"
+          />
         </motion.div>
 
         {/* Metrics */}
@@ -82,7 +70,7 @@ const AnalyticsDashboard = () => {
                 whileHover={{ y: -4, borderColor: 'rgba(220,38,38,0.2)' }}
               >
                 {/* Top glow line on hover */}
-                <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+                <CardGlow />
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
                   <Icon size={18} />
                 </div>
@@ -155,7 +143,7 @@ const AnalyticsDashboard = () => {
                   whileHover={{ y: -6, borderColor: 'rgba(220,38,38,0.2)' }}
                 >
                   {/* Top glow line on hover */}
-                  <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+                  <CardGlow />
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
                     <Icon size={18} />
                   </div>

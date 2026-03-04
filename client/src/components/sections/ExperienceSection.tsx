@@ -1,13 +1,11 @@
-import { motion, useInView } from "framer-motion";
-import { Calendar, Building2, Briefcase, ExternalLink, ArrowRight } from "lucide-react";
-import { certificates } from "@/data/Certificatedata";
+import { motion } from "framer-motion";
+import { Calendar, Building2, Briefcase } from "lucide-react";
+import { experiences } from "@/data/experiencedata";
+import SectionHeader from "@/components/ui/SectionHeader";
+import CardGlow from "@/components/ui/CardGlow";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState, useRef } from 'react';
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
-// Filter for experience entries
-const experienceEntries = certificates.filter(cert => cert.category === "experience");
+import { ease } from "@/lib/animations";
 
 // Helper function to parse dates for proper sorting
 const parseStartDate = (dateString: string) => {
@@ -29,8 +27,7 @@ const ExperienceSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start', skipSnaps: false, dragFree: false });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-  const headerRef = useRef(null);
-  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
+
 
   const scrollTo = useCallback((index: number) => { if (emblaApi) emblaApi.scrollTo(index); }, [emblaApi]);
   const onSelect = useCallback(() => { if (!emblaApi) return; setSelectedIndex(emblaApi.selectedScrollSnap()); }, [emblaApi]);
@@ -44,7 +41,7 @@ const ExperienceSection = () => {
     return () => { emblaApi.off('select', onSelect); emblaApi.off('reInit', onSelect); };
   }, [emblaApi, onSelect]);
 
-  const sortedExperiences = experienceEntries.sort((a, b) => parseStartDate(b.date).getTime() - parseStartDate(a.date).getTime());
+  const sortedExperiences = [...experiences].sort((a, b) => parseStartDate(b.date).getTime() - parseStartDate(a.date).getTime());
 
   return (
     <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0B0F14' }}>
@@ -52,44 +49,13 @@ const ExperienceSection = () => {
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 50% at 70% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div ref={headerRef} className="text-center mb-10">
-          <motion.div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
-            style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
-              animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
-            />
-            <Briefcase className="w-3 h-3 relative z-10" />
-            <span className="relative z-10">Experience</span>
-          </motion.div>
-
-          <motion.h2
-            className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.06 }}
-          >
-            Professional{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Experience</span>
-          </motion.h2>
-
-          <motion.p
-            className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.12 }}
-          >
-            Building expertise through hands-on professional roles
-          </motion.p>
-        </div>
+        <SectionHeader
+          icon={Briefcase}
+          badge="Experience"
+          title="Professional"
+          highlight="Experience"
+          subtitle="Building expertise through hands-on professional roles"
+        />
 
         {/* Carousel */}
         <div className="relative">
@@ -120,21 +86,7 @@ const ExperienceSection = () => {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <motion.a
-            href="/certificates?tab=experience"
-            className="group inline-flex items-center gap-2 h-[38px] px-5 text-[13px] font-medium rounded-lg transition-all duration-250"
-            style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#9CA3AF' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(220,38,38,0.4)'; e.currentTarget.style.color = '#e5e7eb'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#9CA3AF'; }}
-            data-testid="button-complete-work-history"
-          >
-            <Briefcase className="w-3.5 h-3.5" />
-            Complete Work History
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
-          </motion.a>
-        </div>
+
       </div>
     </section>
   );
@@ -176,7 +128,7 @@ const ExperienceCard = ({ experience, index }: { experience: any; index: number 
             style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.06)' }}
           >
             {/* Top glow line */}
-            <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+            <CardGlow />
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-bold text-white mb-2 truncate">{experience.title}</h3>

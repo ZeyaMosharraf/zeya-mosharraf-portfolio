@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import ProjectCard from "@/components/ui/ProjectCard";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { projects } from "@/data/projectsData";
 import { FaGithub, FaFilter } from "react-icons/fa";
 import { FolderGit2, ArrowRight } from "lucide-react";
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { ease } from "@/lib/animations";
 
 const categories = [
   { id: "all", name: "All Projects" },
@@ -26,8 +26,6 @@ interface ProjectsSectionProps {
 const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [, setLocation] = useLocation();
-  const headerRef = useRef(null);
-  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
 
   const selectFeaturedProjects = (): typeof projects => {
     if (!showFeaturedOnly) return projects;
@@ -62,48 +60,17 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div ref={headerRef} className="text-center mb-10">
-          <motion.div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
-            style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
-              animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
-            />
-            <FolderGit2 className="w-3 h-3 relative z-10" />
-            <span className="relative z-10">Projects</span>
-          </motion.div>
-
-          <motion.h2
-            className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.06 }}
-          >
-            {showFeaturedOnly ? (
-              <>Featured{" "}<span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Projects</span></>
-            ) : (
-              <>All{" "}<span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Projects</span></>
-            )}
-          </motion.h2>
-
-          <motion.p
-            className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed mb-8"
-            initial={{ opacity: 0, y: 30 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.12 }}
-          >
-            {showFeaturedOnly
+        <SectionHeader
+          icon={FolderGit2}
+          badge="Projects"
+          title={showFeaturedOnly ? "Featured" : "All"}
+          highlight="Projects"
+          subtitle={
+            showFeaturedOnly
               ? "End-to-end data solutions spanning SQL pipelines, Python automation, Power BI dashboards, and machine learning models."
-              : "A curated collection of data engineering and analytics projects — each with measurable impact."}
-          </motion.p>
-
+              : "A curated collection of data engineering and analytics projects — each with measurable impact."
+          }
+        >
           {/* Category Filter Pills */}
           {!showFeaturedOnly && (
             <div className="flex flex-wrap justify-center gap-2 mt-4">
@@ -124,7 +91,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
               ))}
             </div>
           )}
-        </div>
+        </SectionHeader>
 
         {/* Mobile: Horizontal scroll */}
         <div className="md:hidden">

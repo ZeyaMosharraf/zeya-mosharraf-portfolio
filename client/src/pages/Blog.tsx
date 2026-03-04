@@ -5,6 +5,9 @@ import { ArrowLeft, Calendar, Tag, User, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { blogPosts } from "@/data/blogdata";
 import { Helmet } from "react-helmet-async";
+import PageHero from "@/components/ui/PageHero";
+import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 type BlogPost = {
   id: number;
@@ -44,21 +47,6 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     }
   }, [viewMode, params?.slug]);
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
-
   // Detail view rendering function
   const renderDetailView = () => {
     if (!selectedPost) {
@@ -80,25 +68,12 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-          
-          <div className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-              <motion.button
-                onClick={() => setLocation("/blog")}
-                className="mb-8 inline-flex items-center px-6 py-3 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <ArrowLeft className="mr-3" /> Back to Blog
-              </motion.button>
-
+        <PageHero
+          title={selectedPost.title}
+          gradient="from-red-600 to-orange-500"
+          topContent={
+            <>
+              <AnimatedBackButton onClick={() => setLocation("/blog")} label="Back to Blog" />
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -108,23 +83,22 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                 <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 text-white bg-white/20 backdrop-blur-sm">
                   {selectedPost.category}
                 </span>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                  {selectedPost.title}
-                </h1>
-                <div className="flex items-center justify-center text-white/90 mb-6 space-x-6">
-                  <div className="flex items-center">
-                    <User className="h-5 w-5 mr-2" />
-                    <span className="text-lg">{selectedPost.author}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    <span className="text-lg">{selectedPost.date}</span>
-                  </div>
-                </div>
               </motion.div>
+            </>
+          }
+          bottomContent={
+            <div className="flex items-center justify-center text-white/90 mb-6 space-x-6 mt-6">
+              <div className="flex items-center">
+                <User className="h-5 w-5 mr-2" />
+                <span className="text-lg">{selectedPost.author}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar className="h-5 w-5 mr-2" />
+                <span className="text-lg">{selectedPost.date}</span>
+              </div>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
@@ -182,38 +156,16 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-          
-          <div className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-4xl md:text-6xl font-bold text-white mb-6"
-              >
-                Data Insights Blog
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl text-white/90 max-w-3xl mx-auto"
-              >
-                Thoughts, tutorials, and insights on data analysis, visualization, and modern techniques
-              </motion.p>
-            </div>
-          </div>
-        </div>
+        <PageHero
+          title="Data Insights Blog"
+          subtitle="Thoughts, tutorials, and insights on data analysis, visualization, and modern techniques"
+        />
 
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-6xl mx-auto">
             <motion.div
-              variants={container}
+              variants={staggerContainer}
               initial="hidden"
               animate="show"
               className="grid grid-cols-1 lg:grid-cols-2 gap-8"
@@ -221,7 +173,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
               {blogPosts.map((post, index) => (
                 <motion.article 
                   key={post.slug}
-                  variants={item} 
+                  variants={staggerItem} 
                   className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer"
                   whileHover={{ y: -8, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

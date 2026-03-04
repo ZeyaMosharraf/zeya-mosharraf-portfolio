@@ -5,6 +5,9 @@ import { ArrowLeft, FileText, Calendar, Award, ExternalLink, Search, Grid, List 
 import { Button } from "@/components/ui/button";
 import { caseStudies } from "@/data/CaseStudiesdata";
 import { Helmet } from "react-helmet-async";
+import PageHero from "@/components/ui/PageHero";
+import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 // Case study type definition
 type CaseStudy = {
@@ -52,21 +55,6 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
     }
   }, [viewMode, params?.slug]);
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
-
   // Detail view rendering function
   const renderDetailView = () => {
     if (!selectedCaseStudy) {
@@ -88,27 +76,12 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-700 to-red-900 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-red-700/95 to-red-900/95">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}></div>
-          </div>
-          
-          <div className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-              <motion.button
-                onClick={() => setLocation("/case-studies")}
-                className="mb-8 inline-flex items-center px-6 py-3 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <ArrowLeft className="mr-3" /> Back to Case Studies
-              </motion.button>
-
+        <PageHero
+          title={selectedCaseStudy.title}
+          gradient="from-red-700 to-red-900"
+          topContent={
+            <>
+              <AnimatedBackButton onClick={() => setLocation("/case-studies")} label="Back to Case Studies" />
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -118,17 +91,16 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
                 <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 text-white bg-white/20 backdrop-blur-sm">
                   {selectedCaseStudy.category}
                 </span>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                  {selectedCaseStudy.title}
-                </h1>
-                <div className="flex items-center justify-center text-white/90 mb-6">
-                  <Calendar className="h-5 w-5 mr-2" />
-                  <span className="text-lg">{selectedCaseStudy.date}</span>
-                </div>
               </motion.div>
+            </>
+          }
+          bottomContent={
+            <div className="flex items-center justify-center text-white/90 mb-6 mt-6">
+              <Calendar className="h-5 w-5 mr-2" />
+              <span className="text-lg">{selectedCaseStudy.date}</span>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
@@ -258,34 +230,10 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-red-600/95 to-orange-500/95">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}></div>
-          </div>
-          
-          <div className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-4xl md:text-6xl font-bold text-white mb-6"
-              >
-                Case Studies
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl text-white/90 max-w-3xl mx-auto"
-              >
-                Detailed analyses of real-world data challenges and their innovative solutions
-              </motion.p>
-            </div>
-          </div>
-        </div>
+        <PageHero
+          title="Case Studies"
+          subtitle="Detailed analyses of real-world data challenges and their innovative solutions"
+        />
 
         {/* Search Bar */}
         <div className="relative px-4 sm:px-6 lg:px-8">
@@ -343,7 +291,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
           
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div
-              variants={container}
+              variants={staggerContainer}
               initial="hidden"
               animate="show"
               className={cardViewMode === "grid" ? "grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8" : "flex flex-col gap-4"}
@@ -361,7 +309,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
               ) : filteredCaseStudies.map((caseStudy, index) => (
                 <motion.div 
                   key={caseStudy.slug}
-                  variants={item} 
+                  variants={staggerItem} 
                   className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer ${
                     cardViewMode === "list" ? "flex flex-row" : ""
                   }`}

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FaFilter, FaSearch, FaTh, FaList } from "react-icons/fa";
 import { Grid, List } from "lucide-react";
 import ProjectCard from "@/components/ui/ProjectCard";
+import PageHero from "@/components/ui/PageHero";
 import { projects } from "@/data/projectsData";
 import { SEO } from "@/components/SEO";
 
@@ -56,34 +57,10 @@ const AllProjects = () => {
       
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-red-600/95 to-orange-500/95">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}></div>
-          </div>
-          
-          <div className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-4xl md:text-6xl font-bold text-white mb-6"
-              >
-                All Projects
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl text-white/90 max-w-3xl mx-auto"
-              >
-                Explore my complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains.
-              </motion.p>
-            </div>
-          </div>
-        </div>
+        <PageHero
+          title="All Projects"
+          subtitle="Explore my complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains."
+        />
 
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">

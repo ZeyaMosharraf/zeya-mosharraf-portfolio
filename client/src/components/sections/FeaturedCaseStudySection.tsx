@@ -8,8 +8,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { caseStudies } from "../../data/CaseStudiesdata";
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import SectionHeader from "@/components/ui/SectionHeader";
+import { ease } from "@/lib/animations";
 
 const getCategoryColor = (cat: string) => {
   const c = cat.toLowerCase();
@@ -90,42 +90,13 @@ const FeaturedCaseStudySection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease }}
         >
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
-            style={{
-              background: "rgba(239,68,68,0.08)",
-              color: "rgba(239,68,68,0.8)",
-              border: "1px solid rgba(239,68,68,0.12)",
-            }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)",
-              }}
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
-            />
-            <Sparkles className="w-3 h-3 relative z-10" />
-            <span className="relative z-10">Case Studies</span>
-          </div>
-
-          <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-3">
-            Featured{" "}
-            <span
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: "linear-gradient(135deg, #DC2626 0%, #F97316 100%)",
-              }}
-            >
-              Case Studies
-            </span>
-          </h2>
-
-          <p className="text-[15px] text-gray-500 max-w-md mx-auto leading-relaxed">
-            Real-world projects showcasing data-driven solutions and measurable business impact.
-          </p>
+          <SectionHeader
+            icon={Sparkles}
+            badge="Case Studies"
+            title="Featured"
+            highlight="Case Studies"
+            subtitle="Real-world projects showcasing data-driven solutions and measurable business impact."
+          />
         </motion.div>
 
         {/* ═══ MAIN: Left Summary + Right Scroll Cards ═══ */}

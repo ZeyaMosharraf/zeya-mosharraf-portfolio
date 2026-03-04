@@ -2,8 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { FaGraduationCap, FaBriefcase, FaDownload } from "react-icons/fa";
 import { User2 } from "lucide-react";
 import { useRef } from "react";
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { ease, shimmerTransition } from "@/lib/animations";
 
 const AboutSection = () => {
   const headerRef = useRef(null);
@@ -68,7 +67,7 @@ const AboutSection = () => {
                   className="absolute inset-0"
                   style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
                   animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
+                  transition={shimmerTransition}
                 />
                 <User2 className="w-3 h-3 relative z-10" />
                 <span className="relative z-10">About Me</span>

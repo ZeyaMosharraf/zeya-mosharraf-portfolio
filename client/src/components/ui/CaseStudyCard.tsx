@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import { useLocation } from "wouter";
+import CardGlow from "@/components/ui/CardGlow";
 
 interface CaseStudy {
   id: number;
@@ -40,7 +41,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
       onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
       {/* Top glow line on hover */}
-      <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
+      <CardGlow />
       <div className="relative z-10 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">

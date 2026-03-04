@@ -5,6 +5,8 @@ import { FaGithub, FaArrowLeft, FaExternalLinkAlt, FaTags, FaTools } from "react
 import { Calendar, Target, Zap, Award, Clock, User } from "lucide-react";
 import { projects, Project } from "@/data/projectsData";
 import { Helmet } from "react-helmet-async";
+import PageHero from "@/components/ui/PageHero";
+import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 
 interface ProjectDetailsProps {
   params: {
@@ -52,68 +54,47 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
       
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-red-600 to-orange-500 overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-r from-red-600/95 to-orange-500/95">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}></div>
-          </div>
-          
-          <div className="relative pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-              <motion.button
-                onClick={() => setLocation("/projects")}
-                className="mb-8 inline-flex items-center px-6 py-3 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <FaArrowLeft className="mr-3" /> Back to Projects
-              </motion.button>
-
+        <PageHero
+          title={project.title}
+          subtitle={project.description}
+          topContent={
+            <>
+              <AnimatedBackButton onClick={() => setLocation("/projects")} label="Back to Projects" />
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-center"
               >
-                <span className={`inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 text-white bg-white/20 backdrop-blur-sm`}>
+                <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 text-white bg-white/20 backdrop-blur-sm">
                   {project.category}
                 </span>
-                <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                  {project.title}
-                </h1>
-                <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                  {project.description}
-                </p>
               </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-wrap justify-center gap-4 mt-8"
+            </>
+          }
+          bottomContent={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex flex-wrap justify-center gap-4 mt-8"
+            >
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 bg-white text-gray-900 rounded-xl font-medium hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
               >
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 bg-white text-gray-900 rounded-xl font-medium hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-                >
-                  <FaGithub className="mr-2" /> View Source Code
-                </a>
-                {(project.powerBiEmbedUrl || project.lookerstudioEmbedUrl || project.tableauEmbedUrl) && (
-                  <button className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl font-medium hover:bg-white/20 transition-all duration-300">
-                    <FaExternalLinkAlt className="mr-2" /> Live Demo
+                <FaGithub className="mr-2" /> View Source Code
+              </a>
+              {(project.powerBiEmbedUrl || project.lookerstudioEmbedUrl || project.tableauEmbedUrl) && (
+                <button className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl font-medium hover:bg-white/20 transition-all duration-300">
+                  <FaExternalLinkAlt className="mr-2" /> Live Demo
                   </button>
                 )}
               </motion.div>
-            </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Main Content */}
         <div className="relative px-4 sm:px-6 lg:px-8 py-16">
