@@ -53,7 +53,7 @@ function DataNodeCanvas({ className }: { className?: string }) {
         const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 5);
         gr.addColorStop(0, n.color); gr.addColorStop(1, "transparent");
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 5, 0, Math.PI * 2); ctx.fillStyle = gr; ctx.fill();
-        ctx.beginPath(); ctx.arc(n.x, n.y, n.r + Math.sin(n.pulse) * 1.2, 0, Math.PI * 2);
+        ctx.beginPath(); ctx.arc(n.x, n.y, Math.max(0.01, n.r + Math.sin(n.pulse) * 1.2), 0, Math.PI * 2);
         ctx.fillStyle = n.color; ctx.fill();
         n.x += n.vx; n.y += n.vy;
         if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
