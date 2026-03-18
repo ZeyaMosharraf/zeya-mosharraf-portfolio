@@ -74,7 +74,7 @@ const Navbar = () => {
     closeMenu();
     setLocation(`/projects/${category.toLowerCase().replace(' ', '-')}`);
   };
-  
+
   const navigateToPage = (path: string) => {
     closeMenu();
     setLocation(path);
@@ -87,7 +87,7 @@ const Navbar = () => {
         setIsProjectsDropdownOpen(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -130,7 +130,7 @@ const Navbar = () => {
   const categories = ["SQL", "Python", "Machine Learning", "Power BI", "Excel", "Tableau", "Looker Studio"];
 
   return (
-    <motion.header 
+    <motion.header
       className="fixed w-full top-0 z-50 transition-all duration-300"
       style={{ background: 'rgba(11,15,20,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
       initial={{ y: -100 }}
@@ -142,7 +142,7 @@ const Navbar = () => {
           onClick={goToHomePage}
           className="flex items-center gap-2.5 mr-8 shrink-0"
         >
-          <span 
+          <span
             className="w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-bold tracking-tight"
             style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--accent-primary)', border: '1px solid rgba(239,68,68,0.25)' }}
           >
@@ -158,7 +158,7 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-0.5 ml-auto">
           <NavItem section="home" label="Home" />
-          
+
           {/* Projects dropdown */}
           <div className="relative" ref={projectsDropdownRef}>
             <button
@@ -176,11 +176,11 @@ const Navbar = () => {
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
               )}
             </button>
-            
+
             {/* Dropdown menu */}
             <AnimatePresence>
               {isProjectsDropdownOpen && (
-                <motion.div 
+                <motion.div
                   className="absolute left-0 mt-2 w-48 rounded-lg py-1.5 z-50"
                   style={{ background: 'rgba(20,20,20,0.95)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)' }}
                   initial={{ opacity: 0, y: -8, scale: 0.96 }}
@@ -194,9 +194,9 @@ const Navbar = () => {
                   >
                     All Projects
                   </button>
-                  
+
                   <div className="h-px mx-2.5 my-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                  
+
                   {categories.map((category) => (
                     <button
                       key={category}
@@ -227,7 +227,7 @@ const Navbar = () => {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
             )}
           </Link>
-          
+
           {/* Blog */}
           <Link
             href="/blog"
@@ -244,14 +244,14 @@ const Navbar = () => {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[2px]" style={{ background: 'var(--accent-primary)' }} />
             )}
           </Link>
-          
+
           <NavItem section="about" label="About" />
-          
+
           <NavItem section="contact" label="Contact" />
-          
+
           {/* Separator */}
           <div className="w-px h-3.5 mx-2" style={{ background: 'rgba(255,255,255,0.06)' }} />
-          
+
           {/* Resume button */}
           <a
             href="/resume.pdf"
@@ -318,7 +318,7 @@ const Navbar = () => {
                   Projects
                   <ChevronDown className={cn("h-3.5 w-3.5 transition-transform duration-200", isMobileProjectsOpen && "rotate-180")} />
                 </button>
-                
+
                 <div className={`overflow-hidden transition-all duration-200 ${isMobileProjectsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <div className="pl-3 py-1">
                     <button

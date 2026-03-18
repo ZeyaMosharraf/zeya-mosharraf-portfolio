@@ -34,7 +34,12 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
   // Use passed params if available, otherwise use hook params
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
-  const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(() => {
+    if (viewMode === "detail" && params?.slug) {
+      return caseStudies.find(cs => cs.slug === params.slug) ?? null;
+    }
+    return null;
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [cardViewMode, setCardViewMode] = useState<"grid" | "list">("grid");
 
@@ -47,11 +52,10 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    // If viewing a detailed case study, find the case study by ID
+    // Keep in sync if slug changes after mount
     if (viewMode === "detail" && params?.slug) {
-      const caseStudy = caseStudies.find(cs => cs.slug === params.slug);
-      setSelectedCaseStudy(caseStudy || null);
+      const found = caseStudies.find(cs => cs.slug === params.slug);
+      setSelectedCaseStudy(found ?? null);
     }
   }, [viewMode, params?.slug]);
 
@@ -62,8 +66,8 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Case Study Not Found</h2>
-            <Button 
-              onClick={() => setLocation("/case-studies")} 
+            <Button
+              onClick={() => setLocation("/case-studies")}
               className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Case Studies
@@ -72,13 +76,13 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
         </div>
       );
     }
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
         <PageHero
           title={selectedCaseStudy.title}
-          gradient="from-red-700 to-red-900"
+          showStats={false}
           topContent={
             <>
               <AnimatedBackButton onClick={() => setLocation("/case-studies")} label="Back to Case Studies" />
@@ -107,7 +111,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
           {/* Floating background elements */}
           <div className="absolute top-20 right-10 w-24 h-24 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
           <div className="absolute bottom-40 left-10 w-32 h-32 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-          
+
           <div className="max-w-6xl mx-auto relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Content */}
@@ -224,7 +228,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
       </div>
     );
   };
-  
+
   // List view rendering function
   const renderListView = () => {
     return (
@@ -259,21 +263,19 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
                 <div className="flex items-center gap-1 bg-gray-200 dark:bg-gray-600 rounded-lg p-1 shrink-0">
                   <button
                     onClick={() => setCardViewMode("grid")}
-                    className={`p-2 rounded-md transition-colors ${
-                      cardViewMode === "grid"
-                        ? "bg-white dark:bg-red-600 text-red-600 dark:text-white shadow-sm"
-                        : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                    }`}
+                    className={`p-2 rounded-md transition-colors ${cardViewMode === "grid"
+                      ? "bg-white dark:bg-red-600 text-red-600 dark:text-white shadow-sm"
+                      : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                      }`}
                   >
                     <Grid className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setCardViewMode("list")}
-                    className={`p-2 rounded-md transition-colors ${
-                      cardViewMode === "list"
-                        ? "bg-white dark:bg-red-600 text-red-600 dark:text-white shadow-sm"
-                        : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                    }`}
+                    className={`p-2 rounded-md transition-colors ${cardViewMode === "list"
+                      ? "bg-white dark:bg-red-600 text-red-600 dark:text-white shadow-sm"
+                      : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                      }`}
                   >
                     <List className="w-4 h-4" />
                   </button>
@@ -288,7 +290,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
           {/* Floating background elements */}
           <div className="absolute top-10 left-10 w-32 h-32 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
           <div className="absolute bottom-20 right-20 w-40 h-40 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-          
+
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div
               variants={staggerContainer}
@@ -307,12 +309,11 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
                   <p className="text-sm mt-1">Try a different keyword</p>
                 </motion.div>
               ) : filteredCaseStudies.map((caseStudy, index) => (
-                <motion.div 
+                <motion.div
                   key={caseStudy.slug}
-                  variants={staggerItem} 
-                  className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer ${
-                    cardViewMode === "list" ? "flex flex-row" : ""
-                  }`}
+                  variants={staggerItem}
+                  className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer ${cardViewMode === "list" ? "flex flex-row" : ""
+                    }`}
                   whileHover={{ y: cardViewMode === "grid" ? -6 : 0, x: cardViewMode === "list" ? 4 : 0 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
@@ -321,11 +322,10 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   {/* Header with gradient */}
-                  <div className={`relative p-6 pb-4 bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/30 dark:to-red-900/20 ${
-                    cardViewMode === "list" ? "w-48 shrink-0 flex flex-col justify-center pb-6" : ""
-                  }`}>
+                  <div className={`relative p-6 pb-4 bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/30 dark:to-red-900/20 ${cardViewMode === "list" ? "w-48 shrink-0 flex flex-col justify-center pb-6" : ""
+                    }`}>
                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-full blur-2xl"></div>
-                    <motion.div 
+                    <motion.div
                       className="inline-flex items-center px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/50 rounded-full mb-4"
                       whileHover={{ scale: 1.05 }}
                     >
@@ -347,7 +347,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
                     <div className="mb-6">
                       <div className="flex flex-wrap gap-2 mb-2">
                         {caseStudy.toolsUsed.slice(0, 3).map((tool, toolIndex) => (
-                          <motion.span 
+                          <motion.span
                             key={toolIndex}
                             className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md"
                             whileHover={{ scale: 1.05 }}
@@ -421,7 +421,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
           </>
         )}
       </Helmet>
-      
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

@@ -32,14 +32,19 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   // Use passed params if available, otherwise use hook params
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(() => {
+    if (viewMode === "detail" && params?.slug) {
+      return blogPosts.find(p => p.slug === params.slug) ?? null;
+    }
+    return null;
+  });
 
 
-  
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     // If viewing a detailed blog post, find the post by ID
     if (viewMode === "detail" && params?.slug) {
       const post = blogPosts.find(p => p.slug === params.slug);
@@ -54,8 +59,8 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Blog Post Not Found</h2>
-            <Button 
-              onClick={() => setLocation("/blog")} 
+            <Button
+              onClick={() => setLocation("/blog")}
               className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Blog
@@ -64,13 +69,13 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
         </div>
       );
     }
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
         <PageHero
           title={selectedPost.title}
-          gradient="from-red-600 to-orange-500"
+          showStats={false}
           topContent={
             <>
               <AnimatedBackButton onClick={() => setLocation("/blog")} label="Back to Blog" />
@@ -125,7 +130,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
               </h2>
               <div className="flex flex-wrap gap-2">
                 {selectedPost.tags.map((tag, index) => (
-                  <motion.span 
+                  <motion.span
                     key={index}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -142,7 +147,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
       </div>
     );
   };
-  
+
   // List view rendering function
   const renderListView = () => {
     // Define a mapping of categories to gradients
@@ -152,7 +157,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
       "SQL": "from-red-600 to-orange-500",
       "PYTHON": "from-orange-500 to-red-600"
     };
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
         {/* Hero Section */}
@@ -171,9 +176,9 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
               className="grid grid-cols-1 lg:grid-cols-2 gap-8"
             >
               {blogPosts.map((post, index) => (
-                <motion.article 
+                <motion.article
                   key={post.slug}
-                  variants={staggerItem} 
+                  variants={staggerItem}
                   className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer"
                   whileHover={{ y: -8, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -185,7 +190,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                   {/* Header with category gradient */}
                   <div className={`relative p-6 pb-4 bg-gradient-to-r ${categoryGradients[post.category] || "from-red-600 to-red-700"} text-white`}>
                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-                    <motion.div 
+                    <motion.div
                       className="inline-flex items-center px-3 py-1 text-xs font-semibold text-white bg-white/20 rounded-full mb-4"
                       whileHover={{ scale: 1.05 }}
                     >
@@ -211,7 +216,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                     <div className="mb-4">
                       <div className="flex flex-wrap gap-2">
                         {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                          <motion.span 
+                          <motion.span
                             key={tagIndex}
                             className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200 rounded-md"
                             whileHover={{ scale: 1.05 }}
@@ -286,7 +291,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
           </>
         )}
       </Helmet>
-      
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
