@@ -321,7 +321,7 @@ const PageHero = ({
   return (
     <div
       className="relative overflow-hidden"
-      style={{ background: "#0d0d0d", minHeight: "clamp(240px, 32vh, 340px)" }}
+      style={{ background: "#0d0d0d", minHeight: "clamp(200px, 26vh, 290px)" }}
     >
       {/* Layer 1: node-graph canvas */}
       <div className="absolute inset-0 opacity-55">
@@ -371,7 +371,7 @@ const PageHero = ({
       />
 
       {/* ── Content ── */}
-      <div className="relative pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="relative pt-14 pb-8 px-4 sm:px-6 lg:px-8">
         <div className={`max-w-4xl mx-auto w-full ${center ? "text-center" : ""}`}>
 
           {topContent && (

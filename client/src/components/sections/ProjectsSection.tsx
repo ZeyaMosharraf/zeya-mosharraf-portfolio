@@ -99,7 +99,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
             {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.slug}
-                className="flex-none w-80"
+                className="flex-none w-72"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}

@@ -137,7 +137,7 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 15 }}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center">
         <button
           onClick={goToHomePage}
           className="flex items-center gap-2.5 mr-8 shrink-0"

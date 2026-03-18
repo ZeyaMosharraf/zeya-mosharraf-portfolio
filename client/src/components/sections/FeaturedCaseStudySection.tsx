@@ -85,7 +85,6 @@ const FeaturedCaseStudySection = () => {
       >
         {/* ═══ TOP: Section Headline ═══ */}
         <motion.div
-          className="text-center mb-10"
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease }}

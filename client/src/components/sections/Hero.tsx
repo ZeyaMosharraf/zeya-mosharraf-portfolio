@@ -48,7 +48,7 @@ const RotatingWord = () => {
   }, []);
 
   return (
-    <span className="inline-block relative" style={{ minWidth: '280px' }}>
+    <span className="inline-block relative" style={{ minWidth: 'clamp(160px, 30vw, 280px)' }}>
       <AnimatePresence mode="wait">
         <motion.span
           key={ROTATING_WORDS[index]}
@@ -440,7 +440,7 @@ const Hero = () => {
     <section
       ref={sectionRef}
       id="home"
-      className="relative pt-24 md:pt-28 pb-10 md:pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative pt-20 md:pt-24 pb-10 md:pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0B0F14 0%, #0B0F14 55%, #1a0a0a 100%)' }}
     >
       {/* Interactive canvas (full hero background) */}
