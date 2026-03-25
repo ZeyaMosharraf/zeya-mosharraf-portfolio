@@ -157,7 +157,7 @@ const COMMANDS: Record<string, { cmd: string; lines: TermLine[] }> = {
       { text: "  Building production data pipelines" },
       { text: "  Processing 2M+ records daily" },
       { text: "" },
-      { text: "▸ Key Achievements" , accent: true },
+      { text: "▸ Key Achievements", accent: true },
       { text: "  • Reduced pipeline latency by 60%" },
       { text: "  • Built real-time analytics dashboard" },
       { text: "  • Automated data quality checks" },
@@ -203,7 +203,7 @@ function useHeroCanvas(
     /* ── Mouse tracking ── */
     let mx = -9999, my = -9999;
     const MOUSE_RADIUS = 140;         // interaction zone
-    const MOUSE_FORCE  = 2.8;         // push strength
+    const MOUSE_FORCE = 2.8;         // push strength
 
     const onMouseMove = (e: MouseEvent) => {
       const rect = section.getBoundingClientRect();
@@ -300,9 +300,9 @@ function useHeroCanvas(
       const rect = section.getBoundingClientRect();
       w = rect.width;
       h = rect.height;
-      canvas.width  = w * dpr;
+      canvas.width = w * dpr;
       canvas.height = h * dpr;
-      canvas.style.width  = w + "px";
+      canvas.style.width = w + "px";
       canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       initDots();
