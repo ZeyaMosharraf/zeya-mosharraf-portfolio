@@ -90,3 +90,5 @@ coverage/
 # (keep tracked ONLY if required)
 # =========================
 generated-icon.png
+
+*.txt
