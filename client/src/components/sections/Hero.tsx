@@ -5,6 +5,32 @@ import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import { useLocation } from "wouter";
 
 /* ═══════════════════════════════════════════════════════
+   Terminal Syntax Highlighting Helper
+   ═══════════════════════════════════════════════════════ */
+
+function highlightText(text: string): JSX.Element {
+  // Skip empty lines
+  if (!text || text.trim() === "") {
+    return <span>{text}</span>;
+  }
+
+  // Highlight numbers with units (e.g., 2M+, 99.9%, 60%)
+  let highlighted = text.replace(/(\d+\.?\d*[MBK%]?\+?)/g, '<span class="text-blue-400">$1</span>');
+  
+  // Highlight key achievement bullets
+  highlighted = highlighted.replace(/(✓|•|└|├|─)/g, '<span class="text-emerald-400">$1</span>');
+  
+  // Highlight quoted text
+  highlighted = highlighted.replace(/(".*?")/g, '<span class="text-rose-300">$1</span>');
+  
+  // Highlight true/false/success/error keywords
+  highlighted = highlighted.replace(/\b(true|false|success|active|online)\b/gi, '<span class="text-emerald-400">$1</span>');
+  highlighted = highlighted.replace(/\b(error|failed|offline|false)\b/gi, '<span class="text-rose-400">$1</span>');
+
+  return <span dangerouslySetInnerHTML={{ __html: highlighted }} />;
+}
+
+/* ═══════════════════════════════════════════════════════
    Animated Counter Hook
    ═══════════════════════════════════════════════════════ */
 
@@ -263,13 +289,22 @@ function useHeroCanvas(
         if (d.y < -10) d.y = h + 10;
         if (d.y > h + 10) d.y = -10;
 
-        /* Draw dot */
+        /* Draw dot with glow effect */
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = d.isWhite ? "#ffffff" : accentPrimary;
-        ctx.globalAlpha = d.baseAlpha;
+        // Create radial gradient for glow
+        const gradient = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 2.5);
+        if (d.isWhite) {
+          gradient.addColorStop(0, `rgba(255,255,255,${d.baseAlpha * 0.8})`);
+          gradient.addColorStop(0.5, `rgba(255,255,255,${d.baseAlpha * 0.4})`);
+          gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        } else {
+          gradient.addColorStop(0, `rgba(239,68,68,${d.baseAlpha * 0.6})`);
+          gradient.addColorStop(0.5, `rgba(239,68,68,${d.baseAlpha * 0.3})`);
+          gradient.addColorStop(1, 'rgba(239,68,68,0)');
+        }
+        ctx.fillStyle = gradient;
         ctx.fill();
-        ctx.globalAlpha = 1;
       }
 
       /* Connection lines between nearby particles */
@@ -286,7 +321,9 @@ function useHeroCanvas(
             // mix: if either is white → white line, else red
             const isW = dots[i].isWhite || dots[j].isWhite;
             ctx.strokeStyle = isW ? "rgba(255,255,255,0.06)" : accentPrimary;
-            ctx.globalAlpha = (1 - dist / CONNECT_DIST) * 0.14;
+            // Add subtle pulse animation to connections
+            const pulseAmount = Math.sin(performance.now() * 0.002) * 0.05;
+            ctx.globalAlpha = (1 - dist / CONNECT_DIST) * (0.14 + pulseAmount);
             ctx.lineWidth = 0.4;
             ctx.stroke();
             ctx.globalAlpha = 1;
@@ -361,6 +398,36 @@ const Hero = () => {
     const el = termBodyRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [visibleLines, typedCmd]);
+
+  /* Button ripple effect */
+  const createRipple = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const ripple = document.createElement('span');
+    ripple.style.cssText = `
+      position: absolute;
+      left: ${x}px;
+      top: ${y}px;
+      width: 8px;
+      height: 8px;
+      background: rgba(239,68,68,0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: ripple-expand 0.6s ease-out;
+    `;
+    
+    if (button.style.position !== 'absolute' && button.style.position !== 'relative') {
+      button.style.position = 'relative';
+    }
+    button.style.overflow = 'hidden';
+    button.appendChild(ripple);
+    
+    setTimeout(() => ripple.remove(), 600);
+  };
 
   /* Run a command */
   const runCommand = useCallback((key: string) => {
@@ -639,7 +706,10 @@ const Hero = () => {
                   {CMD_KEYS.map(key => (
                     <button
                       key={key}
-                      onClick={() => runCommand(key)}
+                      onClick={(e) => {
+                        createRipple(e);
+                        runCommand(key);
+                      }}
                       disabled={isTyping}
                       className="px-3 py-1 rounded-md text-xs font-medium transition-all duration-200"
                       style={{
@@ -709,7 +779,7 @@ const Hero = () => {
                           whiteSpace: 'pre',
                         }}
                       >
-                        {line.text}
+                        {line.accent || line.color ? line.text : highlightText(line.text)}
                       </motion.div>
                     ))}
                   </AnimatePresence>

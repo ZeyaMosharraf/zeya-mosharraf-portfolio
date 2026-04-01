@@ -654,3 +654,15 @@
     -webkit-backface-visibility: hidden;
   }
 }
+
+/* Button ripple effect animation */
+@keyframes ripple-expand {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 0;
+  }
+}
