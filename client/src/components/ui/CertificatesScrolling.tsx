@@ -4,7 +4,7 @@ import { Button } from './button';
 import { ChevronLeft, ChevronRight, Calendar, ExternalLink, X, ZoomIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { Certificate, defaultCertificates } from '@/data/certificatesData';
+import { Certificate, defaultCertificates } from '@/data/certificates';
 
 interface CertificatesScrollingProps {
   certificates?: Certificate[];
@@ -200,15 +200,19 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
         {/* Skills */}
         <div className="mb-4">
           <div className="flex flex-wrap gap-1">
-            {certificate.skills.slice(0, 3).map((skill, idx) => (
-              <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
-                {skill}
-              </span>
-            ))}
-            {certificate.skills.length > 3 && (
-              <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
-                +{certificate.skills.length - 3}
-              </span>
+            {certificate.skills && certificate.skills.length > 0 && (
+              <>
+                {certificate.skills.slice(0, 3).map((skill, idx) => (
+                  <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
+                    {skill}
+                  </span>
+                ))}
+                {certificate.skills.length > 3 && (
+                  <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
+                    +{certificate.skills.length - 3}
+                  </span>
+                )}
+              </>
             )}
           </div>
         </div>

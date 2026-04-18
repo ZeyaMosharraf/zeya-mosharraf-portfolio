@@ -19,7 +19,7 @@ AOS.init({
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="portfolio-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="portfolio-theme">
         <App />
       </ThemeProvider>
     </QueryClientProvider>
