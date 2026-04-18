@@ -78,7 +78,9 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
               <motion.div
                 key={project.slug}
                 className="flex-none w-72"
-                {...staggerItem}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.06, ease }}
                 viewport={{ once: true }}
               >
                 <ProjectCard project={project} />
@@ -92,7 +94,8 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.slug}
-              {...staggerItem}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.06, ease }}
               viewport={{ once: true }}
             >
