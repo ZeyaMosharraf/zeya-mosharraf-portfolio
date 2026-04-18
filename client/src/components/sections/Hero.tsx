@@ -24,20 +24,108 @@ function highlightText(text: string): JSX.Element {
     return <span>{text}</span>;
   }
 
-  // Highlight numbers with units (e.g., 2M+, 99.9%, 60%)
-  let highlighted = text.replace(/(\d+\.?\d*[MBK%]?\+?)/g, '<span class="text-blue-400">$1</span>');
-  
-  // Highlight key achievement bullets
-  highlighted = highlighted.replace(/(✓|•|└|├|─)/g, '<span class="text-emerald-400">$1</span>');
-  
-  // Highlight quoted text
-  highlighted = highlighted.replace(/(".*?")/g, '<span class="text-rose-300">$1</span>');
-  
-  // Highlight true/false/success/error keywords
-  highlighted = highlighted.replace(/\b(true|false|success|active|online)\b/gi, '<span class="text-emerald-400">$1</span>');
-  highlighted = highlighted.replace(/\b(error|failed|offline|false)\b/gi, '<span class="text-rose-400">$1</span>');
+  const parts: (string | JSX.Element)[] = [];
+  let lastIndex = 0;
 
-  return <span dangerouslySetInnerHTML={{ __html: highlighted }} />;
+  // Pattern for numbers with units
+  const numberRegex = /(\d+\.?\d*[MBK%]?\+?)/g;
+  let match;
+
+  const processText = (str: string) => {
+    const result: (string | JSX.Element)[] = [];
+    let idx = 0;
+
+    // Match numbers
+    const numMatches = Array.from(str.matchAll(numberRegex));
+    if (numMatches.length > 0) {
+      numMatches.forEach((m, i) => {
+        if (m.index! > idx) {
+          result.push(str.slice(idx, m.index));
+        }
+        result.push(
+          <span key={`num-${i}`} style={{ color: '#60A5FA' }}>
+            {m[0]}
+          </span>
+        );
+        idx = m.index! + m[0].length;
+      });
+      if (idx < str.length) {
+        result.push(str.slice(idx));
+      }
+      return result;
+    }
+
+    // Match bullets/symbols
+    const bulletRegex = /(✓|•|└|├|─)/g;
+    const bulletMatches = Array.from(str.matchAll(bulletRegex));
+    if (bulletMatches.length > 0) {
+      idx = 0;
+      bulletMatches.forEach((m, i) => {
+        if (m.index! > idx) {
+          result.push(str.slice(idx, m.index));
+        }
+        result.push(
+          <span key={`bullet-${i}`} style={{ color: '#34D399' }}>
+            {m[0]}
+          </span>
+        );
+        idx = m.index! + m[0].length;
+      });
+      if (idx < str.length) {
+        result.push(str.slice(idx));
+      }
+      return result;
+    }
+
+    // Match quoted text
+    const quoteRegex = /(".*?")/g;
+    const quoteMatches = Array.from(str.matchAll(quoteRegex));
+    if (quoteMatches.length > 0) {
+      idx = 0;
+      quoteMatches.forEach((m, i) => {
+        if (m.index! > idx) {
+          result.push(str.slice(idx, m.index));
+        }
+        result.push(
+          <span key={`quote-${i}`} style={{ color: '#F8B4D4' }}>
+            {m[0]}
+          </span>
+        );
+        idx = m.index! + m[0].length;
+      });
+      if (idx < str.length) {
+        result.push(str.slice(idx));
+      }
+      return result;
+    }
+
+    // Match keywords
+    const keywordRegex = /\b(true|false|success|active|online|error|failed|offline)\b/gi;
+    const keywordMatches = Array.from(str.matchAll(keywordRegex));
+    if (keywordMatches.length > 0) {
+      idx = 0;
+      keywordMatches.forEach((m, i) => {
+        if (m.index! > idx) {
+          result.push(str.slice(idx, m.index));
+        }
+        const isError = /error|failed|offline/i.test(m[0]);
+        result.push(
+          <span key={`kw-${i}`} style={{ color: isError ? '#F87171' : '#34D399' }}>
+            {m[0]}
+          </span>
+        );
+        idx = m.index! + m[0].length;
+      });
+      if (idx < str.length) {
+        result.push(str.slice(idx));
+      }
+      return result;
+    }
+
+    return [str];
+  };
+
+  return <span>{processText(text)}</span>;
 }
 
 /* ═══════════════════════════════════════════════════════
