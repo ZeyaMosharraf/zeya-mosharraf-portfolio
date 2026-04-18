@@ -156,6 +156,20 @@ export const sortExperiencesByDate = (experiences: Experience[]): Experience[] =
  * Convert URL slug to category display name (e.g., "machine-learning" -> "Machine Learning")
  */
 export const slugToCategoryName = (slug: string): string => {
+  const specialCases: Record<string, string> = {
+    "sql": "SQL",
+    "python": "Python",
+    "power-bi": "Power BI",
+    "machine-learning": "Machine Learning",
+    "excel": "Excel",
+    "tableau": "Tableau",
+    "looker-studio": "Looker Studio"
+  };
+  
+  if (specialCases[slug]) {
+    return specialCases[slug];
+  }
+  
   return slug
     .split("-")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
