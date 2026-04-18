@@ -7,7 +7,7 @@ import {
   Calendar,
   CheckCircle2,
 } from "lucide-react";
-import { caseStudies } from "../../data/CaseStudiesdata";
+import { caseStudies } from "../../data/caseStudies";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { ease, pageHeaderAnimation, rotatingWordAnimation } from "@/lib/animations";
 

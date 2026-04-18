@@ -7,7 +7,7 @@ import SkillsSection from "@/components/sections/SkillsSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ContactSection from "@/components/sections/ContactSection";
 import CertificatesScrolling from "@/components/ui/CertificatesScrolling";
-import RevealSection from "@/components/ui/RevealSection";
+import { RevealSection } from "@/components/ui/common";
 import { SEO } from "@/components/SEO";
 
 const Home = () => {

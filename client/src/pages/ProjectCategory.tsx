@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { FaArrowLeft } from "react-icons/fa";
-import { projects, Project } from "@/data/projectsData";
-import ProjectCard from "@/components/ui/ProjectCard";
+import { projects, Project } from "@/data/projects";
+import { ProjectCard } from "@/components/ui/common";
+import { slugToCategoryName, filterProjectsByExactCategory } from "@/lib/dataTransforms";
 
 interface ProjectCategoryProps {
   params: {
@@ -62,33 +63,14 @@ const ProjectCategory = ({ params }: ProjectCategoryProps) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Normalize category for comparison
-    const normalizedCategory = params.category
-      .split("-")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-      
-    const filtered = projects.filter(project => 
-      project.category.toLowerCase() === normalizedCategory.toLowerCase() ||
-      // Special cases for categories with spaces which might be formatted with dashes in URL
-      (normalizedCategory === "Machine Learning" && project.category === "Machine Learning") ||
-      (normalizedCategory === "Looker Studio" && project.category === "Looker Studio") ||
-      // Handle potential variations in URL
-      (params.category === "looker-studio" && project.category === "Looker Studio")
-    );
-    
+    const categoryName = slugToCategoryName(params.category);
+    const filtered = filterProjectsByExactCategory(projects, categoryName);
     setCategoryProjects(filtered);
   }, [params.category]);
 
-  const displayName = getDisplayName(params.category
-    .split("-")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" "));
-
-  const description = getCategoryDescription(params.category
-    .split("-")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" "));
+  const categoryName = slugToCategoryName(params.category);
+  const displayName = getDisplayName(categoryName);
+  const description = getCategoryDescription(categoryName);
 
   const sectionVariants = {
     hidden: { opacity: 0 },

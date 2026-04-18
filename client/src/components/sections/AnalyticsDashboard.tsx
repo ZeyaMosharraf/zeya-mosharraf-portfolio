@@ -1,20 +1,18 @@
 import { motion, useInView } from "framer-motion";
 import { Database, BarChart3, Brain, Monitor, Zap, TrendingUp, FolderOpen, Award, Users, Clock, Star } from "lucide-react";
-import { projects } from "@/data/projectsData";
+import { projects } from "@/data/projects";
 import { useRef } from "react";
 import { DataFlowVisualization } from "@/components/ui/DataFlowVisualization";
 import SectionHeader from "@/components/ui/SectionHeader";
 import CardGlow from "@/components/ui/CardGlow";
 import { ease, sectionStaggerChildren, cardHover } from "@/lib/animations";
+import { calculateTechnologyStats } from "@/lib/dataTransforms";
 
 const AnalyticsDashboard = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  const technologyStats = projects.reduce((acc, project) => {
-    acc[project.category] = (acc[project.category] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const technologyStats = calculateTechnologyStats(projects);
 
   const technologyCards = [
     { name: "Power BI", count: technologyStats["Power BI"] || 0, icon: Monitor, description: "Interactive Dashboards" },

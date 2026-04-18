@@ -2,21 +2,13 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaFilter, FaSearch, FaTh, FaList } from "react-icons/fa";
 import { Grid, List } from "lucide-react";
-import ProjectCard from "@/components/ui/ProjectCard";
+import { ProjectCard } from "@/components/ui/common";
 import PageHero from "@/components/ui/PageHero";
-import { projects } from "@/data/projectsData";
+import { projects } from "@/data/projects";
 import { SEO } from "@/components/SEO";
+import { getProjectCategories, filterProjects } from "@/lib/dataTransforms";
 
-const categories = [
-  { id: "all", name: "All Projects", count: projects.length },
-  { id: "sql", name: "SQL", count: projects.filter(p => p.category === "SQL").length },
-  { id: "python", name: "Python", count: projects.filter(p => p.category === "Python").length },
-  { id: "machine-learning", name: "Machine Learning", count: projects.filter(p => p.category === "Machine Learning").length },
-  { id: "power-bi", name: "Power BI", count: projects.filter(p => p.category === "Power BI").length },
-  { id: "excel", name: "Excel", count: projects.filter(p => p.category === "Excel").length },
-  { id: "tableau", name: "Tableau", count: projects.filter(p => p.category === "Tableau").length },
-  { id: "looker-studio", name: "Looker Studio", count: projects.filter(p => p.category === "Looker Studio").length }
-];
+const categories = getProjectCategories(projects);
 
 const AllProjects = () => {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -25,25 +17,7 @@ const AllProjects = () => {
   const [filteredProjects, setFilteredProjects] = useState(projects);
 
   useEffect(() => {
-    let filtered = projects;
-
-    // Filter by category
-    if (activeCategory !== "all") {
-      const selectedCategory = categories.find(cat => cat.id === activeCategory);
-      if (selectedCategory) {
-        filtered = filtered.filter(project => project.category === selectedCategory.name);
-      }
-    }
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(project =>
-        project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.skills?.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-
+    const filtered = filterProjects(projects, activeCategory, searchTerm);
     setFilteredProjects(filtered);
   }, [activeCategory, searchTerm]);
 

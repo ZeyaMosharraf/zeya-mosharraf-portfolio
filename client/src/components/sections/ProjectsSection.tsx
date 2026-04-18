@@ -1,23 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import ProjectCard from "@/components/ui/ProjectCard";
+import { ProjectCard } from "@/components/ui/common";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { projects } from "@/data/projectsData";
+import { projects } from "@/data/projects";
 import { FaGithub, FaFilter } from "react-icons/fa";
 import { FolderGit2, ArrowRight } from "lucide-react";
 import { ease, staggerContainer, staggerItem } from "@/lib/animations";
+import { getProjectCategories, selectFeaturedProjects, filterProjectsByCategory } from "@/lib/dataTransforms";
 
-const categories = [
-  { id: "all", name: "All Projects" },
-  { id: "sql", name: "SQL" },
-  { id: "python", name: "Python" },
-  { id: "machine-learning", name: "Machine Learning" },
-  { id: "power-bi", name: "Power BI" },
-  { id: "excel", name: "Excel" },
-  { id: "tableau", name: "Tableau" },
-  { id: "looker-studio", name: "Looker Studio" }
-];
+const categories = getProjectCategories(projects);
 
 interface ProjectsSectionProps {
   showFeaturedOnly?: boolean;
@@ -27,32 +19,18 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
   const [activeCategory, setActiveCategory] = useState("all");
   const [, setLocation] = useLocation();
 
-  const selectFeaturedProjects = (): typeof projects => {
-    if (!showFeaturedOnly) return projects;
-    const featuredProjects: typeof projects = [];
-    const usedCategories = new Set<string>();
-    const priorityCategories = ["SQL", "Power BI", "Python", "Machine Learning", "Excel", "Tableau"];
-    for (const category of priorityCategories) {
-      const project = projects.find(p => p.category === category && !usedCategories.has(p.category));
-      if (project && featuredProjects.length < 6) { featuredProjects.push(project); usedCategories.add(project.category); }
-    }
-    if (featuredProjects.length < 6) {
-      const remaining = projects.filter(p => !featuredProjects.includes(p));
-      featuredProjects.push(...remaining.slice(0, 6 - featuredProjects.length));
-    }
-    return featuredProjects;
+  const projectsToShow = showFeaturedOnly ? selectFeaturedProjects(projects) : projects;
+  const [projectsData, setProjectsData] = useState(projectsToShow);
+
+  useEffect(() => {
+    setProjectsData(showFeaturedOnly ? selectFeaturedProjects(projects) : projects);
+  }, [showFeaturedOnly]);
+
+  const filteredProjects = filterProjectsByCategory(projectsData, activeCategory);
+
+  const navigateToCategory = (categoryId: string) => {
+    if (categoryId !== "all") setLocation(`/projects/${categoryId}`);
   };
-
-  const projectsToShow = selectFeaturedProjects();
-  const [projectsData, setProjectsData] = useState(projectsToShow || []);
-
-  useEffect(() => { setProjectsData(selectFeaturedProjects() || []); }, [showFeaturedOnly]);
-
-  const filteredProjects = activeCategory === "all"
-    ? projectsData
-    : projectsData.filter(project => project.category.toLowerCase().replace(/\s+/g, "-") === activeCategory);
-
-  const navigateToCategory = (categoryId: string) => { if (categoryId !== "all") setLocation(`/projects/${categoryId}`); };
 
   return (
     <section id="projects" className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0B0F14' }}>

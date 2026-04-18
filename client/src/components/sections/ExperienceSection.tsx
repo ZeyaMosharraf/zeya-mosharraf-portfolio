@@ -1,30 +1,14 @@
 import { Calendar, Building2, Briefcase } from "lucide-react";
-import { experiences } from "@/data/experiencedata";
+import { experiences } from "@/data/experience";
 import SectionHeader from "@/components/ui/SectionHeader";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState, useRef } from 'react';
-
-// Helper function to parse dates for proper sorting
-const parseStartDate = (dateString: string) => {
-  const startDate = dateString.split(/\s*[-–]\s*/)[0] || dateString;
-  const monthMap: { [key: string]: number } = {
-    'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-    'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
-  };
-  const parts = startDate.trim().split(' ');
-  if (parts.length === 2) {
-    const month = monthMap[parts[0]];
-    const year = parseInt(parts[1]);
-    return new Date(year, month);
-  }
-  return new Date(startDate);
-};
+import { sortExperiencesByDate } from "@/lib/dataTransforms";
 
 const ExperienceSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start', skipSnaps: false, dragFree: false });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-
 
   const scrollTo = useCallback((index: number) => { if (emblaApi) emblaApi.scrollTo(index); }, [emblaApi]);
   const onSelect = useCallback(() => { if (!emblaApi) return; setSelectedIndex(emblaApi.selectedScrollSnap()); }, [emblaApi]);
@@ -38,7 +22,7 @@ const ExperienceSection = () => {
     return () => { emblaApi.off('select', onSelect); emblaApi.off('reInit', onSelect); };
   }, [emblaApi, onSelect]);
 
-  const sortedExperiences = [...experiences].sort((a, b) => parseStartDate(b.date).getTime() - parseStartDate(a.date).getTime());
+  const sortedExperiences = sortExperiencesByDate(experiences);
 
   return (
     <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0B0F14' }}>

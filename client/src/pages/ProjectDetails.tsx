@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { motion } from "framer-motion";
 import { FaGithub, FaArrowLeft, FaExternalLinkAlt, FaTags, FaTools } from "react-icons/fa";
 import { Calendar, Target, Zap, Award, Clock, User } from "lucide-react";
-import { projects, Project } from "@/data/projectsData";
+import { projects, Project } from "@/data/projects";
 import { Helmet } from "react-helmet-async";
 import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";

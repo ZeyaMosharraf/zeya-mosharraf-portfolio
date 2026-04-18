@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { FaGithub, FaEye } from "react-icons/fa";
 import { TrendingUp } from "lucide-react";
-import { Project } from "@/data/projectsData";
+import { Project } from "@/data/projects";
 
 interface ProjectCardProps {
   project: Project;

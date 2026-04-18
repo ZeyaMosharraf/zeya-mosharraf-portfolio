@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import SkillBar from "@/components/ui/SkillBar";
+import { SkillBar } from "@/components/ui/common";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { programmingSkills, visualizationSkills, additionalSkills } from "@/data/skillsData";
+import { programmingSkills, visualizationSkills, additionalSkills } from "@/data/skills";
 import { Code2 } from "lucide-react";
 import { ease, fadeInLeft, fadeInRight } from "@/lib/animations";
 

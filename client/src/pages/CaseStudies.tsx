@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useParams, useLocation } from "wouter";
 import { ArrowLeft, FileText, Calendar, Award, ExternalLink, Search, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { caseStudies } from "@/data/CaseStudiesdata";
+import { caseStudies } from "@/data/caseStudies";
 import { Helmet } from "react-helmet-async";
 import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
