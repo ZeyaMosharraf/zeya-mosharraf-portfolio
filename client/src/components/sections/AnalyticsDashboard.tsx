@@ -4,7 +4,6 @@ import { projects } from "@/data/projects";
 import { useRef } from "react";
 import { DataFlowVisualization } from "@/components/ui/DataFlowVisualization";
 import SectionHeader from "@/components/ui/SectionHeader";
-import CardGlow from "@/components/ui/CardGlow";
 import { ease, sectionStaggerChildren, cardHover } from "@/lib/animations";
 import { calculateTechnologyStats } from "@/lib/dataTransforms";
 
@@ -65,8 +64,6 @@ const AnalyticsDashboard = () => {
                 animate={isInView ? sectionStaggerChildren(index).animate : {}}
                 whileHover={cardHover.whileHover}
               >
-                {/* Top glow line on hover */}
-                <CardGlow />
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
                   <Icon size={18} />
                 </div>
@@ -138,8 +135,6 @@ const AnalyticsDashboard = () => {
                   transition={{ delay: index * 0.1 + 1, duration: 0.6, ease }}
                   whileHover={{ y: -6, borderColor: 'rgba(220,38,38,0.2)' }}
                 >
-                  {/* Top glow line on hover */}
-                  <CardGlow />
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center text-red-400/70 mx-auto mb-3" style={{ background: 'rgba(220,38,38,0.06)' }}>
                     <Icon size={18} />
                   </div>
