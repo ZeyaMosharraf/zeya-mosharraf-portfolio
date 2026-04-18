@@ -93,8 +93,7 @@ const ExperienceSection = () => {
 const ExperienceCard = ({ experience, index }: { experience: any; index: number }) => {
   return (
     <div
-      className="relative h-[400px] cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-xl overflow-hidden"
-      style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.06)' }}
+      className="relative h-[400px] cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-xl overflow-hidden bg-white/2 border border-white/6 backdrop-blur-sm"
       data-testid={`card-experience-${experience.id}`}
     >
       <div className="h-full p-6 flex flex-col relative overflow-hidden">
@@ -129,15 +128,14 @@ const ExperienceCard = ({ experience, index }: { experience: any; index: number 
               {experience.skills.slice(0, 6).map((skill: string, idx: number) => (
                 <span
                   key={idx}
-                  className="px-2 py-0.5 text-[10px] font-medium text-gray-400 rounded"
-                  style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
+                  className="px-2 py-0.5 text-[10px] font-medium text-gray-400 rounded bg-white/2 border border-white/6"
                   data-testid={`tag-skill-${idx}`}
                 >
                   {skill}
                 </span>
               ))}
               {experience.skills.length > 6 && (
-                <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
+                <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded bg-white/1 border border-white/4">
                   +{experience.skills.length - 6}
                 </span>
               )}

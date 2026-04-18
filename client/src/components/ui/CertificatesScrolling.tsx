@@ -78,8 +78,7 @@ const CertificatesScrolling = ({
           {canScrollLeft && (
             <Button
               onClick={scrollLeft}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300"
-              style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300 bg-white/5 border border-white/8 backdrop-blur-sm"
               variant="ghost"
             >
               <ChevronLeft className="h-5 w-5 text-gray-400" />
@@ -89,8 +88,7 @@ const CertificatesScrolling = ({
           {canScrollRight && (
             <Button
               onClick={scrollRight}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300"
-              style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.08)' }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300 bg-white/5 border border-white/8 backdrop-blur-sm"
               variant="ghost"
             >
               <ChevronRight className="h-5 w-5 text-gray-400" />

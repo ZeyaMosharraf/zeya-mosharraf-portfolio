@@ -24,11 +24,10 @@ const AboutSection = () => {
           >
             <div className="relative">
               <svg
-                className="rounded-xl w-full h-auto"
+                className="rounded-xl w-full h-auto bg-white/2 border border-white/6"
                 viewBox="0 0 400 500"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
               >
                 <rect width="400" height="500" rx="12" fill="rgba(255,255,255,0.01)" />
                 <rect x="100" y="80" width="200" height="200" rx="100" fill="rgba(255,255,255,0.03)" />

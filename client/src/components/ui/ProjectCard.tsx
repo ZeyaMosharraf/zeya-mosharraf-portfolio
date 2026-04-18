@@ -29,8 +29,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
 
   return (
     <div
-      className="group relative rounded-xl overflow-hidden cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+      className="group relative rounded-xl overflow-hidden cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white/2 border border-white/6 backdrop-blur-sm"
       onClick={handleViewProject}
     >
       {/* Thumbnail */}
@@ -72,7 +71,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
 
         {/* Impact metric */}
         {project.resultsAndImpact && (
-          <div className="flex items-start gap-2 mb-4 p-2.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
+          <div className="flex items-start gap-2 mb-4 p-2.5 rounded-lg bg-white/2 border border-white/4">
             <TrendingUp className="w-3 h-3 text-red-400/70 mt-0.5 flex-shrink-0" />
             <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">{project.resultsAndImpact}</p>
           </div>
@@ -82,7 +81,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         {project.skills && project.skills.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
             {project.skills.slice(0, 3).map((skill, idx) => (
-              <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
+              <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded bg-white/2 border border-white/5">
                 {skill}
               </span>
             ))}
@@ -105,8 +104,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-[34px] h-[34px] rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200 hover:bg-white/5"
-            style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
+            className="w-[34px] h-[34px] rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200 hover:bg-white/5 border border-white/6 bg-white/2"
             aria-label="GitHub repository"
             onClick={(e) => e.stopPropagation()}
           >

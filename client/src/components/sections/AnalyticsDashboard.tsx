@@ -62,8 +62,7 @@ const AnalyticsDashboard = () => {
             return (
               <motion.div
                 key={index}
-                className="rounded-xl p-5 text-center group transition-all duration-300 relative overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+                className="rounded-xl p-5 text-center group transition-all duration-300 relative overflow-hidden bg-white/2 border border-white/6 backdrop-blur-sm"
                 initial={{ opacity: 0, y: 24 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: index * 0.08 + 0.2, duration: 0.6, ease }}

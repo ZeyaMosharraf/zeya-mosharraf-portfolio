@@ -70,8 +70,7 @@ const Footer = () => {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 rounded-lg text-gray-500 transition-all duration-300 hover:text-red-400"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                      className="p-3 rounded-lg text-gray-500 transition-all duration-300 hover:text-red-400 bg-white/3 border border-white/6"
                       aria-label={social.label}
                       whileHover={{ y: -3, borderColor: 'rgba(220,38,38,0.2)' }}
                       whileTap={{ scale: 0.95 }}

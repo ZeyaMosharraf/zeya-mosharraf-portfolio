@@ -22,8 +22,7 @@ const ContactSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Form card */}
           <motion.div
-            className="rounded-xl p-6 lg:p-8"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+            className="rounded-xl p-6 lg:p-8 bg-white/2 border border-white/6 backdrop-blur-sm"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -49,7 +48,7 @@ const ContactSection = () => {
                 { icon: <FaClock className="text-[13px]" />, label: "Working Hours", value: "Monday - Friday, 9AM - 5PM IST" },
               ].map((item, i) => (
                 <div key={i} className="flex items-start">
-                  <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-red-400/70" style={{ background: 'rgba(220,38,38,0.06)', border: '1px solid rgba(220,38,38,0.1)' }}>
+                  <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-red-400/70 bg-red-900/10 border border-red-900/20">
                     {item.icon}
                   </div>
                   <div className="ml-3">
@@ -76,8 +75,7 @@ const ContactSection = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200"
-                    style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200 bg-white/2 border border-white/6"
                     aria-label={social.label}
                   >
                     {social.icon}

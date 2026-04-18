@@ -32,8 +32,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
 
   return (
     <div
-      className="group relative rounded-xl p-6 h-full flex flex-col cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden"
-      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
+      className="group relative rounded-xl p-6 h-full flex flex-col cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden bg-white/2 border border-white/6"
       onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
     >
       <div className="relative z-10 flex flex-col h-full">
@@ -66,8 +65,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
             {caseStudy.toolsUsed.slice(0, 3).map((tool, index) => (
               <span
                 key={index}
-                className="px-2 py-0.5 text-[11px] font-medium text-gray-400 rounded"
-                style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
+                className="px-2 py-0.5 text-[11px] font-medium text-gray-400 rounded bg-white/2 border border-white/6"
               >
                 {tool}
               </span>
