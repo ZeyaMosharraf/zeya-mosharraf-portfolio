@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 
-import {projects} from "./client/src/data/projectsData";
-import {blogPosts} from "./client/src/data/blogdata";
-import {caseStudies} from "./client/src/data/CaseStudiesdata";
+import {projects} from "./client/src/data/projects";
+import {blogPosts} from "./client/src/data/blog";
+import {caseStudies} from "./client/src/data/caseStudies";
 
 const baseUrl = "https://zeyamosharraf.vercel.app";
 
