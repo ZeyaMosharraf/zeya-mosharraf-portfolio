@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { DataFlowVisualization } from "@/components/ui/DataFlowVisualization";
 import SectionHeader from "@/components/ui/SectionHeader";
 import CardGlow from "@/components/ui/CardGlow";
-import { ease } from "@/lib/animations";
+import { ease, sectionStaggerChildren, cardHover } from "@/lib/animations";
 
 const AnalyticsDashboard = () => {
   const ref = useRef(null);
@@ -63,10 +63,9 @@ const AnalyticsDashboard = () => {
               <motion.div
                 key={index}
                 className="rounded-xl p-5 text-center group transition-all duration-300 relative overflow-hidden bg-white/2 border border-white/6 backdrop-blur-sm"
-                initial={{ opacity: 0, y: 24 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.08 + 0.2, duration: 0.6, ease }}
-                whileHover={{ y: -4, borderColor: 'rgba(220,38,38,0.2)' }}
+                {...sectionStaggerChildren(index)}
+                animate={isInView ? sectionStaggerChildren(index).animate : {}}
+                whileHover={cardHover.whileHover}
               >
                 {/* Top glow line on hover */}
                 <CardGlow />

@@ -3,6 +3,16 @@ import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from
 import { ArrowRight, Activity, Database, Zap, Clock, Wifi } from "lucide-react";
 import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import { useLocation } from "wouter";
+import { 
+  ease, 
+  heroLeftColumn, 
+  heroItemFadeUp, 
+  heroRightTerminal, 
+  rotatingWordAnimation, 
+  shimmerTransition,
+  shimmerSlide,
+  terminalLineAnimation 
+} from "@/lib/animations";
 
 /* ═══════════════════════════════════════════════════════
    Terminal Syntax Highlighting Helper
@@ -80,10 +90,7 @@ const RotatingWord = () => {
           key={ROTATING_WORDS[index]}
           className="inline-block bg-clip-text text-transparent leading-relaxed"
           style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          {...rotatingWordAnimation}
         >
           {ROTATING_WORDS[index]}
         </motion.span>
@@ -515,17 +522,12 @@ const Hero = () => {
           {/* ─── Left Column ─── */}
           <motion.div
             className="lg:col-span-7 space-y-5"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
-            }}
+            initial={heroLeftColumn.initial}
+            animate={heroLeftColumn.animate}
           >
             {/* Badge with live pulse + shimmer */}
             <motion.div
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              variants={heroItemFadeUp}
             >
               <div
                 className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold relative overflow-hidden"
@@ -535,8 +537,8 @@ const Hero = () => {
                 <motion.div
                   className="absolute inset-0"
                   style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)' }}
-                  animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: 'easeInOut' }}
+                  animate={shimmerSlide}
+                  transition={shimmerTransition}
                 />
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: 'var(--accent-primary)' }} />
@@ -549,8 +551,7 @@ const Hero = () => {
             {/* Headline with rotating gradient keywords */}
             <motion.h1
               className="text-4xl md:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] tracking-tight text-white max-w-xl"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              variants={heroItemFadeUp}
             >
               Building{" "}
               <RotatingWord />
@@ -565,8 +566,7 @@ const Hero = () => {
 
             <motion.p
               className="text-lg text-gray-400 max-w-lg leading-relaxed"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              variants={heroItemFadeUp}
             >
               Designing reliable data pipelines, transformations, and analytics
               infrastructure that power{" "}
@@ -578,8 +578,7 @@ const Hero = () => {
             {/* Metrics strip */}
             <motion.div
               className="flex flex-wrap gap-6 pt-1"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              variants={heroItemFadeUp}
             >
               <MetricPill icon={<Database className="w-3.5 h-3.5" />} value={useCountUp(2, 2000, 800)} suffix="M+" label="Records / Day" />
               <MetricPill icon={<Activity className="w-3.5 h-3.5" />} value={useCountUp(99, 2200, 1000)} suffix=".9%" label="Pipeline Uptime" />
@@ -589,8 +588,7 @@ const Hero = () => {
             {/* CTA buttons */}
             <motion.div
               className="flex items-center gap-3 pt-2"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              variants={heroItemFadeUp}
             >
               <button
                 onClick={() => handleSectionClick("contact")}
@@ -612,8 +610,7 @@ const Hero = () => {
             {/* Social links — tight under CTAs */}
             <motion.div
               className="flex items-center gap-3 pt-1"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              variants={heroItemFadeUp}
             >
               {[
                 { href: "https://github.com/ZeyaMosharraf", icon: <FaGithub className="text-[15px]" />, label: "GitHub" },
@@ -641,9 +638,7 @@ const Hero = () => {
           {/* ─── Right Column — Interactive Terminal ─── */}
           <motion.div
             className="lg:col-span-5"
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+            {...heroRightTerminal}
           >
             <div
               ref={editorRef}
@@ -740,9 +735,7 @@ const Hero = () => {
                     {visibleLines.map((line, i) => (
                       <motion.div
                         key={`${activeCmd}-${i}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        {...terminalLineAnimation}
                         style={{
                           color: line.accent
                             ? 'var(--accent-primary)'

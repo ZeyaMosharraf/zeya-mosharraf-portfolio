@@ -3,7 +3,7 @@ import SkillBar from "@/components/ui/SkillBar";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { programmingSkills, visualizationSkills, additionalSkills } from "@/data/skillsData";
 import { Code2 } from "lucide-react";
-import { ease } from "@/lib/animations";
+import { ease, fadeInLeft, fadeInRight } from "@/lib/animations";
 
 const SkillsSection = () => {
   return (
@@ -24,10 +24,7 @@ const SkillsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
           <motion.div
             className="space-y-6"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease }}
+            {...fadeInLeft()}
           >
             <h3 className="text-[15px] font-semibold text-gray-300 mb-6 uppercase tracking-wider">Data Analysis & Programming</h3>
             <div className="space-y-5">
@@ -39,10 +36,7 @@ const SkillsSection = () => {
 
           <motion.div
             className="space-y-6"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease, delay: 0.1 }}
+            {...fadeInRight(0.1)}
           >
             <h3 className="text-[15px] font-semibold text-gray-300 mb-6 uppercase tracking-wider">Data Visualization & BI Tools</h3>
             <div className="space-y-5">

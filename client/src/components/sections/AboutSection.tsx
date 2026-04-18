@@ -2,7 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { FaGraduationCap, FaBriefcase, FaDownload } from "react-icons/fa";
 import { User2 } from "lucide-react";
 import { useRef } from "react";
-import { ease, shimmerTransition } from "@/lib/animations";
+import { ease, fadeInLeft, fadeInRight, badgeFadeIn, shimmerTransition, shimmerSlide } from "@/lib/animations";
 
 const AboutSection = () => {
   const headerRef = useRef(null);
@@ -17,10 +17,7 @@ const AboutSection = () => {
           {/* Portrait */}
           <motion.div
             className="lg:col-span-5"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, ease }}
+            {...fadeInLeft()}
           >
             <div className="relative">
               <svg
@@ -49,23 +46,18 @@ const AboutSection = () => {
           {/* Content */}
           <motion.div
             className="lg:col-span-7 space-y-5"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, ease, delay: 0.1 }}
+            {...fadeInRight(0.1)}
           >
             <div ref={headerRef}>
               <motion.div
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
                 style={{ background: 'rgba(239,68,68,0.08)', color: 'rgba(239,68,68,0.8)', border: '1px solid rgba(239,68,68,0.12)' }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, ease }}
+                {...badgeFadeIn}
               >
                 <motion.div
                   className="absolute inset-0"
                   style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.1) 50%, transparent 100%)' }}
-                  animate={{ x: ['-100%', '200%'] }}
+                  animate={shimmerSlide}
                   transition={shimmerTransition}
                 />
                 <User2 className="w-3 h-3 relative z-10" />

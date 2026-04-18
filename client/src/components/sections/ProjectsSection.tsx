@@ -6,7 +6,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { projects } from "@/data/projectsData";
 import { FaGithub, FaFilter } from "react-icons/fa";
 import { FolderGit2, ArrowRight } from "lucide-react";
-import { ease } from "@/lib/animations";
+import { ease, staggerContainer, staggerItem } from "@/lib/animations";
 
 const categories = [
   { id: "all", name: "All Projects" },
@@ -100,9 +100,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
               <motion.div
                 key={project.slug}
                 className="flex-none w-72"
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
+                {...staggerItem}
                 viewport={{ once: true }}
               >
                 <ProjectCard project={project} />
@@ -116,8 +114,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.slug}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              {...staggerItem}
               transition={{ duration: 0.5, delay: index * 0.06, ease }}
               viewport={{ once: true }}
             >

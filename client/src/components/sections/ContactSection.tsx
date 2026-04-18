@@ -3,7 +3,7 @@ import ContactForm from "@/components/forms/ContactForm";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { FaEnvelope, FaMapMarkerAlt, FaClock, FaLinkedin, FaGithub } from "react-icons/fa";
 import { Mail } from "lucide-react";
-import { ease } from "@/lib/animations";
+import { ease, whileInViewFadeUp } from "@/lib/animations";
 
 const ContactSection = () => {
   return (
@@ -23,10 +23,7 @@ const ContactSection = () => {
           {/* Form card */}
           <motion.div
             className="rounded-xl p-6 lg:p-8 bg-white/2 border border-white/6 backdrop-blur-sm"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease }}
+            {...whileInViewFadeUp()}
           >
             <ContactForm />
           </motion.div>
@@ -34,10 +31,7 @@ const ContactSection = () => {
           {/* Contact info */}
           <motion.div
             className="space-y-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease, delay: 0.1 }}
+            {...whileInViewFadeUp(0.1)}
           >
             <div className="space-y-5">
               <h3 className="text-[15px] font-semibold text-gray-300 uppercase tracking-wider">Contact Information</h3>

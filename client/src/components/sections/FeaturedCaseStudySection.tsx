@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { caseStudies } from "../../data/CaseStudiesdata";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { ease } from "@/lib/animations";
+import { ease, pageHeaderAnimation, rotatingWordAnimation } from "@/lib/animations";
 
 const getCategoryColor = (cat: string) => {
   const c = cat.toLowerCase();
@@ -85,9 +85,8 @@ const FeaturedCaseStudySection = () => {
       >
         {/* ═══ TOP: Section Headline ═══ */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          {...pageHeaderAnimation}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease }}
         >
           <SectionHeader
             icon={Sparkles}
@@ -101,19 +100,15 @@ const FeaturedCaseStudySection = () => {
         {/* ═══ MAIN: Left Summary + Right Scroll Cards ═══ */}
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start"
-          initial={{ opacity: 0, y: 40 }}
+          {...pageHeaderAnimation}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.15, duration: 0.7, ease }}
         >
           {/* ─── LEFT: Executive Summary (synced with active card) ─── */}
           <div className="lg:col-span-5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.35, ease }}
+                {...rotatingWordAnimation}
                 className="rounded-2xl p-7 lg:p-8"
                 style={{
                   background: "rgba(255,255,255,0.02)",
