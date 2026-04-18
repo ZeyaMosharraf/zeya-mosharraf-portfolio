@@ -1,7 +1,5 @@
-import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import { useLocation } from "wouter";
-import CardGlow from "@/components/ui/CardGlow";
 
 interface CaseStudy {
   id: number;
@@ -33,15 +31,11 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
   const catColor = getCategoryColor(caseStudy.category);
 
   return (
-    <motion.div
-      className="group relative rounded-xl p-6 h-full flex flex-col cursor-pointer transition-all duration-250 ease-out hover:-translate-y-1.5 overflow-hidden"
+    <div
+      className="group relative rounded-xl p-6 h-full flex flex-col cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden"
       style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
       onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.boxShadow = '0 12px 32px -8px rgba(0,0,0,0.3)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
-      {/* Top glow line on hover */}
-      <CardGlow />
       <div className="relative z-10 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
@@ -101,7 +95,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
             e.stopPropagation();
             setLocation(`/case-study/${caseStudy.slug}`);
           }}
-          className="group/btn w-full inline-flex items-center justify-center gap-2 h-[38px] text-[13px] font-medium rounded-lg transition-all duration-250"
+          className="group/btn w-full inline-flex items-center justify-center gap-2 h-[38px] text-[13px] font-medium rounded-lg transition-all duration-300 hover:bg-white/5"
           style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#9CA3AF' }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(220,38,38,0.35)'; e.currentTarget.style.color = '#e5e7eb'; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#9CA3AF'; }}
@@ -111,7 +105,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

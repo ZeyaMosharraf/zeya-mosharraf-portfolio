@@ -1,9 +1,7 @@
-import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { FaGithub, FaEye } from "react-icons/fa";
 import { TrendingUp } from "lucide-react";
 import { Project } from "@/data/projectsData";
-import CardGlow from "@/components/ui/CardGlow";
 
 interface ProjectCardProps {
   project: Project;
@@ -30,23 +28,18 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
   const handleViewProject = () => { setLocation(`/project/${project.slug}`); };
 
   return (
-    <motion.div
-      className="group relative rounded-xl overflow-hidden cursor-pointer flex flex-col h-full transition-all duration-300"
+    <div
+      className="group relative rounded-xl overflow-hidden cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
       style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
-      whileHover={{ y: -4, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-      whileTap={{ scale: 0.98 }}
       onClick={handleViewProject}
-      layout
     >
-      {/* Top glow line on hover */}
-      <CardGlow />
       {/* Thumbnail */}
       {project.thumbhnailUrl && (
         <div className="relative h-40 overflow-hidden" style={{ background: '#0a0a0a' }}>
           <img
             src={project.thumbhnailUrl}
             alt={project.title + ' preview'}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-80 group-hover:opacity-100"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14] via-transparent to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -103,7 +96,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         <div className="flex items-center gap-2 mt-auto">
           <button
             onClick={(e) => { e.stopPropagation(); handleViewProject(); }}
-            className="flex-1 flex items-center justify-center gap-2 h-[34px] rounded-lg text-[12px] font-medium text-white transition-all duration-200"
+            className="flex-1 flex items-center justify-center gap-2 h-[34px] rounded-lg text-[12px] font-medium text-white transition-all duration-200 hover:brightness-110"
             style={{ background: '#DC2626' }}
           >
             <FaEye className="text-[10px]" /> View Project
@@ -112,7 +105,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-[34px] h-[34px] rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200"
+            className="w-[34px] h-[34px] rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200 hover:bg-white/5"
             style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
             aria-label="GitHub repository"
             onClick={(e) => e.stopPropagation()}
@@ -121,7 +114,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           </a>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -80,10 +80,10 @@ const RotatingWord = () => {
           key={ROTATING_WORDS[index]}
           className="inline-block bg-clip-text text-transparent leading-relaxed"
           style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-          initial={{ opacity: 0, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, filter: 'blur(10px)' }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
         >
           {ROTATING_WORDS[index]}
         </motion.span>
@@ -96,33 +96,12 @@ const RotatingWord = () => {
 
 /* ── Animated Border for Terminal ── */
 const AnimatedBorder = ({ children }: { children: React.ReactNode }) => {
-  const angle = useMotionValue(0);
-  const smoothAngle = useSpring(angle, { damping: 20, stiffness: 80 });
-
-  useEffect(() => {
-    let id: number;
-    let a = 0;
-    const tick = () => {
-      a = (a + 0.5) % 360;
-      angle.set(a);
-      id = requestAnimationFrame(tick);
-    };
-    id = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(id);
-  }, [angle]);
-
-  const background = useTransform(
-    smoothAngle,
-    (a: number) =>
-      `conic-gradient(from ${a}deg at 50% 50%, rgba(220,38,38,0.5) 0deg, transparent 60deg, transparent 180deg, rgba(239,68,68,0.3) 240deg, transparent 360deg)`
-  );
-
   return (
-    <motion.div className="relative p-[1px] rounded-xl" style={{ background }}>
+    <div className="relative p-[1px] rounded-xl" style={{ background: 'rgba(220,38,38,0.2)' }}>
       <div className="rounded-xl overflow-hidden relative" style={{ background: '#0D0D0D' }}>
         {children}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -576,14 +555,12 @@ const Hero = () => {
               Building{" "}
               <RotatingWord />
               <br />
-              <motion.span
+              <span
                 className="bg-clip-text text-transparent"
                 style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-                animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
               >
                 Data Systems
-              </motion.span>
+              </span>
             </motion.h1>
 
             <motion.p
@@ -617,20 +594,16 @@ const Hero = () => {
             >
               <button
                 onClick={() => handleSectionClick("contact")}
-                className="group h-[42px] px-5 text-[14px] text-white rounded-lg font-semibold flex items-center transition-all duration-250 hover:scale-[1.02]"
+                className="group h-[42px] px-5 text-[14px] text-white rounded-lg font-semibold flex items-center transition-all duration-300 hover:brightness-110"
                 style={{ background: '#DC2626' }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 16px rgba(220,38,38,0.3)'; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
               >
                 Work With Me <ArrowRight className="ml-2 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
               </button>
 
               <button
                 onClick={() => setLocation("/case-studies")}
-                className="h-[42px] px-5 text-[14px] text-gray-300 rounded-lg font-medium transition-all duration-250 hover:scale-[1.02]"
+                className="h-[42px] px-5 text-[14px] text-gray-300 rounded-lg font-medium transition-all duration-300 hover:border-red-500 hover:text-white"
                 style={{ border: '1px solid rgba(255,255,255,0.10)' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(220,38,38,0.5)'; e.currentTarget.style.color = '#f3f4f6'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)'; e.currentTarget.style.color = '#D1D5DB'; }}
               >
                 View Case Studies
               </button>
@@ -652,10 +625,10 @@ const Hero = () => {
                   href={link.href}
                   target={link.href.startsWith("mailto") ? undefined : "_blank"}
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 transition-all duration-250"
+                  className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 transition-all duration-300 hover:text-white hover:border-red-500"
                   style={{ border: '1px solid rgba(255,255,255,0.08)' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(220,38,38,0.4)'; e.currentTarget.style.color = '#f3f4f6'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = ''; }}
+                  onMouseEnter={undefined}
+                  onMouseLeave={undefined}
                   aria-label={link.label}
                 >
                   {link.icon}
@@ -767,9 +740,9 @@ const Hero = () => {
                     {visibleLines.map((line, i) => (
                       <motion.div
                         key={`${activeCmd}-${i}`}
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
                         style={{
                           color: line.accent
                             ? 'var(--accent-primary)'

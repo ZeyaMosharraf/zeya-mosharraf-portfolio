@@ -1,11 +1,8 @@
-import { motion } from "framer-motion";
 import { Calendar, Building2, Briefcase } from "lucide-react";
 import { experiences } from "@/data/experiencedata";
 import SectionHeader from "@/components/ui/SectionHeader";
-import CardGlow from "@/components/ui/CardGlow";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { ease } from "@/lib/animations";
 
 // Helper function to parse dates for proper sorting
 const parseStartDate = (dateString: string) => {
@@ -92,113 +89,62 @@ const ExperienceSection = () => {
   );
 };
 
-// Experience Card — glassmorphism flip card
+// Experience Card — simple hover lift
 const ExperienceCard = ({ experience, index }: { experience: any; index: number }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const handleFlip = () => { if (isMobile) setIsFlipped(!isFlipped); };
-
   return (
     <div
-      className="relative h-[400px] cursor-pointer perspective-1000"
-      onMouseEnter={() => !isMobile && setIsFlipped(true)}
-      onMouseLeave={() => !isMobile && setIsFlipped(false)}
-      onClick={handleFlip}
+      className="relative h-[400px] cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-xl overflow-hidden"
+      style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.06)' }}
       data-testid={`card-experience-${experience.id}`}
     >
-      <motion.div
-        className="relative w-full h-full"
-        initial={false}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-        style={{ transformStyle: "preserve-3d" }}
-      >
-        {/* Front */}
-        <div className="absolute w-full h-full backface-hidden" style={{ backfaceVisibility: "hidden" }}>
+      <div className="h-full p-6 flex flex-col relative overflow-hidden">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-bold text-white mb-2 truncate">{experience.title}</h3>
+            <div className="flex items-center text-red-400/80 mb-2">
+              <Building2 className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+              <span className="font-medium text-[13px] truncate">{experience.issuer}</span>
+            </div>
+            <div className="flex items-center text-gray-500 text-[12px]">
+              <Calendar className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+              <span>{experience.date}</span>
+            </div>
+          </div>
           <div
-            className="h-full rounded-xl p-6 flex flex-col relative overflow-hidden"
-            style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.06)' }}
+            className="px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide ml-3 flex-shrink-0"
+            style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}
           >
-            {/* Top glow line */}
-            <CardGlow />
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-white mb-2 truncate">{experience.title}</h3>
-                <div className="flex items-center text-red-400/80 mb-2">
-                  <Building2 className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-                  <span className="font-medium text-[13px] truncate">{experience.issuer}</span>
-                </div>
-                <div className="flex items-center text-gray-500 text-[12px]">
-                  <Calendar className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-                  <span>{experience.date}</span>
-                </div>
-              </div>
-              <div
-                className="px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide ml-3 flex-shrink-0"
-                style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}
-              >
-                Work
-              </div>
-            </div>
-
-            <div className="mb-4 flex-grow overflow-hidden">
-              <p className="text-[13px] text-gray-400 leading-relaxed line-clamp-3">{experience.description}</p>
-            </div>
-
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-600 mt-auto">
-              <span>{isMobile ? '↑ Tap to read full experience' : '↑ Hover to read full experience'}</span>
-            </div>
+            Work
           </div>
         </div>
 
-        {/* Back */}
-        <div className="absolute w-full h-full backface-hidden" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-          <div
-            className="h-full rounded-xl p-6 flex flex-col"
-            style={{ background: 'rgba(220,38,38,0.03)', backdropFilter: 'blur(10px)', border: '1px solid rgba(220,38,38,0.1)' }}
-          >
-            <div className="mb-3 flex-shrink-0">
-              <h4 className="text-[15px] font-bold text-white leading-tight">{experience.title}</h4>
-              <p className="text-[11px] text-red-400/70 font-medium mt-0.5">{experience.issuer} · {experience.date}</p>
-            </div>
-
-            <div className="flex-grow overflow-y-auto mb-3 pr-1">
-              <p className="text-[12px] text-gray-400 leading-relaxed">{experience.description}</p>
-            </div>
-
-            {experience.skills && experience.skills.length > 0 && (
-              <div className="flex-shrink-0 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                <p className="text-[10px] font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Skills</p>
-                <div className="flex flex-wrap gap-1">
-                  {experience.skills.slice(0, 8).map((skill: string, idx: number) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-0.5 text-[10px] font-medium text-gray-400 rounded"
-                      style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
-                      data-testid={`tag-skill-${idx}`}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                  {experience.skills.length > 8 && (
-                    <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
-                      +{experience.skills.length - 8}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="mb-4 flex-grow overflow-hidden">
+          <p className="text-[13px] text-gray-400 leading-relaxed line-clamp-4">{experience.description}</p>
         </div>
-      </motion.div>
+
+        {experience.skills && experience.skills.length > 0 && (
+          <div className="flex-shrink-0 pt-3 border-t border-white/10">
+            <p className="text-[10px] font-semibold text-gray-500 mb-2 uppercase tracking-wider">Skills</p>
+            <div className="flex flex-wrap gap-1">
+              {experience.skills.slice(0, 6).map((skill: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="px-2 py-0.5 text-[10px] font-medium text-gray-400 rounded"
+                  style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
+                  data-testid={`tag-skill-${idx}`}
+                >
+                  {skill}
+                </span>
+              ))}
+              {experience.skills.length > 6 && (
+                <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
+                  +{experience.skills.length - 6}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
