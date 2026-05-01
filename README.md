@@ -1,146 +1,343 @@
-# Zeya Mosharraf — Portfolio
+# Zeya Mosharraf — Analytics Engineer
 
-A modern, full-stack personal portfolio website for **Zeya Mosharraf** — Data Analyst, Power BI Developer, and Business Analyst. Built with React, TypeScript, and Express, it showcases projects, case studies, certifications, experience, and interactive data visualizations.
+![Live](https://img.shields.io/badge/Live-zeyamosharraf.vercel.app-blue?style=flat-square)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-RealTime-3FCF8E?style=flat-square&logo=supabase)
+![Vercel](https://img.shields.io/badge/Vercel-Deployed-000?style=flat-square&logo=vercel)
 
 ---
 
-## Live Preview
+## The Difference
 
-> Deploy the project and replace this line with your live URL.
+Most portfolios are static HTML with hardcoded content. This one operates like a **data system**.
+
+**Supabase powers every content section** — skills, metrics, projects. Change a value in the database, see it live instantly. No redeployment. No CI/CD overhead for content updates.
+
+This portfolio demonstrates the **same architecture principles** I apply to production data engineering: separation of concerns, reusable patterns, real-time data flow, and scalable design.
+
+---
+
+## System Architecture
+
+### High-Level Data Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    User Browser                             │
+│  (React App + TypeScript + Framer Motion)                   │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Components (Hero, Skills, Projects)                │  │
+│  │  ↓                                                   │  │
+│  │  Custom useSupabaseTable<T> Hook                    │  │
+│  │  ├─ Fetch data from Supabase                        │  │
+│  │  ├─ Subscribe to real-time changes                  │  │
+│  │  └─ Handle errors + loading states                  │  │
+│  └──────────────────────────────────────────────────────┘  │
+└────────────┬────────────────────────────────────────────────┘
+             │ (WebSocket + REST API)
+             ↓
+┌─────────────────────────────────────────────────────────────┐
+│           Supabase (PostgreSQL + Real-Time)                │
+│                                                             │
+│  Tables:                                                    │
+│  ├─ skills (name, category, proficiency, sort_order)       │
+│  ├─ hero_metrics (label, value, icon, sort_order)          │
+│  └─ [Extensible for new content types]                     │
+│                                                             │
+│  Features:                                                  │
+│  ├─ Row Level Security (RLS) for access control            │
+│  ├─ Realtime subscriptions on INSERT/UPDATE/DELETE         │
+│  └─ Built-in REST API + GraphQL                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Real-Time Data Update Flow
+
+```
+1. Update Supabase database
+   ↓
+2. Supabase broadcasts change event via WebSocket
+   ↓
+3. useSupabaseTable hook receives event
+   ↓
+4. Hook calls fetchData() to refetch updated data
+   ↓
+5. Component re-renders with latest values
+   ↓
+6. No browser refresh needed — seamless live update
+```
+
+---
+
+## Deployment & CI/CD Pipeline
+
+### GitHub → Vercel Flow
+
+```
+┌─────────────────┐
+│  Push to main   │
+│  on GitHub      │
+└────────┬────────┘
+         │ (Git webhook)
+         ↓
+┌──────────────────────────────────────┐
+│  Vercel Detects New Commit           │
+│                                      │
+│  1. Clone repository                 │
+│  2. Install dependencies (npm)       │
+│  3. Load env vars from Vercel config │
+│  4. Run npm run build                │
+│  5. Run type checking (TypeScript)   │
+│  6. Generate optimized bundle        │
+└────────┬─────────────────────────────┘
+         │
+         ↓
+┌──────────────────────────────────────┐
+│  Build Passes?                       │
+└────────┬──────────────────┬──────────┘
+         │ YES              │ NO
+         ↓                  ↓
+   Deploy to CDN      Notify (failure)
+   [Edge Network]     [Halt deployment]
+         ↓
+   Cache cleared
+   DNS updated
+   Live in ~60s
+```
+
+### Environment Variables Strategy
+
+**Local Development (.env file - NOT committed)**
+```
+VITE_SUPABASE_URL=https://[your-project].supabase.co
+VITE_SUPABASE_ANON_KEY=[your-anon-key]
+```
+
+**Production (Vercel Dashboard)**
+- Settings → Environment Variables
+- Same keys, production values
+- Automatically injected during build
+- Never visible in logs or code
+
+**Security Model**
+- `VITE_` prefix = public (embedded in frontend bundle)
+- Supabase RLS policies protect data access
+- Anon key is intentionally public
+- Service role key stays server-side (never exposed)
+
+---
+
+## Build & Type Checking
+
+**Development**
+```bash
+npm run dev       # Vite + hot reload
+```
+
+**Production Build**
+```bash
+npm run build     # TypeScript type check + minify + optimize
+npm run preview   # Test production build locally
+```
+
+**Build Pipeline**
+1. TypeScript compilation (catches errors before deployment)
+2. Tailwind CSS generation (tree-shaking unused styles)
+3. React code splitting (lazy-loaded routes)
+4. Asset optimization (images, fonts, bundles)
+5. Sitemap generation (for SEO)
+
+---
+
+## Architecture Components
+
+| Layer | Technology | Responsibility |
+|-------|-----------|-----------------|
+| **Presentation** | React 18 + TypeScript | UI rendering, state management, animations |
+| **Data Layer** | `useSupabaseTable` hook | Fetch, subscribe, error handling, caching |
+| **Backend** | Supabase PostgreSQL | Data storage, RLS policies, real-time events |
+| **API** | Supabase REST/WebSocket | Type-safe queries, real-time subscriptions |
+| **CDN/Hosting** | Vercel Edge Network | Global distribution, atomic deploys |
 
 ---
 
 ## Features
 
-- **Animated Hero** — Typed.js role animation (Data Analyst / Power BI Developer / Business Analyst)
-- **Featured Case Studies** — In-depth project breakdowns with data storytelling
-- **Analytics Dashboard** — Interactive data flow and visualization components
-- **Projects Section** — Filterable project cards with category pages and detail views
-- **Experience Timeline** — Carousel-based work history
-- **Skills Section** — Animated skill bars for Programming, BI Tools, and more
-- **Certificates** — Auto-scrolling certificate showcase
-- **Blog** — Articles and write-ups page
-- **Portfolio Assistant** — AI-powered assistant component
-- **Contact Form** — Server-side form handling via Express
-- **Dark / Light Mode** — Theme toggle with persistent preference
-- **SEO** — Per-page meta tags via a dedicated SEO component
-- **Sitemap Generation** — Auto-generated `sitemap.xml` on build
-- **Responsive Design** — Mobile-first layout using Tailwind CSS
+- **Real-Time Data Layer** — Supabase + custom `useSupabaseTable<T>` hook
+- **Animated Hero** — Terminal-style interface with live metrics
+- **Dynamic Skills Section** — Real-time category updates from database
+- **Live Metrics** — Hero section metrics update instantly
+- **Custom Hooks Pattern** — Reusable, type-safe data fetching
+- **Error Diagnostics** — Step-by-step console logging (never exposes credentials)
+- **Smooth Animations** — Framer Motion with AOS
+- **Dark/Light Mode** — Theme toggle with persistent preference
+- **SEO Optimized** — Meta tags, sitemap generation, Open Graph
+- **Responsive Design** — Mobile-first using Tailwind CSS
+- **Type Safety** — 100% TypeScript with strict mode
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, TypeScript, Vite |
-| Styling | Tailwind CSS, shadcn/ui, Radix UI |
-| Animations | Framer Motion, AOS |
-| State / Data | TanStack React Query |
-| Backend | Node.js, Express |
-| Database | PostgreSQL (Neon), Drizzle ORM |
-| Forms | React Hook Form, Zod |
-| Charts | Recharts, Embla Carousel |
+**Frontend**
+- React 18, TypeScript 5.0+, Vite
+- Tailwind CSS, Framer Motion, shadcn/ui
+
+**Data & Backend**
+- Supabase (PostgreSQL + real-time WebSocket)
+- REST APIs, OAuth2, Google Apps Script
+
+**DevOps & Deployment**
+- Git, GitHub, Vercel
+- Environment variable management, atomic deploys
+
+**Analytics**
+- Python, SQL, ETL pipelines
+- Real-time data validation
 
 ---
 
 ## Project Structure
 
 ```
-├── client/                  # React frontend
-│   └── src/
-│       ├── components/
-│       │   ├── layout/      # Navbar, Footer
-│       │   ├── sections/    # Hero, About, Projects, Skills, etc.
-│       │   └── ui/          # shadcn/ui + custom UI components
-│       ├── data/            # Static data files (projects, skills, certs)
-│       ├── hooks/           # Custom React hooks
-│       ├── lib/             # Query client, utilities
-│       └── pages/           # Route-level page components
-├── server/                  # Express backend
-│   ├── index.ts             # Server entry point
-│   ├── routes.ts            # API routes
-│   ├── storage.ts           # Database access layer
-│   └── vite.ts              # Vite dev-server integration
-├── drizzle.config.ts        # Drizzle ORM config
-├── generate-sitemap.ts      # Sitemap generation script
-├── tailwind.config.ts
-├── vite.config.ts
-└── tsconfig.json
+client/src/
+├── components/
+│   ├── sections/
+│   │   ├── Hero.tsx              # Real-time metrics from Supabase
+│   │   └── SkillsSection.tsx      # Dynamic categories + real-time
+│   └── ui/                        # Reusable components
+├── hooks/
+│   └── useSupabaseTable.ts        # Generic fetch + subscribe logic
+├── lib/
+│   ├── supabase.ts               # Supabase client + validation
+│   ├── errorLogger.ts            # Step-by-step error diagnostics
+│   └── animations.ts             # Framer Motion presets
+└── App.tsx
 ```
 
 ---
 
-## Getting Started
+## Local Setup
 
-### Prerequisites
-
-- **Node.js** v18 or later
-- **npm** v9 or later
-- A **PostgreSQL** database (e.g. [Neon](https://neon.tech))
-
-### Installation
+**Prerequisites:** Node 18+, npm 9+
 
 ```bash
-# 1. Clone the repository
+# Clone
 git clone https://github.com/ZeyaMosharraf/zeya-mosharraf-portfolio.git
 cd zeya-mosharraf-portfolio
 
-# 2. Install dependencies
+# Install dependencies
 npm install
 
-# 3. Set up environment variables
-#    Create a .env file in the root directory and add:
-DATABASE_URL=your_postgresql_connection_string
+# Create .env with Supabase credentials
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_ANON_KEY=your_key
 
-# 4. Push the database schema
-npm run db:push
-
-# 5. Start the development server
+# Run development server
 npm run dev
+# → http://localhost:5173
+
+# Build for production
+npm run build
+
+# Test production build
+npm run preview
 ```
 
-The app will be available at `http://localhost:5000`.
+**Production:** Environment variables configured in Vercel dashboard. Settings → Environment Variables.
 
 ---
 
-## Available Scripts
+## How It Works: Detailed Scenarios
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start the development server (client + server) |
-| `npm run build` | Build for production (client bundle + server bundle + sitemap) |
-| `npm start` | Run the production build |
-| `npm run check` | TypeScript type-checking |
-| `npm run db:push` | Push Drizzle schema changes to the database |
+### Scenario 1: Adding a New Skill (Zero Redeployment)
+
+1. Content creator updates Supabase dashboard
+   - Adds: `{name: "Apache Spark", category: "Data Tools", proficiency: 85}`
+
+2. Database event triggered
+   - Supabase publishes `INSERT` event to real-time channel
+
+3. Frontend hook receives event
+   - `useSupabaseTable` detects change via WebSocket
+   - Calls `fetchData()` to refetch full skills table
+
+4. Component re-renders
+   - SkillsSection receives updated data
+   - Framer Motion animates new skill into view
+
+5. Result: Skill appears live with smooth animation (no page reload)
+
+### Scenario 2: Deployment Flow (Zero Downtime)
+
+1. Developer pushes code to main branch
+   - `npm run build` passes all checks
+   - Commits with meaningful message
+
+2. GitHub webhook notifies Vercel
+   - Vercel downloads latest code
+   - Loads production env vars
+
+3. Build validates
+   - TypeScript checks for errors
+   - Assets optimized
+   - Sitemap generated
+
+4. Deploy succeeds
+   - New build pushed to CDN
+   - Deployed across 300+ edge locations
+   - Live in ~60s
+
+5. Rollback ready
+   - Previous deployment remains active
+   - One-click rollback available
 
 ---
 
-## Skills Highlighted
+## Monitoring & Debugging
 
-**Programming & Data**
-- Python (Pandas, NumPy, Scikit-learn)
-- SQL, Excel (Advanced), Google Sheets
+**Console Logs (Development)**
+- Step-by-step error diagnostics
+- Data fetch success/failure
+- Real-time subscription status
+- No credentials exposed
 
-**Business Intelligence & Visualization**
-- Power BI, Tableau, Looker Studio
-- Matplotlib / Seaborn
-
-**Other**
-- Power BI Dashboard Development · Data Storytelling  
-- Statistical Analysis · Machine Learning · Google Data Studio Reporting
+**Error Handling**
+- Step 1: Check env vars exist
+- Step 2: Validate Supabase connection
+- Step 3: Handle fetch errors
+- Step 4: Check data retrieval
+- All errors logged to console only
 
 ---
 
-## Contact
+## Custom `useSupabaseTable` Hook
 
-| Platform | Link |
-|---|---|
-| LinkedIn | [linkedin.com/in/zeya-mosharraf](https://www.linkedin.com/in/zeya-mosharraf/) |
-| GitHub | [github.com/ZeyaMosharraf](https://github.com/ZeyaMosharraf) |
+```typescript
+const { data: skills, loading } = useSupabaseTable<Skill>("skills", {
+  column: "sort_order",
+  ascending: true
+});
+```
+
+**Features:**
+- ✅ Handles fetch, real-time subscription, error state in one call
+- ✅ Generic type `<T>` works with any table
+- ✅ Prevents memory leaks, orphaned subscriptions
+- ✅ Fires and forgets (no promise return in callbacks)
+- ✅ Mounted ref prevents state updates after unmount
+
+---
+
+## Connect
+
+- **GitHub:** [github.com/ZeyaMosharraf](https://github.com/ZeyaMosharraf)
+- **LinkedIn:** [linkedin.com/in/zeya-mosharraf](https://www.linkedin.com/in/zeya-mosharraf)
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License**.
+MIT
