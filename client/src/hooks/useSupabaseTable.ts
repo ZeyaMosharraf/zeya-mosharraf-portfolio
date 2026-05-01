@@ -54,7 +54,6 @@ export function useSupabaseTable<T>(
         console.error(`❌ Error fetching ${table}:`, {
           code: fetchError.code,
           message: fetchError.message,
-          status: fetchError.status,
         });
         setError(fetchError.message);
         setData([]);

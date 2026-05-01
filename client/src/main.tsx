@@ -7,7 +7,6 @@ import { ThemeProvider } from "./components/theme-provider";
 import { HelmetProvider } from "react-helmet-async";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { testSupabaseConnection } from "./lib/testSupabase";
 
 // Initialize AOS
 AOS.init({
@@ -16,9 +15,6 @@ AOS.init({
   once: true,
   offset: 100
 });
-
-// Make test function available in console
-console.log('✅ App loaded! Type testSupabaseConnection() in console to test Supabase');
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
