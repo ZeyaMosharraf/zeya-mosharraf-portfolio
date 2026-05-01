@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { ArrowRight, Activity, Database, Zap, Clock, Wifi } from "lucide-react";
+import { ArrowRight, Activity, Database, Zap, Clock, Wifi, Shield, Cpu, Timer } from "lucide-react";
 import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import { useLocation } from "wouter";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { 
   ease, 
   heroLeftColumn, 
@@ -441,6 +442,38 @@ function useHeroCanvas(
 
 
 
+/* ═══════════════════════════════════════════════════════
+   Hero Metrics — Supabase types & hook
+   ═══════════════════════════════════════════════════════ */
+
+interface HeroMetric {
+  id: number;
+  label: string;
+  value: string;
+  icon: string;
+  sort_order: number;
+}
+
+/** Maps icon name strings stored in Supabase to Lucide components */
+const ICON_MAP: Record<string, React.ReactNode> = {
+  database: <Database className="w-3.5 h-3.5" />,
+  activity: <Activity className="w-3.5 h-3.5" />,
+  zap: <Zap className="w-3.5 h-3.5" />,
+  clock: <Clock className="w-3.5 h-3.5" />,
+  shield: <Shield className="w-3.5 h-3.5" />,
+  timer: <Timer className="w-3.5 h-3.5" />,
+  cpu: <Cpu className="w-3.5 h-3.5" />,
+  // Fallback for any unmapped icons
+  wifi: <Wifi className="w-3.5 h-3.5" />,
+};
+
+function useHeroMetrics() {
+  return useSupabaseTable<HeroMetric>("hero_metrics", {
+    column: "sort_order",
+    ascending: true
+  });
+}
+
 /* ─── Hero Component ─── */
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -668,9 +701,7 @@ const Hero = () => {
               className="flex flex-wrap gap-6 pt-1"
               variants={heroItemFadeUp}
             >
-              <MetricPill icon={<Database className="w-3.5 h-3.5" />} value={useCountUp(2, 2000, 800)} suffix="M+" label="Records / Day" />
-              <MetricPill icon={<Activity className="w-3.5 h-3.5" />} value={useCountUp(99, 2200, 1000)} suffix=".9%" label="Pipeline Uptime" />
-              <MetricPill icon={<Zap className="w-3.5 h-3.5" />} value={useCountUp(60, 1800, 1200)} suffix="%" label="Faster ETL" />
+              <HeroMetricsStrip />
             </motion.div>
 
             {/* CTA buttons */}
@@ -936,4 +967,75 @@ const MetricPill = ({ icon, value, suffix, label }: {
   </div>
 );
 
+/* ─── MetricPillDynamic: animates a single numeric metric value ─── */
+const MetricPillDynamic = ({ metric }: { metric: { label: string; value: string; icon: string } }) => {
+  // Parse value like "2M+", "99.9%", "60%"
+  const numMatch = metric.value.match(/^(\d+\.?\d*)/);
+  const numericTarget = numMatch ? parseFloat(numMatch[1]) : 0;
+  const suffix = metric.value.replace(/^\d+\.?\d*/, "");
+
+  const animated = useCountUp(Math.round(numericTarget), 2000, 800);
+  
+  // Case-insensitive icon lookup
+  const iconKey = metric.icon.toLowerCase();
+  const iconComponent = ICON_MAP[iconKey] ?? <Activity className="w-3.5 h-3.5" />;
+
+  return (
+    <MetricPill
+      icon={iconComponent}
+      value={animated}
+      suffix={suffix}
+      label={metric.label}
+    />
+  );
+};
+
+/* ─── HeroMetricsStrip: fetches from Supabase and renders pills ─── */
+const HeroMetricsStrip = () => {
+  const { data: metrics, loading, error } = useHeroMetrics();
+
+  if (loading) {
+    return (
+      <>
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg animate-pulse"
+            style={{
+              width: "140px",
+              height: "52px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
+          />
+        ))}
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <span
+        className="text-[12px] px-3 py-1.5 rounded-md"
+        style={{
+          color: "rgba(239,68,68,0.7)",
+          background: "rgba(220,38,38,0.06)",
+          border: "1px solid rgba(220,38,38,0.15)",
+        }}
+      >
+        {error}
+      </span>
+    );
+  }
+
+  return (
+    <>
+      {metrics.map((metric) => (
+        <MetricPillDynamic key={metric.id} metric={metric} />
+      ))}
+    </>
+  );
+};
+
 export default Hero;
+
