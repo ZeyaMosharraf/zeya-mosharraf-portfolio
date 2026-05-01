@@ -92,9 +92,10 @@ export function useSupabaseTable<T>(
           table: table,
         },
         (payload) => {
-          // Async refetch but don't return the promise (fire and forget)
+          // Fire-and-forget: call fetchData but don't return or await it
+          // Wrapping in void ensures TypeScript knows we're intentionally not awaiting
           if (mountedRef.current) {
-            fetchData();
+            void fetchData();
           }
         }
       )
