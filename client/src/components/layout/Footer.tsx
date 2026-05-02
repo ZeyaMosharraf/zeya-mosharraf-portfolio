@@ -32,7 +32,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative text-white overflow-hidden" style={{ background: '#080b10' }}>
+    <footer className="relative text-white overflow-hidden" style={{ background: '#0d0d0d' }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 40% at 50% 0%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 
       <div className="relative z-10">

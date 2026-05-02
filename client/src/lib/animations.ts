@@ -7,11 +7,6 @@
 export const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 // ── Fade / Slide Presets ────────────────────────────────────────
-export const fadeInUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease, delay },
-});
 
 export const fadeInLeft = (delay = 0) => ({
   initial: { opacity: 0, x: -40 },
@@ -70,19 +65,6 @@ export const terminalLineAnimation = {
   transition: { duration: 0.15, ease: "easeOut" },
 };
 
-// ── Card / Section Animations ──────────────────────────────────
-export const cardFadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.7, ease, delay },
-});
-
-export const sectionStaggerChildren = (index: number) => ({
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-  transition: { delay: index * 0.08 + 0.2, duration: 0.6, ease },
-});
 
 // ── Stagger Container/Item (for lists & grids) ─────────────────
 export const staggerContainer = {
@@ -108,23 +90,7 @@ export const sectionReveal = {
   },
 };
 
-// ── Hover presets ───────────────────────────────────────────────
-export const hoverLift = {
-  whileHover: { scale: 1.02, y: -2 },
-  whileTap: { scale: 0.98 },
-};
-
-export const cardHover = {
-  whileHover: { y: -4, borderColor: "rgba(220,38,38,0.2)" },
-};
-
-// ── WhileInView helper (used in multiple sections) ──────────────
-export const whileInViewProps = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.2 },
-  transition: { duration: 0.7, ease, delay },
-});
+// ── Hover presets (none currently in use — placeholder)
 
 // ── WhileInView FadeUp (for cards and sections) ────────────────
 export const whileInViewFadeUp = (delay = 0) => ({
@@ -141,18 +107,6 @@ export const badgeFadeIn = {
   transition: { duration: 0.6, ease },
 };
 
-// ── Footer & Social animations ──────────────────────────────────
-export const socialLinkAnimation = (delay = 0) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { delay: delay * 0.08 + 0.3, duration: 0.5 },
-  viewport: { once: true },
-});
-
-export const socialHover = {
-  whileHover: { y: -3, borderColor: 'rgba(220,38,38,0.2)' },
-  whileTap: { scale: 0.95 },
-};
 
 // ── Page-level animations ───────────────────────────────────────
 export const pageHeaderAnimation = {
@@ -161,12 +115,3 @@ export const pageHeaderAnimation = {
   transition: { duration: 0.8, ease },
 };
 
-// ── Rotating item animation (RotatingWord component) ────────────
-export const rotatingItemVariants = (index: number) => ({
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { delay: index * 0.15, duration: 0.5, ease },
-  },
-});

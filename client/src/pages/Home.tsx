@@ -1,6 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import FeaturedCaseStudySection from "@/components/sections/FeaturedCaseStudySection";
-import AnalyticsDashboard from "@/components/sections/AnalyticsDashboard";
+import MedallionArchitectureUI from "@/components/sections/medallion-architecture-ui";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import SkillsSection from "@/components/sections/SkillsSection";
@@ -20,13 +20,21 @@ const Home = () => {
         canonicalUrl="https://zeyamosharraf.com"
       />
 
-      <div style={{ background: "#0B0F14" }}>
+      <div style={{ background: "#0d0d0d" }}>
         {/* Hero — no wrapper needed, it animates itself */}
         <Hero />
 
         {/* Each section gets a scroll-triggered upward reveal */}
         <RevealSection><FeaturedCaseStudySection /></RevealSection>
-        <RevealSection><AnalyticsDashboard /></RevealSection>
+        
+        {/* Medallion Architecture Section */}
+        <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0d0d0d' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <RevealSection><MedallionArchitectureUI /></RevealSection>
+          </div>
+        </section>
+
         <RevealSection><ExperienceSection /></RevealSection>
         <RevealSection><ProjectsSection showFeaturedOnly={true} /></RevealSection>
         <RevealSection><SkillsSection /></RevealSection>

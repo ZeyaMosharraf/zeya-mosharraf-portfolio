@@ -615,7 +615,7 @@ const Hero = () => {
       ref={sectionRef}
       id="home"
       className="relative pt-20 md:pt-24 pb-10 md:pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #0B0F14 0%, #0B0F14 55%, #1a0a0a 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #0d0d0d 0%, #0d0d0d 55%, #1a0a0a 100%)' }}
     >
       {/* Interactive canvas (full hero background) */}
       <canvas

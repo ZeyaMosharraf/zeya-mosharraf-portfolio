@@ -25,7 +25,7 @@ const ExperienceSection = () => {
   const sortedExperiences = sortExperiencesByDate(experiences);
 
   return (
-    <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0B0F14' }}>
+    <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0d0d0d' }}>
       {/* Background accent */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 50% at 70% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
 

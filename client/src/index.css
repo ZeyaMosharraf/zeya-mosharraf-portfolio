@@ -44,9 +44,9 @@
     --color-brand-fg: #FFFFFF; /* text on brand surfaces */
 
     /* Neutrals */
-    --color-bg: #0F172A; /* slate-900 */
-    --color-surface: #111827; /* gray-900 */
-    --color-elevated: #1F2937; /* gray-800 */
+    --color-bg: #0d0d0d;
+    --color-surface: #111111;
+    --color-elevated: #1a1a1a;
     --color-muted: #94A3B8; /* slate-400 */
     --color-border: #334155; /* slate-700 */
 
