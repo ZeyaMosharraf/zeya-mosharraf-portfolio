@@ -1,5 +1,3 @@
-import { Card, CardContent } from './card';
-import { Badge } from './badge';
 import { Button } from './button';
 import { ChevronLeft, ChevronRight, Calendar, ExternalLink, X, ZoomIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
