@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, ChevronDown, FileText, BookOpen, Home, FolderOpen, Users, Mail, Download } from "lucide-react";
+import { Menu, X, ChevronDown, Home, Mail, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {

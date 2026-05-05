@@ -1,19 +1,29 @@
 /**
- * COMMON COMPONENTS BARREL EXPORT
+ * common - Barrel export for reusable UI components
  * 
- * These components have been logically organized as "common" reusable components:
- * - ProjectCard: Reusable card component for displaying project information
- * - CaseStudyCard: Card component for case study tiles
- * - SkillBar: Skill progress bar component
- * - RevealSection: Scroll-triggered reveal wrapper
- * 
- * Import from this file as:
- *   import { ProjectCard, CaseStudyCard, SkillBar, RevealSection } from '@/components/ui/common';
- * 
- * Or import individual components directly from their files in ui folder.
+ * Usage:
+ *   import { ProjectCard, sectionBackground, shimmerBadge } from '@/components/ui/common';
+ *   import { sectionBackground, shimmerBadge } from '@/components/ui/common'; // new lowercase files
  */
 
+// PascalCase components (existing)
 export { default as ProjectCard } from './ProjectCard';
 export { default as CaseStudyCard } from './CaseStudyCard';
 export { default as SkillBar } from './SkillBar';
 export { default as RevealSection } from './RevealSection';
+export { default as SectionHeader } from './SectionHeader';
+export { default as SectionBackground } from './SectionBackground';
+export { default as ShimmerBadge } from './ShimmerBadge';
+export { default as CarouselDots } from './CarouselDots';
+export { default as ContactCard } from './ContactCard';
+export { default as SocialLinks } from './SocialLinks';
+
+// lowercase components (new reusable files)
+export { default as sectionBackground } from './sectionBackground';
+export { default as shimmerBadge } from './shimmerBadge';
+export { default as carouselDots } from './carouselDots';
+export { default as contactCard } from './contactCard';
+export { default as socialLinks } from './socialLinks';
+
+// Skeleton utilities
+export * from './skeletons';

@@ -3,7 +3,7 @@ import ContactForm from "@/components/forms/ContactForm";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { FaEnvelope, FaMapMarkerAlt, FaClock, FaLinkedin, FaGithub } from "react-icons/fa";
 import { Mail } from "lucide-react";
-import { ease, whileInViewFadeUp } from "@/lib/animations";
+import { whileInViewFadeUp } from "@/lib/animations";
 
 const ContactSection = () => {
   return (

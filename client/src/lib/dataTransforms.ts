@@ -183,33 +183,3 @@ export const filterProjectsByExactCategory = (projects: Project[], categoryName:
   return projects.filter(project => project.category === categoryName);
 };
 
-/**
- * Group items by a key function
- */
-export const groupBy = <T, K extends string | number>(
-  items: T[],
-  keyFn: (item: T) => K
-): Record<K, T[]> => {
-  return items.reduce((acc, item) => {
-    const key = keyFn(item);
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {} as Record<K, T[]>);
-};
-
-/**
- * Map and filter items in a single operation
- */
-export const mapAndFilter = <T, R>(
-  items: T[],
-  fn: (item: T) => R | null | undefined
-): R[] => {
-  return items.reduce((acc, item) => {
-    const result = fn(item);
-    if (result !== null && result !== undefined) {
-      acc.push(result);
-    }
-    return acc;
-  }, [] as R[]);
-};
