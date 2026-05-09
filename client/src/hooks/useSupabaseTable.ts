@@ -51,21 +51,21 @@ export function useSupabaseTable<T>(
       if (!mountedRef.current) return;
 
       if (fetchError) {
-        console.error(`❌ Error fetching ${table}:`, {
+        console.error(`Error fetching ${table}:`, {
           code: fetchError.code,
           message: fetchError.message,
         });
         setError(fetchError.message);
         setData([]);
       } else if (!result || result.length === 0) {
-        console.warn(`⚠️ No data returned from ${table} table`);
+        console.warn(`No data returned from ${table} table`);
         setData([]);
       } else {
-        console.log(`✅ Fetched ${result.length} rows from ${table}`);
+        console.log(`Fetched ${result.length} rows from ${table}`);
         setData(result as T[]);
       }
     } catch (err: any) {
-      console.error(`❌ Unexpected error fetching ${table}:`, err?.message);
+      console.error(`Unexpected error fetching ${table}:`, err?.message);
       setError(err?.message || "Unknown error");
       setData([]);
     } finally {

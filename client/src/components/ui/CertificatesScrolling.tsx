@@ -2,19 +2,33 @@ import { Button } from './button';
 import { ChevronLeft, ChevronRight, Calendar, ExternalLink, X, ZoomIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { Certificate, defaultCertificates } from '@/data/certificates';
+import { useSupabaseTable } from '@/hooks/useSupabaseTable';
+
+interface Certificate {
+  id?: number;
+  title: string;
+  issuer: string;
+  issued_date: string;
+  image_url?: string;
+  credential_url?: string;
+  tags: string[];
+  category?: string;
+  sort_order: number;
+}
 
 interface CertificatesScrollingProps {
-  certificates?: Certificate[];
   title?: string;
   className?: string;
 }
 
 const CertificatesScrolling = ({
-  certificates = defaultCertificates,
   title = "Certifications & Achievements",
   className = ''
 }: CertificatesScrollingProps) => {
+  const { data: certificates, loading } = useSupabaseTable<Certificate>("certifications", {
+    column: "sort_order",
+    ascending: true
+  });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -103,21 +117,34 @@ const CertificatesScrolling = ({
             onScroll={checkScrollPosition}
           >
             <div className="flex space-x-6 px-4 py-4" style={{ width: 'max-content' }}>
-              {certificates.map((cert, index) => (
-                <motion.div
-                  key={cert.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="flex-shrink-0"
-                >
-                  <CertificateCard
-                    certificate={cert}
-                    onClick={() => setSelectedCertificate(cert)}
-                  />
-                </motion.div>
-              ))}
+              {loading ? (
+                // Loading skeleton
+                <>
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={`skeleton-${i}`}
+                      className="flex-shrink-0 w-80 h-96 rounded-xl animate-pulse"
+                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                    />
+                  ))}
+                </>
+              ) : (
+                certificates.map((cert, index) => (
+                  <motion.div
+                    key={cert.id}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex-shrink-0"
+                  >
+                    <CertificateCard
+                      certificate={cert}
+                      onClick={() => setSelectedCertificate(cert)}
+                    />
+                  </motion.div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -153,8 +180,8 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
       <div className="absolute top-0 left-0 right-0 h-px z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
       {/* Certificate Image */}
       <div className="relative h-48 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)' }}>
-        {certificate.imageUrl ? (
-          <img src={certificate.imageUrl} alt={certificate.title} className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
+        {certificate.image_url ? (
+          <img src={certificate.image_url} alt={certificate.title} className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">
@@ -168,7 +195,7 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
 
         <div className="absolute top-3 right-3">
           <span className="px-2 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide" style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}>
-            {certificate.category}
+            {certificate.category || 'Certificate'}
           </span>
         </div>
 
@@ -190,24 +217,24 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
             <span>·</span>
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              <span>{certificate.date}</span>
+              <span>{certificate.issued_date}</span>
             </div>
           </div>
         </div>
 
-        {/* Skills */}
+        {/* Skills/Tags */}
         <div className="mb-4">
           <div className="flex flex-wrap gap-1">
-            {certificate.skills && certificate.skills.length > 0 && (
+            {certificate.tags && certificate.tags.length > 0 && (
               <>
-                {certificate.skills.slice(0, 3).map((skill, idx) => (
+                {certificate.tags.slice(0, 3).map((tag, idx) => (
                   <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded" style={{ border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}>
-                    {skill}
+                    {tag}
                   </span>
                 ))}
-                {certificate.skills.length > 3 && (
+                {certificate.tags.length > 3 && (
                   <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
-                    +{certificate.skills.length - 3}
+                    +{certificate.tags.length - 3}
                   </span>
                 )}
               </>
@@ -216,9 +243,9 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
         </div>
 
         {/* View Link */}
-        {certificate.credentialLink && (
+        {certificate.credential_url && (
           <a
-            href={certificate.credentialLink}
+            href={certificate.credential_url}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 h-[34px] rounded-lg text-[12px] font-medium text-white transition-all duration-200"
@@ -308,21 +335,21 @@ const CertificateModal = ({
                   <span>·</span>
                   <div className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
-                    <span>{certificate.date}</span>
+                    <span>{certificate.issued_date}</span>
                   </div>
                 </div>
               </div>
               <span className="px-2 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide" style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}>
-                {certificate.category}
+                {certificate.category || 'Certificate'}
               </span>
             </div>
           </div>
 
           {/* Image */}
           <div className="relative p-6" style={{ background: 'rgba(255,255,255,0.01)' }}>
-            {certificate.imageUrl ? (
+            {certificate.image_url ? (
               <div className="flex justify-center">
-                <img src={certificate.imageUrl} alt={certificate.title} className="max-w-full max-h-[60vh] object-contain rounded-lg" />
+                <img src={certificate.image_url} alt={certificate.title} className="max-w-full max-h-[60vh] object-contain rounded-lg" />
               </div>
             ) : (
               <div className="flex items-center justify-center h-64 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)' }}>
@@ -342,18 +369,18 @@ const CertificateModal = ({
             <div className="mb-5">
               <h3 className="text-[12px] font-semibold text-gray-400 mb-2 uppercase tracking-wider">Skills & Competencies</h3>
               <div className="flex flex-wrap gap-1">
-                {certificate.skills.map((skill, idx) => (
+                {certificate.tags.map((tag, idx) => (
                   <span key={idx} className="px-2 py-0.5 text-[11px] font-medium text-gray-400 rounded" style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
-                    {skill}
+                    {tag}
                   </span>
                 ))}
               </div>
             </div>
 
             <div className="flex gap-2">
-              {certificate.credentialLink && (
+              {certificate.credential_url && (
                 <a
-                  href={certificate.credentialLink}
+                  href={certificate.credential_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 h-[38px] rounded-lg text-[13px] font-medium text-white transition-all duration-200"

@@ -1,11 +1,26 @@
 import { Calendar, Building2, Briefcase } from "lucide-react";
-import { experiences } from "@/data/experience";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import SectionHeader from "@/components/ui/SectionHeader";
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { sortExperiencesByDate } from "@/lib/dataTransforms";
+
+interface Experience {
+  id: string;
+  title: string;
+  company: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+  skills: string[];
+  is_current: boolean;
+  sort_order: number;
+}
 
 const ExperienceSection = () => {
+  const { data: experiences, loading } = useSupabaseTable<Experience>("experience", {
+    column: "sort_order",
+    ascending: true
+  });
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start', skipSnaps: false, dragFree: false });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
@@ -22,7 +37,7 @@ const ExperienceSection = () => {
     return () => { emblaApi.off('select', onSelect); emblaApi.off('reInit', onSelect); };
   }, [emblaApi, onSelect]);
 
-  const sortedExperiences = sortExperiencesByDate(experiences);
+  const sortedExperiences = experiences;
 
   return (
     <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0d0d0d' }}>
@@ -40,31 +55,39 @@ const ExperienceSection = () => {
 
         {/* Carousel */}
         <div className="relative">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-6 pt-5">
-              {sortedExperiences.map((experience, index) => (
-                <div key={experience.id} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_100%] md:flex-[0_0_calc(50%_-_12px)] lg:flex-[0_0_calc(33.333%_-_16px)]">
-                  <ExperienceCard experience={experience} index={index} />
-                </div>
-              ))}
+          {loading ? (
+            <div className="flex justify-center items-center h-[400px]">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex gap-6 pt-5">
+                  {sortedExperiences.map((experience, index) => (
+                    <div key={experience.id} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_100%] md:flex-[0_0_calc(50%_-_12px)] lg:flex-[0_0_calc(33.333%_-_16px)]">
+                      <ExperienceCard experience={experience} index={index} />
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-          {/* Pagination */}
-          <div className="flex justify-center gap-1.5 mt-8">
-            {scrollSnaps.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollTo(index)}
-                className="h-[3px] rounded-full transition-all duration-400"
-                style={{
-                  width: index === selectedIndex ? 28 : 8,
-                  background: index === selectedIndex ? '#DC2626' : 'rgba(255,255,255,0.08)',
-                }}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+              {/* Pagination */}
+              <div className="flex justify-center gap-1.5 mt-8">
+                {scrollSnaps.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => scrollTo(index)}
+                    className="h-[3px] rounded-full transition-all duration-400"
+                    style={{
+                      width: index === selectedIndex ? 28 : 8,
+                      background: index === selectedIndex ? '#DC2626' : 'rgba(255,255,255,0.08)',
+                    }}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
 
@@ -74,7 +97,9 @@ const ExperienceSection = () => {
 };
 
 // Experience Card — simple hover lift
-const ExperienceCard = ({ experience, index }: { experience: any; index: number }) => {
+const ExperienceCard = ({ experience, index }: { experience: Experience; index: number }) => {
+  const dateRange = `${experience.start_date} – ${experience.is_current ? 'Present' : experience.end_date}`;
+  
   return (
     <div
       className="relative h-[400px] cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-xl overflow-hidden bg-white/2 border border-white/6 backdrop-blur-sm"
@@ -86,11 +111,11 @@ const ExperienceCard = ({ experience, index }: { experience: any; index: number 
             <h3 className="text-lg font-bold text-white mb-2 truncate">{experience.title}</h3>
             <div className="flex items-center text-red-400/80 mb-2">
               <Building2 className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-              <span className="font-medium text-[13px] truncate">{experience.issuer}</span>
+              <span className="font-medium text-[13px] truncate">{experience.company}</span>
             </div>
             <div className="flex items-center text-gray-500 text-[12px]">
               <Calendar className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
-              <span>{experience.date}</span>
+              <span>{dateRange}</span>
             </div>
           </div>
           <div
