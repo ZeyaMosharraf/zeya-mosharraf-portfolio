@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Calendar, ExternalLink, X, ZoomIn } from 'lu
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { useSupabaseTable } from '@/hooks/useSupabaseTable';
+import { COLORS, FONTS, BG_GRADIENTS } from '@/lib/constants';
 
 interface Certificate {
   id?: number;
@@ -34,7 +35,6 @@ const CertificatesScrolling = ({
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
 
-  // Check scroll position to show/hide navigation buttons
   const checkScrollPosition = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -47,7 +47,7 @@ const CertificatesScrolling = ({
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener('scroll', checkScrollPosition);
-      checkScrollPosition(); // Initial check
+      checkScrollPosition();
       return () => container.removeEventListener('scroll', checkScrollPosition);
     }
   }, []);
@@ -62,8 +62,8 @@ const CertificatesScrolling = ({
   };
 
   return (
-    <section className={`relative py-12 lg:py-16 overflow-hidden ${className}`} style={{ background: '#0d0d0d' }}>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 40% 50%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
+    <section className={`relative py-12 lg:py-16 overflow-hidden ${className}`} style={{ background: BG_GRADIENTS.sectionDark }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: BG_GRADIENTS.radialRed60 }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {title && (

@@ -4,8 +4,8 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { Code2 } from "lucide-react";
 import { ease, fadeInLeft, fadeInRight } from "@/lib/animations";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { FONTS } from "@/lib/constants";
 
-/* ── TypeScript types for Supabase table ── */
 interface Skill {
   id: number;
   name: string;
@@ -14,8 +14,6 @@ interface Skill {
   sort_order: number;
 }
 
-/* ── Category display config - maps DB categories to display labels ── */
-/* ── Get unique categories from data in order of appearance ── */
 const getCategoriesInOrder = (skills: Skill[]): string[] => {
   const seen = new Set<string>();
   return skills
@@ -23,12 +21,10 @@ const getCategoriesInOrder = (skills: Skill[]): string[] => {
     .map(skill => skill.category);
 };
 
-/* ── Get color for category dynamically based on index ── */
 const getCategoryColor = (index: number): "primary" | "secondary" => {
   return index % 2 === 0 ? "primary" : "secondary";
 };
 
-/* ── Loading skeleton for skill bars ── */
 const SkillBarSkeleton = () => (
   <div className="space-y-5">
     {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -46,7 +42,6 @@ const SkillBarSkeleton = () => (
   </div>
 );
 
-/* ── Loading skeleton for pills ── */
 const PillsSkeleton = () => (
   <div className="flex flex-wrap justify-center gap-2">
     {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -102,12 +97,7 @@ const SkillsSection = () => {
           subtitle="My professional toolkit includes programming languages, data analysis tools, and visualization platforms."
         />
 
-        {/* NO ERROR STATE - errors only in console */}
-
-        {/* Skill bars grid - dynamic columns based on category count */}
-        <div className={`grid grid-cols-1 ${categoriesInOrder.length > 2 ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-10 lg:gap-16`}>
-          {loading ? (
-            // Show 3 skeleton columns while loading (matches typical category count)
+        {loading ? (
             <>
               {[1, 2, 3].map((i) => (
                 <motion.div key={i} className="space-y-6" {...fadeInLeft()}>
@@ -117,36 +107,36 @@ const SkillsSection = () => {
               ))}
             </>
           ) : (
-            // Render each category dynamically
-            categoriesInOrder.map((category, idx) => {
-              const categorySkills = grouped[category] ?? [];
-              const color = getCategoryColor(idx);
-              const isLeft = idx % 2 === 0;
-              
-              return (
-                <motion.div 
-                  key={category} 
-                  className="space-y-6" 
-                  {...(isLeft ? fadeInLeft(idx * 0.1) : fadeInRight(idx * 0.1))}
-                >
-                  <h3 className="text-[15px] font-semibold text-gray-300 mb-6 uppercase tracking-wider">
-                    {category}
-                  </h3>
-                  <div className="space-y-5">
-                    {categorySkills.map((skill) => (
-                      <SkillBar
-                        key={skill.id}
-                        name={skill.name}
-                        percentage={skill.proficiency}
-                        color={color}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              );
-            })
+            <div className={`grid grid-cols-1 ${categoriesInOrder.length > 2 ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-10 lg:gap-16`}>
+              {categoriesInOrder.map((category, idx) => {
+                const categorySkills = grouped[category] ?? [];
+                const color = getCategoryColor(idx);
+                const isLeft = idx % 2 === 0;
+                
+                return (
+                  <motion.div 
+                    key={category} 
+                    className="space-y-6" 
+                    {...(isLeft ? fadeInLeft(idx * 0.1) : fadeInRight(idx * 0.1))}
+                  >
+                    <h3 className="text-[15px] font-semibold text-gray-300 mb-6 uppercase tracking-wider">
+                      {category}
+                    </h3>
+                    <div className="space-y-5">
+                      {categorySkills.map((skill) => (
+                        <SkillBar
+                          key={skill.id}
+                          name={skill.name}
+                          percentage={skill.proficiency}
+                          color={color}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           )}
-        </div>
 
         {/* Additional skills pills - only shown if there's an "additional" category */}
         {Object.keys(grouped).includes("additional") && (

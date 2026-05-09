@@ -2,7 +2,8 @@ import { Calendar, Building2, Briefcase } from "lucide-react";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import SectionHeader from "@/components/ui/SectionHeader";
 import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { COLORS, FONTS, BADGES, BG_GRADIENTS } from "@/lib/constants";
 
 interface Experience {
   id: string;
@@ -40,9 +41,8 @@ const ExperienceSection = () => {
   const sortedExperiences = experiences;
 
   return (
-    <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: '#0d0d0d' }}>
-      {/* Background accent */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 50% at 70% 30%, rgba(220,38,38,0.03) 0%, transparent 60%)' }} />
+    <section className="relative py-12 lg:py-16 overflow-hidden" style={{ background: BG_GRADIENTS.sectionDark }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: BG_GRADIENTS.radialRed70 }} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeader
@@ -120,7 +120,7 @@ const ExperienceCard = ({ experience, index }: { experience: Experience; index: 
           </div>
           <div
             className="px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide ml-3 flex-shrink-0"
-            style={{ background: 'rgba(220,38,38,0.08)', color: 'rgba(220,38,38,0.8)', border: '1px solid rgba(220,38,38,0.12)' }}
+            style={{ background: BADGES.work.bg, color: BADGES.work.text, border: BADGES.work.border }}
           >
             Work
           </div>
@@ -132,7 +132,7 @@ const ExperienceCard = ({ experience, index }: { experience: Experience; index: 
 
         {experience.skills && experience.skills.length > 0 && (
           <div className="flex-shrink-0 pt-3 border-t border-white/10">
-            <p className="text-[10px] font-semibold text-gray-500 mb-2 uppercase tracking-wider">Skills</p>
+            <p className={`${FONTS.size.xs} font-semibold text-gray-500 mb-2 uppercase tracking-wider`}>Skills</p>
             <div className="flex flex-wrap gap-1">
               {experience.skills.slice(0, 6).map((skill: string, idx: number) => (
                 <span
