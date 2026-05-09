@@ -1,5 +1,4 @@
 import { Project } from "@/data/projects";
-import { Experience } from "@/data/experience";
 
 /**
  * Project filtering and transformation utilities
@@ -114,38 +113,6 @@ export const selectFeaturedProjects = (
   }
   
   return featuredProjects;
-};
-
-/**
- * Experience sorting and transformation utilities
- */
-
-/**
- * Parse date string from experience to get Date object
- * Handles formats like "Aug 2025 - Present", "Mar 2025 - Apr 2025"
- */
-export const parseExperienceDate = (dateString: string): Date => {
-  const startDate = dateString.split(/\s*[-–]\s*/)[0] || dateString;
-  const monthMap: { [key: string]: number } = {
-    'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-    'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
-  };
-  const parts = startDate.trim().split(' ');
-  if (parts.length === 2) {
-    const month = monthMap[parts[0]];
-    const year = parseInt(parts[1]);
-    return new Date(year, month);
-  }
-  return new Date(startDate);
-};
-
-/**
- * Sort experiences by date (newest first)
- */
-export const sortExperiencesByDate = (experiences: Experience[]): Experience[] => {
-  return [...experiences].sort((a, b) => 
-    parseExperienceDate(b.date).getTime() - parseExperienceDate(a.date).getTime()
-  );
 };
 
 /**
