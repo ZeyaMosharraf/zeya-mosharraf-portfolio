@@ -12,6 +12,7 @@ interface PortfolioInfo {
   id: string;
   category: string;
   label: string;
+  value: string;
   display_value?: string;
   link_url?: string | null;
   icon_name?: string;
