@@ -66,6 +66,7 @@ const AllProjects = () => {
                 {/* View Mode Toggle */}
                 <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                   <button
+                    aria-label="Grid view"
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-md transition-colors ${
                       viewMode === "grid"
@@ -76,6 +77,7 @@ const AllProjects = () => {
                     <Grid className="w-4 h-4" />
                   </button>
                   <button
+                    aria-label="List view"
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-md transition-colors ${
                       viewMode === "list"

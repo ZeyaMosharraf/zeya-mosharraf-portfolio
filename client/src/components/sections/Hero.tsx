@@ -150,6 +150,10 @@ function highlightText(text: string): JSX.Element {
 function useCountUp(target: number, duration = 2000, delay = 0) {
   const [value, setValue] = useState(0);
   useEffect(() => {
+    if (window.innerWidth < 768) {
+      setValue(target);
+      return;
+    }
     const startTime = performance.now() + delay;
     let rafId: number;
     const tick = (now: number) => {
@@ -187,7 +191,7 @@ const RotatingWord = () => {
   }, []);
 
   return (
-    <span className="inline-block relative" style={{ minWidth: 'clamp(160px, 30vw, 280px)' }}>
+    <span className="inline-block relative" style={{ minWidth: 'clamp(160px, 30vw, 280px)', minHeight: '1.2em' }}>
       <AnimatePresence mode="wait">
         <motion.span
           key={ROTATING_WORDS[index]}
@@ -308,6 +312,8 @@ function useHeroCanvas(
     if (!ctx) return;
 
     const isMobile = window.innerWidth < 768;
+    if (isMobile) return; // Disable canvas particles on mobile to improve TBT & LCP
+
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const cs = getComputedStyle(document.documentElement);
@@ -592,6 +598,13 @@ const Hero = () => {
 
   /* Run "skills" on mount for an initial impression */
   useEffect(() => {
+    if (window.innerWidth < 768) {
+      // Instant print on mobile to avoid main thread blocking
+      setActiveCmd("skills");
+      setVisibleLines(COMMANDS["skills"].lines);
+      setTypedCmd(COMMANDS["skills"].cmd);
+      return;
+    }
     const t = setTimeout(() => runCommand("skills"), 600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -712,7 +725,7 @@ const Hero = () => {
 
             {/* Metrics strip */}
             <motion.div
-              className="flex flex-wrap gap-6 pt-1"
+              className="flex flex-wrap gap-6 pt-1 min-h-[52px]"
               variants={heroItemFadeUp}
             >
               <HeroMetricsStrip />

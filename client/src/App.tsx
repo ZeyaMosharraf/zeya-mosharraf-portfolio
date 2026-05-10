@@ -5,8 +5,9 @@ import Footer from "@/components/layout/Footer";
 import PortfolioAssistant from "@/components/PortfolioAssistant";
 import React, { useEffect, useState, Suspense } from "react";
 
+import Home from "@/pages/Home";
+
 const NotFound = React.lazy(() => import("@/pages/not-found"));
-const Home = React.lazy(() => import("@/pages/Home"));
 const AllProjects = React.lazy(() => import("@/pages/AllProjects"));
 const ProjectDetails = React.lazy(() => import("@/pages/ProjectDetails"));
 const ProjectCategory = React.lazy(() => import("@/pages/ProjectCategory"));

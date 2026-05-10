@@ -181,7 +181,7 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
       {/* Certificate Image */}
       <div className="relative h-48 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)' }}>
         {certificate.image_url ? (
-          <img src={certificate.image_url} alt={certificate.title} loading="lazy" className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
+          <img src={certificate.image_url} alt={certificate.title || "Certificate"} loading="lazy" className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">
@@ -349,7 +349,7 @@ const CertificateModal = ({
           <div className="relative p-6" style={{ background: 'rgba(255,255,255,0.01)' }}>
             {certificate.image_url ? (
               <div className="flex justify-center">
-                <img src={certificate.image_url} alt={certificate.title} className="max-w-full max-h-[60vh] object-contain rounded-lg" />
+                <img src={certificate.image_url} alt={certificate.title || "Certificate"} className="max-w-full max-h-[60vh] object-contain rounded-lg" />
               </div>
             ) : (
               <div className="flex items-center justify-center h-64 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)' }}>

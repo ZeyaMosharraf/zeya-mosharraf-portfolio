@@ -207,6 +207,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
         transition={{ delay: 2, type: "spring", stiffness: 260, damping: 20 }}
       >
         <Button
+          aria-label="Open portfolio assistant chat"
           onClick={() => setIsOpen(true)}
           className="w-14 h-14 rounded-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
           size="lg"

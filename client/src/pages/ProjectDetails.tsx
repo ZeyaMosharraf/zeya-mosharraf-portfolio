@@ -164,7 +164,7 @@ const ProjectDetails = ({ params }: ProjectDetailsProps) => {
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
                   <img
                     src={project.imageUrl}
-                    alt={project.title + ' preview'}
+                    alt={(project.title || "Project") + ' preview'}
                     className="w-full rounded-xl aspect-[16/9] object-cover"
                   />
                 </div>

@@ -8,6 +8,16 @@ import { HelmetProvider } from "react-helmet-async";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+import { prefetchSupabaseTable } from "./hooks/useSupabaseTable";
+
+// Prefetch critical data immediately outside React tree!
+prefetchSupabaseTable("portfolio_info", { column: "sort_order", ascending: true });
+prefetchSupabaseTable("hero_metrics", { column: "sort_order", ascending: true });
+prefetchSupabaseTable("experience", { column: "sort_order", ascending: true });
+prefetchSupabaseTable("skills", { column: "sort_order", ascending: true });
+prefetchSupabaseTable("certifications", { column: "sort_order", ascending: true });
+prefetchSupabaseTable("portfolio_content");
+
 // Initialize AOS
 AOS.init({
   duration: 800,

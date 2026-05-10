@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { queryClient } from "@/lib/queryClient";
 
 interface OrderBy {
   column: string;
@@ -12,6 +13,34 @@ interface UseSupabaseTableResult<T> {
   error: string | null;
 }
 
+export const fetchSupabaseTable = async <T>(table: string, orderBy?: OrderBy): Promise<T[]> => {
+  let query = supabase.from(table).select("*");
+
+  if (orderBy) {
+    query = query.order(orderBy.column, { ascending: orderBy.ascending });
+  }
+
+  const { data: result, error: fetchError } = await query;
+
+  if (fetchError) {
+    console.error(`Error fetching ${table}:`, {
+      code: fetchError.code,
+      message: fetchError.message,
+    });
+    throw fetchError;
+  }
+  
+  return (result || []) as T[];
+};
+
+export function prefetchSupabaseTable(table: string, orderBy?: OrderBy) {
+  return queryClient.prefetchQuery({
+    queryKey: ['supabase', table, orderBy?.column, orderBy?.ascending],
+    queryFn: () => fetchSupabaseTable(table, orderBy),
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
 /**
  * Reusable hook for fetching and subscribing to real-time updates from Supabase tables
  * 
@@ -19,12 +48,6 @@ interface UseSupabaseTableResult<T> {
  * @param table - Supabase table name
  * @param orderBy - Optional ordering configuration
  * @returns Object with data array, loading state, and error state
- * 
- * @example
- * const { data: skills, loading, error } = useSupabaseTable<Skill>("skills", { 
- *   column: "sort_order", 
- *   ascending: true 
- * })
  */
 export function useSupabaseTable<T>(
   table: string,
@@ -32,25 +55,7 @@ export function useSupabaseTable<T>(
 ): UseSupabaseTableResult<T> {
   const { data, isLoading, error } = useQuery({
     queryKey: ['supabase', table, orderBy?.column, orderBy?.ascending],
-    queryFn: async () => {
-      let query = supabase.from(table).select("*");
-
-      if (orderBy) {
-        query = query.order(orderBy.column, { ascending: orderBy.ascending });
-      }
-
-      const { data: result, error: fetchError } = await query;
-
-      if (fetchError) {
-        console.error(`Error fetching ${table}:`, {
-          code: fetchError.code,
-          message: fetchError.message,
-        });
-        throw fetchError;
-      }
-      
-      return (result || []) as T[];
-    },
+    queryFn: () => fetchSupabaseTable<T>(table, orderBy),
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     retry: 1
   });

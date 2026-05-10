@@ -37,7 +37,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         <div className="relative h-40 overflow-hidden" style={{ background: '#0a0a0a' }}>
           <img
             src={project.thumbhnailUrl}
-            alt={project.title + ' preview'}
+            alt={(project.title || "Project") + ' preview'}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-80 group-hover:opacity-100"
           />
