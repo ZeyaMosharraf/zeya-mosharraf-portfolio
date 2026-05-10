@@ -2,18 +2,30 @@ import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ArrowRight, Activity, Database, Zap, Clock, Wifi, Shield, Cpu, Timer } from "lucide-react";
 import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
+import { FaHackerrank } from "react-icons/fa6";
+import { SiGooglecloud } from "react-icons/si";
 import { useLocation } from "wouter";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
-import { 
-  ease, 
-  heroLeftColumn, 
-  heroItemFadeUp, 
-  heroRightTerminal, 
-  rotatingWordAnimation, 
+import {
+  ease,
+  heroLeftColumn,
+  heroItemFadeUp,
+  heroRightTerminal,
+  rotatingWordAnimation,
   shimmerTransition,
   shimmerSlide,
-  terminalLineAnimation 
+  terminalLineAnimation
 } from "@/lib/animations";
+
+interface PortfolioInfo {
+  id: string;
+  category: string;
+  label: string;
+  display_value?: string;
+  link_url?: string | null;
+  icon_name?: string;
+  sort_order?: number;
+}
 
 /* ═══════════════════════════════════════════════════════
    Terminal Syntax Highlighting Helper
@@ -512,7 +524,7 @@ const Hero = () => {
     const rect = button.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const ripple = document.createElement('span');
     ripple.style.cssText = `
       position: absolute;
@@ -526,13 +538,13 @@ const Hero = () => {
       transform: translate(-50%, -50%);
       animation: ripple-expand 0.6s ease-out;
     `;
-    
+
     if (button.style.position !== 'absolute' && button.style.position !== 'relative') {
       button.style.position = 'relative';
     }
     button.style.overflow = 'hidden';
     button.appendChild(ripple);
-    
+
     setTimeout(() => ripple.remove(), 600);
   };
 
@@ -731,25 +743,34 @@ const Hero = () => {
               className="flex items-center gap-3 pt-1"
               variants={heroItemFadeUp}
             >
-              {[
-                { href: "https://github.com/ZeyaMosharraf", icon: <FaGithub className="text-[15px]" />, label: "GitHub" },
-                { href: "https://www.linkedin.com/in/zeya-mosharraf/", icon: <FaLinkedinIn className="text-[15px]" />, label: "LinkedIn" },
-                { href: "mailto:zeyamosharraf999@gmail.com", icon: <FaEnvelope className="text-[15px]" />, label: "Email" },
-              ].map(link => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target={link.href.startsWith("mailto") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 transition-all duration-300 hover:text-white hover:border-red-500"
-                  style={{ border: '1px solid rgba(255,255,255,0.08)' }}
-                  onMouseEnter={undefined}
-                  onMouseLeave={undefined}
-                  aria-label={link.label}
-                >
-                  {link.icon}
-                </a>
-              ))}
+              {(() => {
+                const { data: allData, loading } = useSupabaseTable<PortfolioInfo>("portfolio_info", { column: "sort_order", ascending: true });
+                const socialLinks = allData.filter(item => item.category === "social_link");
+                if (loading) return <div className="text-xs text-gray-600">Loading...</div>;
+
+                const iconMap: Record<string, React.ReactNode> = {
+                  github: <FaGithub className="text-[15px]" />,
+                  linkedin: <FaLinkedinIn className="text-[15px]" />,
+                  envelope: <FaEnvelope className="text-[15px]" />,
+                  mail: <FaEnvelope className="text-[15px]" />,
+                  cloud: <SiGooglecloud className="text-[15px]" />,
+                  hackerrank: <FaHackerrank className="text-[15px]" />,
+                };
+
+                return socialLinks.map(link => (
+                  <a
+                    key={link.id}
+                    href={link.link_url || (link.label.toLowerCase() === 'email' || link.icon_name === 'mail' ? `https://mail.google.com/mail/?view=cm&fs=1&to=${link.display_value || link.value}` : (link.display_value || link.value))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 transition-all duration-300 hover:text-white hover:border-red-500"
+                    style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                    aria-label={link.label}
+                  >
+                    {iconMap[link.icon_name || ''] || <Wifi className="w-4 h-4" />}
+                  </a>
+                ));
+              })()}
               <span className="text-[10px] font-mono text-gray-600 ml-0.5 select-none">·  Let's connect</span>
             </motion.div>
           </motion.div>
@@ -975,7 +996,7 @@ const MetricPillDynamic = ({ metric }: { metric: { label: string; value: string;
   const suffix = metric.value.replace(/^\d+\.?\d*/, "");
 
   const animated = useCountUp(Math.round(numericTarget), 2000, 800);
-  
+
   // Case-insensitive icon lookup
   const iconKey = metric.icon.toLowerCase();
   const iconComponent = ICON_MAP[iconKey] ?? <Activity className="w-3.5 h-3.5" />;
