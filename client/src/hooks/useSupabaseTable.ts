@@ -45,6 +45,9 @@ export function useSupabaseTable<T>(
       { id: "6", category: "contact_info", label: "Email", value: "zeyamosharraf999@gmail.com", display_value: "zeyamosharraf999@gmail.com", icon_name: "mail", sort_order: 1 },
       { id: "7", category: "contact_info", label: "Location", value: "Delhi NCR, India", display_value: "Delhi NCR, India", icon_name: "map-pin", sort_order: 2 },
     ],
+    portfolio_content: [
+      { id: "1", section: "about", text: "Most data problems are not analysis problems. They are infrastructure problems disguised as reporting problems. That distinction drives how I work.\n\nI build systems that make reliable analytics possible. I have shipped reporting infrastructure that cut a client's reporting cycle from two weeks to ten minutes, engineered a dual-protocol extraction pipeline running at 146 records per second during a time-critical account shutdown, and built migration engines that moved 20,000+ CRM records with zero data loss using layered architecture, concurrency control, and checkpoint recovery. When a paid automation feature was creating unnecessary cost, I replaced it entirely with a zero-cost system that did the same job.\n\nThe common thread is not the tools. It is finding where the system breaks and fixing it before it does, whether that is a rate limit failure killing a production dashboard, a flawed ingestion layer corrupting downstream reports, or a migration process with no recovery path.\n\nCurrently building an AI-powered CRM Data Hygiene Pipeline on Microsoft Fabric using Medallion Architecture with automated data quality monitoring.", sort_order: 1 },
+    ],
   };
 
   const fetchData = async () => {
@@ -68,11 +71,10 @@ export function useSupabaseTable<T>(
           message: fetchError.message,
         });
         setError(fetchError.message);
-        setData((fallbackData[table] as T[]) || []);
+        setData([]);
       } else if (!result || result.length === 0) {
-        console.warn(`No data returned from ${table} table, using fallback`);
-        console.log("Fallback data:", fallbackData[table]);
-        setData((fallbackData[table] as T[]) || []);
+        console.warn(`No data returned from ${table} table`);
+        setData([]);
       } else {
         console.log(`Fetched ${result.length} rows from ${table}`);
         setData(result as T[]);
@@ -80,7 +82,7 @@ export function useSupabaseTable<T>(
     } catch (err: any) {
       console.error(`Unexpected error fetching ${table}:`, err?.message);
       setError(err?.message || "Unknown error");
-      setData((fallbackData[table] as T[]) || []);
+      setData([]);
     } finally {
       if (mountedRef.current) {
         setLoading(false);
