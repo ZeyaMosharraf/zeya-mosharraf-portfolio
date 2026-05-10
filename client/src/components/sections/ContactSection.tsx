@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import ContactForm from "@/components/forms/ContactForm";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { FaEnvelope, FaMapMarkerAlt, FaClock, FaLinkedin, FaGithub } from "react-icons/fa";
-import { FaHackerrank } from "react-icons/fa6";
-import { SiGooglecloud } from "react-icons/si";
+import { FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { Mail, AlertCircle } from "lucide-react";
 import { whileInViewFadeUp } from "@/lib/animations";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
@@ -23,17 +21,12 @@ const ContactSection = () => {
   const { data: allData, loading } = useSupabaseTable<PortfolioInfo>("portfolio_info", { column: "sort_order", ascending: true });
 
   const contactInfo = allData.filter(item => item.category === "contact_info");
-  const socialLinks = allData.filter(item => item.category === "social_link");
 
   const iconMap: Record<string, React.ReactNode> = {
     envelope: <FaEnvelope className="text-[13px]" />,
     "map-pin": <FaMapMarkerAlt className="text-[13px]" />,
     clock: <FaClock className="text-[13px]" />,
-    linkedin: <FaLinkedin className="text-[15px]" />,
-    github: <FaGithub className="text-[15px]" />,
-    cloud: <SiGooglecloud className="text-[13px]" />,
     mail: <FaEnvelope className="text-[13px]" />,
-    hackerrank: <FaHackerrank className="text-[15px]" />,
   };
 
   return (
@@ -87,27 +80,6 @@ const ContactSection = () => {
               )}
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-[15px] font-semibold text-gray-300 uppercase tracking-wider">Connect With Me</h3>
-              <div className="flex gap-3">
-                {loading ? (
-                  <div className="text-xs text-gray-600">Loading...</div>
-                ) : (
-                  socialLinks.map((social) => (
-                    <a
-                      key={social.id}
-                      href={social.link_url || (social.label.toLowerCase() === 'email' || social.icon_name === 'mail' ? `https://mail.google.com/mail/?view=cm&fs=1&to=${social.display_value || social.value}` : (social.display_value || social.value))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200 bg-white/2 border border-white/6"
-                      aria-label={social.label}
-                    >
-                      {iconMap[social.icon_name || ''] || <AlertCircle className="w-4 h-4" />}
-                    </a>
-                  ))
-                )}
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
