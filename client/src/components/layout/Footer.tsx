@@ -9,9 +9,10 @@ import {
   FaCloud,
   FaArrowUp
 } from "react-icons/fa";
-import { FaHackerrank } from "react-icons/fa6";
 import { SiGooglecloud } from "react-icons/si";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { SocialLinks } from "@/components/ui/common";
+import ContactCard from "@/components/ui/ContactCard";
 
 interface PortfolioInfo {
   id: string;
@@ -27,18 +28,7 @@ interface PortfolioInfo {
 const Footer = () => {
   const { data: allData, loading } = useSupabaseTable<PortfolioInfo>("portfolio_info", { column: "sort_order", ascending: true });
 
-  const socialLinks = allData.filter(item => item.category === "social_link");
   const contactInfo = allData.filter(item => item.category === "contact_info");
-
-  const iconMap: Record<string, React.ReactNode> = {
-    github: <FaGithub className="text-lg" />,
-    linkedin: <FaLinkedinIn className="text-lg" />,
-    cloud: <SiGooglecloud className="text-lg" />,
-    hackerrank: <FaHackerrank className="text-lg" />,
-    envelope: <FaEnvelope className="text-sm" />,
-    "map-pin": <FaMapMarkerAlt className="text-sm" />,
-    mail: <FaEnvelope className="text-sm" />,
-  };
 
   const handleSectionClick = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -90,24 +80,12 @@ const Footer = () => {
                   {loading ? (
                     <div className="text-xs text-gray-600">Loading...</div>
                   ) : (
-                    socialLinks.map((social, index) => (
-                      <motion.a
-                        key={social.id}
-                        href={social.link_url || (social.label.toLowerCase() === 'email' || social.icon_name === 'mail' ? `https://mail.google.com/mail/?view=cm&fs=1&to=${social.display_value || social.value}` : (social.display_value || social.value))}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-3 rounded-lg text-gray-500 transition-all duration-300 hover:text-red-400 bg-white/3 border border-white/6"
-                        aria-label={social.label}
-                        whileHover={{ y: -3, borderColor: 'rgba(220,38,38,0.2)' }}
-                        whileTap={{ scale: 0.95 }}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.08 + 0.3, duration: 0.5 }}
-                        viewport={{ once: true }}
-                      >
-                        {iconMap[social.icon_name || ''] || <FaCloud className="text-lg" />}
-                      </motion.a>
-                    ))
+                    <SocialLinks 
+                      animated={true}
+                      containerClassName="flex space-x-3"
+                      linkClassName="p-3 rounded-lg text-gray-500 transition-all duration-300 hover:text-red-400 bg-white/3 border border-white/6"
+                      iconClassName="text-lg"
+                    />
                   )}
                 </div>
               </motion.div>
@@ -162,22 +140,13 @@ const Footer = () => {
                   ) : (
                     contactInfo.map((item) => (
                       <motion.div key={item.id} className="group" whileHover={{ x: 4 }}>
-                        <div className="flex items-center p-4 rounded-xl transition-all duration-300" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                          <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-4" style={{ background: 'rgba(220,38,38,0.06)' }}>
-                            <div className="text-red-400/70 text-sm">
-                              {iconMap[item.icon_name || ''] || <FaEnvelope className="text-sm" />}
-                            </div>
-                          </div>
-                          <div>
-                            <p className="text-[11px] text-gray-600 mb-0.5">{item.label}</p>
-                            {item.link_url ? (
-                              <a href={item.link_url} className="text-gray-300 hover:text-red-400 transition-colors text-[13px] font-medium">
-                                {item.display_value || item.value}
-                              </a>
-                            ) : (
-                              <span className="text-gray-300 text-[13px] font-medium">{item.display_value || item.value}</span>
-                            )}
-                          </div>
+                        <div className="p-4 rounded-xl transition-all duration-300" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                          <ContactCard
+                            iconName={item.icon_name || ''}
+                            label={item.label}
+                            value={item.display_value || item.value}
+                            href={item.link_url || undefined}
+                          />
                         </div>
                       </motion.div>
                     ))

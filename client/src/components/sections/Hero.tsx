@@ -6,6 +6,7 @@ import { FaHackerrank } from "react-icons/fa6";
 import { SiGooglecloud } from "react-icons/si";
 import { useLocation } from "wouter";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { SocialLinks } from "@/components/ui/common";
 import {
   ease,
   heroLeftColumn,
@@ -744,7 +745,7 @@ const Hero = () => {
               className="flex items-center gap-3 pt-1"
               variants={heroItemFadeUp}
             >
-              <HeroSocialLinks />
+              <SocialLinks />
               <span className="text-[10px] font-mono text-gray-600 ml-0.5 select-none">·  Let's connect</span>
             </motion.div>
           </motion.div>
@@ -1027,40 +1028,6 @@ const HeroMetricsStrip = () => {
     <>
       {metrics.map((metric) => (
         <MetricPillDynamic key={metric.id} metric={metric} />
-      ))}
-    </>
-  );
-};
-
-/* ─── HeroSocialLinks: fetches from Supabase and renders social icons ─── */
-const HeroSocialLinks = () => {
-  const { data: allData, loading } = useSupabaseTable<PortfolioInfo>("portfolio_info", { column: "sort_order", ascending: true });
-  const socialLinks = allData.filter(item => item.category === "social_link");
-  if (loading) return <div className="text-xs text-gray-600">Loading...</div>;
-
-  const iconMap: Record<string, React.ReactNode> = {
-    github: <FaGithub className="text-[15px]" />,
-    linkedin: <FaLinkedinIn className="text-[15px]" />,
-    envelope: <FaEnvelope className="text-[15px]" />,
-    mail: <FaEnvelope className="text-[15px]" />,
-    cloud: <SiGooglecloud className="text-[15px]" />,
-    hackerrank: <FaHackerrank className="text-[15px]" />,
-  };
-
-  return (
-    <>
-      {socialLinks.map(link => (
-        <a
-          key={link.id}
-          href={link.link_url || (link.label.toLowerCase() === 'email' || link.icon_name === 'mail' ? `https://mail.google.com/mail/?view=cm&fs=1&to=${link.display_value || link.value}` : (link.display_value || link.value))}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 transition-all duration-300 hover:text-white hover:border-red-500"
-          style={{ border: '1px solid rgba(255,255,255,0.08)' }}
-          aria-label={link.label}
-        >
-          {iconMap[link.icon_name || ''] || <Wifi className="w-4 h-4" />}
-        </a>
       ))}
     </>
   );
