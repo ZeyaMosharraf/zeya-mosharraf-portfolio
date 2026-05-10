@@ -181,7 +181,7 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
       {/* Certificate Image */}
       <div className="relative h-48 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)' }}>
         {certificate.image_url ? (
-          <img src={certificate.image_url} alt={certificate.title} className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
+          <img src={certificate.image_url} alt={certificate.title} loading="lazy" className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">

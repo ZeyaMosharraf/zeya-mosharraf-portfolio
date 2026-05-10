@@ -1,16 +1,17 @@
 import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
-import NotFound from "@/pages/not-found";
-import Home from "@/pages/Home";
-import AllProjects from "@/pages/AllProjects";
-import ProjectDetails from "@/pages/ProjectDetails";
-import ProjectCategory from "@/pages/ProjectCategory";
-import CaseStudies from "@/pages/CaseStudies";
-import Blog from "@/pages/Blog";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PortfolioAssistant from "@/components/PortfolioAssistant";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+
+const NotFound = React.lazy(() => import("@/pages/not-found"));
+const Home = React.lazy(() => import("@/pages/Home"));
+const AllProjects = React.lazy(() => import("@/pages/AllProjects"));
+const ProjectDetails = React.lazy(() => import("@/pages/ProjectDetails"));
+const ProjectCategory = React.lazy(() => import("@/pages/ProjectCategory"));
+const CaseStudies = React.lazy(() => import("@/pages/CaseStudies"));
+const Blog = React.lazy(() => import("@/pages/Blog"));
 
 
 function App() {
@@ -42,25 +43,27 @@ function App() {
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <Navbar />
       <main className="flex-grow">
-        <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/projects" component={AllProjects} />
-          <Route path="/project/:slug" component={ProjectDetails} />
-          <Route path="/projects/:category" component={ProjectCategory} />
-          <Route path="/case-studies">
-            {() => <CaseStudies />}
-          </Route>
-          <Route path="/case-study/:slug">
-            {(params) => <CaseStudies viewMode="detail" params={params} />}
-          </Route>
-          <Route path="/blog">
-            {() => <Blog />}
-          </Route>
-          <Route path="/blog/:slug">
-            {(params) => <Blog viewMode="detail" params={params} />}
-          </Route>
-          <Route component={NotFound} />
-        </Switch>
+        <Suspense fallback={<div className="flex-grow flex items-center justify-center min-h-[60vh]"><div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/projects" component={AllProjects} />
+            <Route path="/project/:slug" component={ProjectDetails} />
+            <Route path="/projects/:category" component={ProjectCategory} />
+            <Route path="/case-studies">
+              {() => <CaseStudies />}
+            </Route>
+            <Route path="/case-study/:slug">
+              {(params) => <CaseStudies viewMode="detail" params={params} />}
+            </Route>
+            <Route path="/blog">
+              {() => <Blog />}
+            </Route>
+            <Route path="/blog/:slug">
+              {(params) => <Blog viewMode="detail" params={params} />}
+            </Route>
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
       </main>
       <Footer />
       
