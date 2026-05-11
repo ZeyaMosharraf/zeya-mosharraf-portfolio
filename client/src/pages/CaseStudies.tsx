@@ -1,13 +1,25 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useLocation } from "wouter";
-import { ArrowLeft, FileText, Calendar, Award, ExternalLink, Search, Grid, List } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { 
+  Calendar, 
+  Search, 
+  Zap, 
+  Target, 
+  CheckCircle2, 
+  Activity,
+  ArrowRight,
+  Shield,
+  Cpu,
+  BarChart3,
+  Layers,
+  Clock
+} from "lucide-react";
 import { caseStudies } from "@/data/caseStudies";
 import { Helmet } from "react-helmet-async";
 import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
-import { staggerContainer, staggerItem } from "@/lib/animations";
+import { SEO } from "@/components/SEO";
 
 // Case study type definition
 type CaseStudy = {
@@ -24,14 +36,8 @@ type CaseStudy = {
   slug: string;
 };
 
-interface CaseStudiesProps {
-  viewMode?: "list" | "detail";
-  params?: { slug: string };
-}
-
-const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProps) => {
+const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "list" | "detail", params?: { slug: string } }) => {
   const hookParams = useParams<{ slug: string }>();
-  // Use passed params if available, otherwise use hook params
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(() => {
@@ -41,7 +47,6 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
     return null;
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [cardViewMode, setCardViewMode] = useState<"grid" | "list">("grid");
 
   const filteredCaseStudies = caseStudies.filter(cs =>
     cs.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,345 +57,387 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Keep in sync if slug changes after mount
     if (viewMode === "detail" && params?.slug) {
       const found = caseStudies.find(cs => cs.slug === params.slug);
       setSelectedCaseStudy(found ?? null);
     }
   }, [viewMode, params?.slug]);
 
-  // Detail view rendering function
   const renderDetailView = () => {
     if (!selectedCaseStudy) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Case Study Not Found</h2>
-            <Button
+            <h2 className="text-2xl font-bold mb-4 text-white">Study Not Found</h2>
+            <button
               onClick={() => setLocation("/case-studies")}
-              className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
+              className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Case Studies
-            </Button>
+              Back to Operations
+            </button>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
-        {/* Hero Section */}
-        <PageHero
-          title={selectedCaseStudy.title}
-          showStats={false}
-          topContent={
-            <>
-              <AnimatedBackButton onClick={() => setLocation("/case-studies")} label="Back to Case Studies" />
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-center"
-              >
-                <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 text-white bg-white/20 backdrop-blur-sm">
-                  {selectedCaseStudy.category}
-                </span>
-              </motion.div>
-            </>
-          }
-          bottomContent={
-            <div className="flex items-center justify-center text-white/90 mb-6 mt-6">
-              <Calendar className="h-5 w-5 mr-2" />
-              <span className="text-lg">{selectedCaseStudy.date}</span>
-            </div>
-          }
+      <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
+        <SEO 
+          title={`${selectedCaseStudy.title} | Engineering Case Study`}
+          description={selectedCaseStudy.shortDescription}
         />
 
-        {/* Main Content */}
-        <div className="relative px-4 sm:px-6 lg:px-8 py-16">
-          {/* Floating background elements */}
-          <div className="absolute top-20 right-10 w-24 h-24 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-40 left-10 w-32 h-32 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        {/* ── ATMOSPHERIC DEPTH (aligned with Projects section) ── */}
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.02) 0%, transparent 65%)",
+            zIndex: 0,
+          }}
+        />
 
-          <div className="max-w-6xl mx-auto relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg"
+        {/* ── HERO SECTION (LEFT ALIGNED) ── */}
+        <section className="relative pt-20 pb-12 lg:pt-28 lg:pb-16 border-b border-white/[0.03]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="flex flex-col items-start max-w-3xl">
+              <AnimatedBackButton onClick={() => setLocation("/case-studies")} label="Back to Case Studies" />
+              
+              {/* Contextual Label */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15, duration: 0.4 }}
+                className="mt-8 mb-5 flex items-center gap-2"
+              >
+                <div className="w-1 h-1 rounded-full bg-red-500" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/70">
+                  Engineering Case Study
+                </span>
+              </motion.div>
+
+              {/* Title — restrained 24/32/38/42px */}
+              <motion.h1 
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="text-[24px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold text-white tracking-tight leading-[1.2] mb-6 max-w-[700px]"
+              >
+                {selectedCaseStudy.title}
+              </motion.h1>
+
+              {/* Metadata Row */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.25, duration: 0.4 }}
+                className="flex flex-wrap items-center gap-5 text-[11px] text-gray-600 font-medium mb-8"
+              >
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-3.5 h-3.5 opacity-40" />
+                  <span>{selectedCaseStudy.date}</span>
+                </div>
+                <div className="w-1 h-1 rounded-full bg-white/5" />
+                <div className="flex items-center gap-2">
+                  <Activity className="w-3.5 h-3.5 opacity-40" />
+                  <span>{selectedCaseStudy.category.split('|')[0].trim()}</span>
+                </div>
+                <div className="w-1 h-1 rounded-full bg-white/5" />
+                <div className="flex items-center gap-2">
+                  <Shield className="w-3.5 h-3.5 opacity-40" />
+                  <span>Operational System</span>
+                </div>
+              </motion.div>
+
+              {/* Outcome Statement */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.05] relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 bottom-0 w-1 bg-red-600/40" />
+                <p className="text-[14px] md:text-[15px] text-gray-400 leading-relaxed font-medium">
+                  {selectedCaseStudy.shortDescription}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── MAIN CONTENT (WIDER LAYOUT) ── */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+            
+            {/* Storytelling Column */}
+            <div className="lg:col-span-8 space-y-24">
+              
+              {/* Editorial Summary */}
+              <motion.section
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500/40 mb-8 flex items-center gap-3">
+                  <Layers className="w-3.5 h-3.5" />
+                  Context & Overview
+                </h2>
+                <div className="prose prose-invert prose-red max-w-none">
+                  <p className="text-[15px] md:text-[17px] text-gray-200 leading-[1.7] font-medium mb-8">
+                    {selectedCaseStudy.fullDescription.split('\n\n')[0]}
+                  </p>
+                  <p className="text-[13px] md:text-[14px] text-gray-500 leading-[1.8] whitespace-pre-line">
+                    {selectedCaseStudy.fullDescription.split('\n\n').slice(1).join('\n\n')}
+                  </p>
+                </div>
+              </motion.section>
+
+              {/* Execution Flow (Refined) */}
+              {selectedCaseStudy.bulletPoints && (
+                <motion.section
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Case Study Overview</h2>
-                  <div className="prose prose-lg max-w-none dark:prose-invert">
-                    <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                      {selectedCaseStudy.fullDescription}
-                    </p>
-                  </div>
-                </motion.div>
-
-                {selectedCaseStudy.bulletPoints && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                    className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg"
-                  >
-                    <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Key Activities</h2>
-                    <div className="space-y-4">
-                      {selectedCaseStudy.bulletPoints.map((point, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
-                          className="flex items-start"
-                        >
-                          <div className="flex-shrink-0 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4 mt-1">
-                            ✓
-                          </div>
-                          <span className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{point}</span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
-                  className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-8 shadow-lg"
-                >
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                    <Award className="h-8 w-8 mr-3 text-green-600 dark:text-green-400" />
-                    Results & Impact
+                  <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500/40 mb-10 flex items-center gap-3">
+                    <Cpu className="w-3.5 h-3.5" />
+                    Technical Execution
                   </h2>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{selectedCaseStudy.results}</p>
-                </motion.div>
-              </div>
-
-              {/* Sidebar */}
-              <div className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
-                >
-                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
-                    <FileText className="h-5 w-5 mr-2 text-red-600" />
-                    Tools & Technologies
-                  </h3>
-                  <div className="space-y-2">
-                    {selectedCaseStudy.toolsUsed.map((tool, idx) => (
-                      <motion.div
+                  
+                  <div className="grid grid-cols-1 gap-3">
+                    {selectedCaseStudy.bulletPoints.map((point, idx) => (
+                      <motion.div 
                         key={idx}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: 0.6 + idx * 0.1 }}
-                        className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        initial={{ opacity: 0, y: 8 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.05, duration: 0.4 }}
+                        className="group flex items-center gap-5 p-5 rounded-xl bg-white/[0.015] border border-white/[0.04] hover:bg-white/[0.025] hover:border-white/[0.08] transition-all duration-300"
                       >
-                        <div className="w-2 h-2 bg-red-600 rounded-full mr-3"></div>
-                        <span className="text-gray-700 dark:text-gray-300 font-medium">{tool}</span>
+                        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center group-hover:border-red-500/20 group-hover:bg-red-500/[0.02] transition-colors duration-300">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-gray-700 group-hover:text-red-500 transition-colors" />
+                        </div>
+                        <span className="text-[14px] text-gray-500 group-hover:text-gray-300 leading-relaxed transition-colors duration-300">
+                          {point}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
-                </motion.div>
+                </motion.section>
+              )}
 
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg"
-                >
-                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Quick Stats</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                      <span className="text-gray-600 dark:text-gray-400">Duration</span>
-                      <span className="font-semibold text-gray-900 dark:text-white">2-4 weeks</span>
+              {/* Operational Impact (Refined Centerpiece) */}
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7 }}
+                className="relative p-10 md:p-14 rounded-3xl overflow-hidden group bg-[#0f0f0f] border border-white/[0.04]"
+              >
+                {/* Atmospheric depth */}
+                <div className="absolute inset-0 bg-red-600/[0.01] pointer-events-none" />
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-red-500/[0.03] blur-[80px] rounded-full" />
+                
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-10 flex items-center gap-3">
+                  <BarChart3 className="w-4 h-4" />
+                  Measurable Impact
+                </h2>
+                
+                <div className="relative z-10">
+                  <p className="text-[16px] md:text-[18px] lg:text-[20px] text-white leading-[1.6] font-medium italic mb-10 tracking-tight">
+                    "{selectedCaseStudy.results}"
+                  </p>
+                  
+                  <div className="flex items-center gap-4 pt-8 border-t border-white/[0.05]">
+                    <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                      <Zap className="w-5 h-5 text-red-500" />
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <span className="text-gray-600 dark:text-gray-400">Impact</span>
-                      <span className="font-semibold text-green-600 dark:text-green-400">High</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                      <span className="text-gray-600 dark:text-gray-400">Complexity</span>
-                      <span className="font-semibold text-purple-600 dark:text-purple-400">Advanced</span>
+                    <div>
+                      <h4 className="text-white font-bold text-[13px]">Engineering Success</h4>
+                      <p className="text-gray-600 text-[10px] uppercase tracking-widest mt-1">Verified Operational Outcome</p>
                     </div>
                   </div>
-                </motion.div>
-              </div>
+                </div>
+              </motion.section>
             </div>
+
+            {/* Sidebar (Integrated Meta) */}
+            <aside className="lg:col-span-4 space-y-10 lg:sticky lg:top-32">
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="space-y-10"
+              >
+                {/* Tech Stack */}
+                <div className="p-7 rounded-2xl bg-white/[0.015] border border-white/[0.04]">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 flex items-center gap-2">
+                    <Layers className="w-3 h-3" />
+                    Tech Stack
+                  </h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedCaseStudy.toolsUsed.map((tool, idx) => (
+                      <span key={idx} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-[11px] text-gray-500 font-medium">
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Parameters */}
+                <div className="p-7 rounded-2xl bg-white/[0.015] border border-white/[0.04]">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 flex items-center gap-2">
+                    <Clock className="w-3 h-3" />
+                    Project Metadata
+                  </h4>
+                  <div className="space-y-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[12px] text-gray-600">Cycle Duration</span>
+                      <span className="text-[12px] text-gray-300 font-bold">2-4 Weeks</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[12px] text-gray-600">Platform Scope</span>
+                      <span className="text-[12px] text-gray-300 font-bold">Production</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[12px] text-gray-600">Impact Score</span>
+                      <span className="text-[12px] text-red-600 font-bold uppercase">High</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div 
+                  className="p-7 rounded-2xl relative overflow-hidden group cursor-pointer"
+                  style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.08)" }}
+                  onClick={() => setLocation('/contact')}
+                >
+                  <h4 className="text-white font-bold text-[14px] mb-2">Technical Deep-Dive?</h4>
+                  <p className="text-[12px] text-gray-500 leading-relaxed mb-5">
+                    Interested in how I automated these workflows? Let's discuss the engineering details.
+                  </p>
+                  <div className="flex items-center gap-2 text-red-500 text-[12px] font-bold group-hover:gap-3 transition-all">
+                    Reach out
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </motion.div>
+            </aside>
           </div>
-        </div>
+        </main>
       </div>
     );
   };
 
-  // List view rendering function
   const renderListView = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
-        {/* Hero Section */}
+      <div className="min-h-screen bg-[#0d0d0d]">
+        <SEO 
+          title="Case Studies | Operational Engineering"
+          description="Detailed analyses of real-world operational challenges and measurable engineering solutions."
+        />
+        
         <PageHero
-          title="Case Studies"
-          subtitle="Detailed analyses of real-world data challenges and their innovative solutions"
+          title="Operational Stories"
+          subtitle="How data engineering and automation solve real-world business bottlenecks."
         />
 
-        {/* Search Bar */}
-        <div className="relative px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-white dark:bg-gray-900/80 rounded-2xl p-6 shadow-lg -mt-8 relative z-10 border border-gray-100 dark:border-red-900/20"
-            >
-              <div className="flex flex-row gap-4 items-center justify-between w-full">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search case studies..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-red-900/30 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
-                  />
-                </div>
-                {/* View Mode Toggle */}
-                <div className="flex items-center gap-1 bg-gray-200 dark:bg-gray-600 rounded-lg p-1 shrink-0">
-                  <button
-                    onClick={() => setCardViewMode("grid")}
-                    className={`p-2 rounded-md transition-colors ${cardViewMode === "grid"
-                      ? "bg-white dark:bg-red-600 text-red-600 dark:text-white shadow-sm"
-                      : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                      }`}
-                  >
-                    <Grid className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setCardViewMode("list")}
-                    className={`p-2 rounded-md transition-colors ${cardViewMode === "list"
-                      ? "bg-white dark:bg-red-600 text-red-600 dark:text-white shadow-sm"
-                      : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                      }`}
-                  >
-                    <List className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+        {/* Atmospheric Depth */}
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.03) 0%, transparent 65%)",
+            zIndex: 0,
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+          {/* Minimal Search */}
+          <div className="relative max-w-xl mx-auto mb-20">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-600" />
+            <input
+              type="text"
+              placeholder="Search operational stories..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-11 pl-11 pr-4 bg-white/[0.02] border border-white/[0.06] rounded-xl text-[12px] text-white focus:border-red-500/30 outline-none transition-all"
+            />
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="relative px-4 sm:px-6 lg:px-8 py-16">
-          {/* Floating background elements */}
-          <div className="absolute top-10 left-10 w-32 h-32 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="grid grid-cols-1 gap-12 lg:gap-20">
+            {filteredCaseStudies.map((cs, index) => (
+              <motion.article
+                key={cs.slug}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-start cursor-pointer"
+                onClick={() => setLocation(`/case-study/${cs.slug}`)}
+              >
+                {/* Visual Accent */}
+                <div className="hidden lg:block lg:col-span-1 pt-2">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-center transition-colors group-hover:border-red-500/20 group-hover:bg-red-500/[0.02]">
+                    <span className="text-[12px] font-bold text-gray-700 group-hover:text-red-500/50">0{index + 1}</span>
+                  </div>
+                </div>
 
-          <div className="max-w-7xl mx-auto relative z-10">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-              className={cardViewMode === "grid" ? "grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8" : "flex flex-col gap-4"}
-            >
-              {filteredCaseStudies.length === 0 ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="col-span-2 text-center py-16 text-gray-500 dark:text-gray-400"
-                >
-                  <Search className="w-12 h-12 mx-auto mb-4 opacity-30" />
-                  <p className="text-lg font-medium">No case studies found for "{searchTerm}"</p>
-                  <p className="text-sm mt-1">Try a different keyword</p>
-                </motion.div>
-              ) : filteredCaseStudies.map((caseStudy, index) => (
-                <motion.div
-                  key={caseStudy.slug}
-                  variants={staggerItem}
-                  className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer ${cardViewMode === "list" ? "flex flex-row" : ""
-                    }`}
-                  whileHover={{ y: cardViewMode === "grid" ? -6 : 0, x: cardViewMode === "list" ? 4 : 0 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  {/* Header with gradient */}
-                  <div className={`relative p-6 pb-4 bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-950/30 dark:to-red-900/20 ${cardViewMode === "list" ? "w-48 shrink-0 flex flex-col justify-center pb-6" : ""
-                    }`}>
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-full blur-2xl"></div>
-                    <motion.div
-                      className="inline-flex items-center px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/50 rounded-full mb-4"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <FileText className="w-3 h-3 mr-1" />
-                      Case Study
-                    </motion.div>
-                    <h3 className="text-lg lg:text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-300 leading-tight line-clamp-2">
-                      {caseStudy.title}
-                    </h3>
+                {/* Content Story */}
+                <div className="lg:col-span-7 space-y-6">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-red-500/80">
+                      {cs.category.split('|')[0]}
+                    </span>
+                    <span className="text-gray-700 text-[10px]">•</span>
+                    <span className="text-[11px] text-gray-600 font-medium">{cs.date}</span>
                   </div>
 
-                  {/* Content */}
-                  <div className="p-4 lg:p-6 pt-0">
-                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 lg:mb-6 line-clamp-3">
-                      {caseStudy.shortDescription}
+                  <h3 className="text-2xl lg:text-3xl font-bold text-white group-hover:text-red-50 transition-colors leading-tight">
+                    {cs.title}
+                  </h3>
+
+                  <p className="text-[14px] text-gray-500 leading-relaxed max-w-2xl">
+                    {cs.shortDescription}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {cs.toolsUsed.slice(0, 4).map((tool, j) => (
+                      <span key={j} className="text-[10px] text-gray-700 font-medium uppercase tracking-wider">
+                        {tool}{j < Math.min(cs.toolsUsed.length, 4) - 1 ? ' • ' : ''}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Outcome Highlight */}
+                <div className="lg:col-span-4 lg:pl-8">
+                  <div className="relative p-6 lg:p-8 rounded-2xl bg-white/[0.01] border border-white/[0.04] overflow-hidden group-hover:bg-red-500/[0.01] group-hover:border-red-500/10 transition-all duration-500">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <Zap className="w-10 h-10 text-red-500" />
+                    </div>
+                    
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-red-500/60 mb-4 flex items-center gap-2">
+                      <Target className="w-3.5 h-3.5" />
+                      Key Outcome
+                    </h4>
+                    
+                    <p className="text-[12px] text-gray-500 leading-relaxed line-clamp-4 italic">
+                      "{cs.results.split('.')[0]}."
                     </p>
 
-                    {/* Tools preview */}
-                    <div className="mb-6">
-                      <div className="flex flex-wrap gap-2 mb-2">
-                        {caseStudy.toolsUsed.slice(0, 3).map((tool, toolIndex) => (
-                          <motion.span
-                            key={toolIndex}
-                            className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md"
-                            whileHover={{ scale: 1.05 }}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3, delay: 0.2 + toolIndex * 0.1 }}
-                          >
-                            {tool}
-                          </motion.span>
-                        ))}
-                        {caseStudy.toolsUsed.length > 3 && (
-                          <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-md">
-                            +{caseStudy.toolsUsed.length - 3} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
-                      <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {caseStudy.date}
-                      </div>
-                      <motion.div
-                        className="flex items-center text-red-600 dark:text-red-400 font-medium text-sm group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors duration-300"
-                        whileHover={{ x: 4 }}
-                      >
-                        Read Study
-                        <ExternalLink className="w-4 h-4 ml-1" />
-                      </motion.div>
+                    <div className="mt-6 flex items-center gap-2 text-[12px] font-bold text-red-500 group-hover:gap-4 transition-all">
+                      Read full study
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
+                </div>
 
-                  {/* Hover overlay */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
+                {/* Divider Line */}
+                <div className="absolute -bottom-8 lg:-bottom-12 left-0 right-0 h-px bg-white/5 group-last:hidden" />
+              </motion.article>
+            ))}
           </div>
         </div>
       </div>
@@ -398,38 +445,11 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: CaseStudiesProp
   };
 
   return (
-    <>
-      <Helmet>
-        {viewMode === "detail" && selectedCaseStudy ? (
-          <>
-            <title>{selectedCaseStudy.title} | Case Study | Zeya Mosharraf</title>
-            <meta name="description" content={selectedCaseStudy.shortDescription} />
-            <meta name="keywords" content={`case study, ${selectedCaseStudy.category}, ${selectedCaseStudy.toolsUsed.join(', ')}`} />
-            <meta property="og:title" content={`${selectedCaseStudy.title} | Case Study`} />
-            <meta property="og:description" content={selectedCaseStudy.shortDescription} />
-            {selectedCaseStudy.imageUrl && <meta property="og:image" content={selectedCaseStudy.imageUrl} />}
-            <meta property="og:type" content="article" />
-          </>
-        ) : (
-          <>
-            <title>Case Studies | Zeya Mosharraf</title>
-            <meta name="description" content="Detailed analyses of real-world data challenges and their solutions" />
-            <meta name="keywords" content="case studies, data analysis, projects, portfolio" />
-            <meta property="og:title" content="Case Studies | Zeya Mosharraf" />
-            <meta property="og:description" content="Detailed analyses of real-world data challenges and their solutions" />
-            <meta property="og:type" content="website" />
-          </>
-        )}
-      </Helmet>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className={viewMode === "detail" ? "" : ""}
-      >
+    <div className="relative">
+      <AnimatePresence mode="wait">
         {viewMode === "detail" ? renderDetailView() : renderListView()}
-      </motion.div>
-    </>
+      </AnimatePresence>
+    </div>
   );
 };
 

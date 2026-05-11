@@ -142,7 +142,7 @@ export default function MedallionArchitectureUI() {
       style={{
         background: '#0D0D0D',
         border: '1px solid rgba(220,38,38,0.20)',
-        padding: '3.5rem 2rem 3rem',
+        padding: '2rem 1rem 2rem',
       }}
     >
       <style>{animStyles}</style>
@@ -158,8 +158,8 @@ export default function MedallionArchitectureUI() {
       <div className="relative z-10">
 
         {/* ── TITLE ── */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3">
+        <div className="text-center mb-6 md:mb-12">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3">
             Medallion{' '}
             <span
               className="bg-clip-text text-transparent"
@@ -168,7 +168,7 @@ export default function MedallionArchitectureUI() {
               Architecture
             </span>
           </h2>
-          <p className="text-gray-400 text-sm max-w-xl mx-auto leading-relaxed">
+          <p className="text-gray-400 text-xs md:text-sm max-w-xl mx-auto leading-relaxed px-2">
             A scalable data design pattern that logically organizes data in a lakehouse, 
             progressively improving structure and quality as it flows through the pipeline.
           </p>
@@ -384,7 +384,7 @@ export default function MedallionArchitectureUI() {
         </div>
 
         {/* ── METRICS ROW ── */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-8">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-8">
           {METRICS.map((m, i) => {
             const Icon = m.icon;
             return (
@@ -393,21 +393,21 @@ export default function MedallionArchitectureUI() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
-                className="flex flex-col p-4 rounded-xl"
+                className="flex flex-col p-3 md:p-4 rounded-xl"
                 style={{
                   background: '#111111',
                   border: '1px solid rgba(255,255,255,0.04)',
                 }}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <Icon size={14} className="text-gray-500" />
-                  <span className="text-[11px] font-medium text-gray-400">{m.label}</span>
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <Icon size={12} className="text-gray-500 flex-shrink-0" />
+                  <span className="text-[10px] md:text-[11px] font-medium text-gray-400 truncate">{m.label}</span>
                 </div>
-                <div className="flex items-end gap-2">
-                  <span className="text-2xl font-semibold text-white leading-none">{m.value}</span>
-                  {m.unit && <span className="text-[13px] text-gray-500 mb-0.5">{m.unit}</span>}
+                <div className="flex items-end gap-1">
+                  <span className="text-lg md:text-2xl font-semibold text-white leading-none">{m.value}</span>
+                  {m.unit && <span className="text-[11px] md:text-[13px] text-gray-500 mb-0.5">{m.unit}</span>}
                 </div>
-                <div className="mt-2 text-[11px] font-medium">
+                <div className="mt-1.5 text-[10px] md:text-[11px] font-medium">
                   <span className={m.up === true ? 'text-emerald-400' : m.up === false ? 'text-rose-400' : 'text-gray-500'}>
                     {m.change}
                   </span>

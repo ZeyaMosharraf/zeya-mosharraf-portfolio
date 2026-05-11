@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useLocation } from "wouter";
-import { ArrowLeft, Calendar, Tag, User, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Calendar, Tag, User, ArrowUpRight, BookOpen, Clock } from "lucide-react";
 import { blogPosts } from "@/data/blog";
 import { Helmet } from "react-helmet-async";
-import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
-import { staggerContainer, staggerItem } from "@/lib/animations";
+import { SEO } from "@/components/SEO";
 
 type BlogPost = {
   id: number;
@@ -29,7 +27,6 @@ interface BlogProps {
 
 const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   const hookParams = useParams<{ slug: string }>();
-  // Use passed params if available, otherwise use hook params
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(() => {
@@ -39,227 +36,295 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     return null;
   });
 
-
-
-
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    // If viewing a detailed blog post, find the post by ID
     if (viewMode === "detail" && params?.slug) {
       const post = blogPosts.find(p => p.slug === params.slug);
       setSelectedPost(post || null);
     }
   }, [viewMode, params?.slug]);
 
-  // Detail view rendering function
   const renderDetailView = () => {
     if (!selectedPost) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Blog Post Not Found</h2>
-            <Button
+            <h2 className="text-2xl font-bold mb-4 text-white">Entry Not Found</h2>
+            <button
               onClick={() => setLocation("/blog")}
-              className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
+              className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Blog
-            </Button>
+              Back to Journal
+            </button>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
-        {/* Hero Section */}
-        <PageHero
-          title={selectedPost.title}
-          showStats={false}
-          topContent={
-            <>
-              <AnimatedBackButton onClick={() => setLocation("/blog")} label="Back to Blog" />
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-center"
-              >
-                <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 text-white bg-white/20 backdrop-blur-sm">
-                  {selectedPost.category}
-                </span>
-              </motion.div>
-            </>
-          }
-          bottomContent={
-            <div className="flex items-center justify-center text-white/90 mb-6 space-x-6 mt-6">
-              <div className="flex items-center">
-                <User className="h-5 w-5 mr-2" />
-                <span className="text-lg">{selectedPost.author}</span>
-              </div>
-              <div className="flex items-center">
-                <Calendar className="h-5 w-5 mr-2" />
-                <span className="text-lg">{selectedPost.date}</span>
-              </div>
-            </div>
-          }
+      <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
+        <SEO 
+          title={`${selectedPost.title} | Engineering Journal`}
+          description={selectedPost.shortDescription}
         />
 
-        {/* Main Content */}
-        <div className="relative px-4 sm:px-6 lg:px-8 py-16">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-white dark:bg-gray-900/80 rounded-2xl p-8 shadow-lg mb-8 border border-gray-200 dark:border-red-900/20"
-            >
-              <div className="prose prose-lg max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: selectedPost.fullContent }}>
-              </div>
-            </motion.div>
+        {/* ── ATMOSPHERIC DEPTH ── */}
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.02) 0%, transparent 65%)",
+            zIndex: 0,
+          }}
+        />
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="bg-white dark:bg-gray-900/80 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-red-900/20"
-            >
-              <h2 className="text-xl font-bold mb-4 flex items-center text-gray-900 dark:text-gray-100">
-                <Tag className="h-5 w-5 mr-2 text-red-600 dark:text-red-400" />
-                Tags
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {selectedPost.tags.map((tag, index) => (
-                  <motion.span
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 0.8 + index * 0.1 }}
-                    className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200 px-3 py-1 rounded-full text-sm font-medium"
-                  >
-                    {tag}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
+        {/* ── LEFT-ALIGNED EDITORIAL HERO ── */}
+        <section className="relative pt-20 pb-12 lg:pt-28 lg:pb-16 border-b border-white/[0.03]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="flex flex-col items-start max-w-3xl">
+              <AnimatedBackButton onClick={() => setLocation("/blog")} label="Back to Journal" />
+              
+              {/* Contextual Label */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15, duration: 0.4 }}
+                className="mt-8 mb-5 flex items-center gap-2"
+              >
+                <div className="w-1 h-1 rounded-full bg-red-500" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/70">
+                  Engineering Journal Entry
+                </span>
+              </motion.div>
+
+              {/* Title — restrained 24/32/38/42px */}
+              <motion.h1 
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="text-[24px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold text-white tracking-tight leading-[1.2] mb-6 max-w-[700px]"
+              >
+                {selectedPost.title}
+              </motion.h1>
+
+              {/* Metadata Row */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.25, duration: 0.4 }}
+                className="flex flex-wrap items-center gap-5 text-[11px] text-gray-600 font-medium"
+              >
+                <div className="flex items-center gap-2">
+                  <User className="w-3.5 h-3.5 opacity-40" />
+                  <span>{selectedPost.author}</span>
+                </div>
+                <div className="w-1 h-1 rounded-full bg-white/5" />
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-3.5 h-3.5 opacity-40" />
+                  <span>{selectedPost.date}</span>
+                </div>
+                <div className="w-1 h-1 rounded-full bg-white/5" />
+                <div className="flex items-center gap-2">
+                  <Tag className="w-3.5 h-3.5 opacity-40" />
+                  <span className="text-red-500 font-medium">{selectedPost.category}</span>
+                </div>
+                <div className="w-1 h-1 rounded-full bg-white/5" />
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 opacity-40" />
+                  <span>5 min read</span>
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* ── MAIN CONTENT ── */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+            
+            {/* Editorial Content */}
+            <div className="lg:col-span-8">
+              <motion.article
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="prose prose-invert prose-red max-w-none"
+              >
+                <div 
+                  className="text-gray-400 leading-[1.8] text-[14px] md:text-[15px] space-y-8"
+                  dangerouslySetInnerHTML={{ __html: selectedPost.fullContent }} 
+                />
+              </motion.article>
+
+              {/* Tags Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="mt-20 pt-10 border-t border-white/[0.05]"
+              >
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-6 flex items-center gap-2">
+                  <Tag className="h-3.5 w-3.5" />
+                  Indexed Topics
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPost.tags.map((tag, idx) => (
+                    <span key={idx} className="px-3 py-1 bg-white/[0.03] border border-white/[0.05] rounded-lg text-[11px] text-gray-500 font-medium">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Sidebar Meta */}
+            <aside className="lg:col-span-4 space-y-10 lg:sticky lg:top-32">
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="p-8 rounded-2xl bg-white/[0.015] border border-white/[0.04] space-y-8"
+              >
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-4">About this entry</h4>
+                  <p className="text-[13px] text-gray-500 leading-relaxed">
+                    This entry documents a technical challenge and implementation strategy used in an operational production environment.
+                  </p>
+                </div>
+
+                <div className="pt-8 border-t border-white/[0.05]">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 mb-4">Engagement</h4>
+                  <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
+                    Have questions about the technical approach discussed here?
+                  </p>
+                  <button 
+                    onClick={() => setLocation('/contact')}
+                    className="flex items-center gap-2 text-red-500 text-[12px] font-bold hover:gap-3 transition-all"
+                  >
+                    Start a technical thread
+                    <ArrowUpRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </motion.div>
+            </aside>
+          </div>
+        </main>
       </div>
     );
   };
 
-  // List view rendering function
   const renderListView = () => {
-    // Define a mapping of categories to gradients
-    const categoryGradients: Record<string, string> = {
-      "DATA SCIENCE": "from-red-600 to-orange-500",
-      "VISUALIZATION": "from-orange-500 to-red-600",
-      "SQL": "from-red-600 to-orange-500",
-      "PYTHON": "from-orange-500 to-red-600"
-    };
-
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
-        {/* Hero Section */}
-        <PageHero
-          title="Data Insights Blog"
-          subtitle="Thoughts, tutorials, and insights on data analysis, visualization, and modern techniques"
+      <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
+        <SEO 
+          title="Engineering Journal | Technical Insights"
+          description="A collection of technical articles, engineering insights, and data analysis tutorials."
         />
 
-        {/* Main Content */}
-        <div className="relative px-4 sm:px-6 lg:px-8 py-16">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-            >
-              {blogPosts.map((post, index) => (
-                <motion.article
-                  key={post.slug}
-                  variants={staggerItem}
-                  className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer"
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setLocation(`/blog/${post.slug}`)}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+        {/* ── ATMOSPHERIC DEPTH ── */}
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.02) 0%, transparent 65%)",
+            zIndex: 0,
+          }}
+        />
+
+        {/* ── JOURNAL HERO ── */}
+        <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="max-w-3xl">
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-6 flex items-center gap-2"
+              >
+                <div className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/80">
+                  Technical Repository
+                </span>
+              </motion.div>
+              
+              <motion.h1 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-8"
+              >
+                Engineering Journal
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="text-[16px] md:text-[18px] text-gray-500 leading-relaxed"
+              >
+                Documenting technical discoveries, engineering patterns, and data-driven insights.
+              </motion.p>
+            </div>
+          </div>
+        </section>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            {blogPosts.map((post, index) => (
+              <motion.article
+                key={post.slug}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                onClick={() => setLocation(`/blog/${post.slug}`)}
+                className="group relative flex flex-col cursor-pointer"
+              >
+                {/* Cinematic Card Layout */}
+                <div 
+                  className="relative flex flex-col h-full rounded-2xl overflow-hidden transition-all duration-500 border border-white/[0.04] group-hover:border-white/[0.08]"
+                  style={{ background: "rgba(255,255,255,0.01)" }}
                 >
-                  {/* Header with category gradient */}
-                  <div className={`relative p-6 pb-4 bg-gradient-to-r ${categoryGradients[post.category] || "from-red-600 to-red-700"} text-white`}>
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-                    <motion.div
-                      className="inline-flex items-center px-3 py-1 text-xs font-semibold text-white bg-white/20 rounded-full mb-4"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <Tag className="w-3 h-3 mr-1" />
-                      {post.category}
-                    </motion.div>
-                    <h3 className="text-xl font-bold mb-3 leading-tight line-clamp-2">
+                  <div className="p-8 flex flex-col h-full">
+                    {/* Header Meta */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-500/40" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-red-500/60">
+                          {post.category}
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-gray-600 font-medium">
+                        {post.date}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-xl lg:text-2xl font-bold text-white mb-4 leading-tight transition-colors group-hover:text-red-50">
                       {post.title}
                     </h3>
-                    <div className="flex items-center text-white/90 text-sm">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      {post.date}
-                    </div>
-                  </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
+                    {/* Description */}
+                    <p className="text-[14px] text-gray-500 leading-relaxed mb-8 line-clamp-3 flex-grow">
                       {post.shortDescription}
                     </p>
 
-                    {/* Tags */}
-                    <div className="mb-4">
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                          <motion.span
-                            key={tagIndex}
-                            className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200 rounded-md"
-                            whileHover={{ scale: 1.05 }}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3, delay: 0.2 + tagIndex * 0.1 }}
-                          >
-                            {tag}
-                          </motion.span>
-                        ))}
-                        {post.tags.length > 3 && (
-                          <span className="px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">
-                            +{post.tags.length - 3} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
-                      <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm">
-                        <User className="w-4 h-4 mr-1" />
-                        {post.author}
+                    <div className="flex items-center justify-between pt-6 border-t border-white/[0.05]">
+                      <div className="flex items-center gap-2 text-gray-600 text-[12px]">
+                        <User className="w-3.5 h-3.5 opacity-40" />
+                        <span>{post.author}</span>
                       </div>
-                      <motion.div
-                        className="flex items-center text-red-600 font-medium text-sm group-hover:text-red-700 transition-colors duration-300"
-                        whileHover={{ x: 4 }}
-                      >
-                        Read Article
-                        <ExternalLink className="w-4 h-4 ml-1" />
-                      </motion.div>
+                      <div className="flex items-center gap-1.5 text-red-500 text-[12px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                        Read Entry
+                        <ArrowUpRight className="w-4 h-4" />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Hover overlay */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                  />
-                </motion.article>
-              ))}
-            </motion.div>
+                  {/* Ambient Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                </div>
+              </motion.article>
+            ))}
           </div>
         </div>
       </div>
@@ -267,39 +332,11 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   };
 
   return (
-    <>
-      <Helmet>
-        {viewMode === "detail" && selectedPost ? (
-          <>
-            <title>{selectedPost.title} | Blog | Zeya Mosharraf</title>
-            <meta name="description" content={selectedPost.shortDescription} />
-            <meta name="keywords" content={`blog, ${selectedPost.category.toLowerCase()}, ${selectedPost.tags.join(', ')}`} />
-            <meta property="og:title" content={selectedPost.title} />
-            <meta property="og:description" content={selectedPost.shortDescription} />
-            {selectedPost.imageUrl && <meta property="og:image" content={selectedPost.imageUrl} />}
-            <meta property="og:type" content="article" />
-            <meta name="author" content={selectedPost.author} />
-          </>
-        ) : (
-          <>
-            <title>Data Insights Blog | Zeya Mosharraf</title>
-            <meta name="description" content="Thoughts, tutorials, and insights on data analysis, visualization, and modern techniques" />
-            <meta name="keywords" content="data analysis, blog, data science, visualization, python, SQL" />
-            <meta property="og:title" content="Data Insights Blog | Zeya Mosharraf" />
-            <meta property="og:description" content="Thoughts, tutorials, and insights on data analysis, visualization, and modern techniques" />
-            <meta property="og:type" content="website" />
-          </>
-        )}
-      </Helmet>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className=""
-      >
+    <div className="relative">
+      <AnimatePresence mode="wait">
         {viewMode === "detail" ? renderDetailView() : renderListView()}
-      </motion.div>
-    </>
+      </AnimatePresence>
+    </div>
   );
 };
 

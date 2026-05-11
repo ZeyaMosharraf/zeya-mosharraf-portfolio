@@ -74,7 +74,7 @@ const CertificatesScrolling = ({
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-[42px] font-bold text-white leading-tight mb-4">
               Certifications &{" "}
               <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}>Achievements</span>
             </h2>
@@ -123,8 +123,8 @@ const CertificatesScrolling = ({
                   {[1, 2, 3, 4].map((i) => (
                     <div
                       key={`skeleton-${i}`}
-                      className="flex-shrink-0 w-80 h-96 rounded-xl animate-pulse"
-                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                      className="flex-shrink-0 h-80 rounded-xl animate-pulse"
+                      style={{ width: 'min(75vw, 280px)', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
                     />
                   ))}
                 </>
@@ -170,8 +170,8 @@ const CertificatesScrolling = ({
 const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; onClick?: () => void }) => {
   return (
     <motion.div
-      className="group rounded-xl overflow-hidden h-full w-80 cursor-pointer transition-all duration-300 relative"
-      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
+      className="group rounded-xl overflow-hidden h-full cursor-pointer transition-all duration-300 relative"
+      style={{ width: 'min(75vw, 280px)', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)' }}
       whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
@@ -179,7 +179,7 @@ const CertificateCard = ({ certificate, onClick }: { certificate: Certificate; o
       {/* Top glow line on hover */}
       <div className="absolute top-0 left-0 right-0 h-px z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(90deg, transparent, rgba(220,38,38,0.5), transparent)' }} />
       {/* Certificate Image */}
-      <div className="relative h-48 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)' }}>
+      <div className="relative h-40 md:h-48 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)' }}>
         {certificate.image_url ? (
           <img src={certificate.image_url} alt={certificate.title || "Certificate"} loading="lazy" className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
         ) : (
@@ -310,7 +310,7 @@ const CertificateModal = ({
 
         {/* Modal Content */}
         <motion.div
-          className="relative rounded-xl overflow-hidden max-w-4xl max-h-[90vh]"
+          className="relative rounded-xl overflow-hidden w-full max-w-4xl max-h-[90vh] overflow-y-auto"
           style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -326,7 +326,7 @@ const CertificateModal = ({
           </button>
 
           {/* Header */}
-          <div className="p-6" style={{ background: 'rgba(220,38,38,0.04)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="p-4 sm:p-6" style={{ background: 'rgba(220,38,38,0.04)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             <div className="flex items-start justify-between pr-10">
               <div>
                 <h2 className="text-xl font-bold text-white mb-1.5">{certificate.title}</h2>

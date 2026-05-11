@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { FaFilter, FaSearch, FaTh, FaList } from "react-icons/fa";
-import { Grid, List } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Grid3x3, LayoutList, X } from "lucide-react";
 import { ProjectCard } from "@/components/ui/common";
 import PageHero from "@/components/ui/PageHero";
 import { projects } from "@/data/projects";
@@ -17,8 +16,7 @@ const AllProjects = () => {
   const [filteredProjects, setFilteredProjects] = useState(projects);
 
   useEffect(() => {
-    const filtered = filterProjects(projects, activeCategory, searchTerm);
-    setFilteredProjects(filtered);
+    setFilteredProjects(filterProjects(projects, activeCategory, searchTerm));
   }, [activeCategory, searchTerm]);
 
   return (
@@ -28,165 +26,195 @@ const AllProjects = () => {
         description="Complete collection of data analysis projects showcasing skills in SQL, Python, Power BI, Machine Learning, Excel, Tableau, and Looker Studio."
         keywords="Data Analytics Projects, SQL Projects, Python Projects, Power BI Dashboards, Machine Learning, Excel Analysis, Tableau Visualizations, Looker Studio Reports"
       />
-      
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50/30 dark:from-[#0d0d0d] dark:to-[#1a0a0a]">
-        {/* Hero Section */}
+
+      <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+        {/* Hero */}
         <PageHero
           title="All Projects"
           subtitle="Explore my complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains."
         />
 
-        {/* Main Content */}
-        <div className="relative px-4 sm:px-6 lg:px-8 py-16">
-          {/* Floating background elements */}
-          <div className="absolute top-10 left-10 w-32 h-32 bg-red-200/20 dark:bg-red-900/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-          
-          <div className="max-w-7xl mx-auto relative z-10">
-            {/* Search and Filter Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-white dark:bg-gray-900/80 rounded-2xl p-6 shadow-lg mb-8 -mt-8 relative z-10 border border-gray-200 dark:border-red-900/20"
-            >
-              <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-                {/* Search */}
-                <div className="relative flex-1 max-w-md">
-                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search projects..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-red-900/30 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  />
-                </div>
+        {/* ── Sticky Controls ── */}
+        <div
+          className="sticky top-14 z-30 px-4 sm:px-6 lg:px-8 py-2.5"
+          style={{
+            background: "rgba(10,10,10,0.95)",
+            backdropFilter: "blur(16px)",
+            borderBottom: "1px solid rgba(255,255,255,0.04)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-2.5 sm:items-center">
 
-                {/* View Mode Toggle */}
-                <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-                  <button
-                    aria-label="Grid view"
-                    onClick={() => setViewMode("grid")}
-                    className={`p-2 rounded-md transition-colors ${
-                      viewMode === "grid"
-                        ? "bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 shadow-sm"
-                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
-                    }`}
-                  >
-                    <Grid className="w-4 h-4" />
-                  </button>
-                  <button
-                    aria-label="List view"
-                    onClick={() => setViewMode("list")}
-                    className={`p-2 rounded-md transition-colors ${
-                      viewMode === "list"
-                        ? "bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 shadow-sm"
-                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300"
-                    }`}
-                  >
-                    <List className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Category Filter */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mb-8"
-            >
-              <div className="flex flex-wrap gap-3">
-                {categories.map((category, index) => (
-                  <motion.button
-                    key={category.id}
-                    onClick={() => setActiveCategory(category.id)}
-                    className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
-                      activeCategory === category.id
-                        ? "bg-gradient-to-r from-red-600 to-orange-500 text-white shadow-lg shadow-red-500/25"
-                        : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-red-900/20"
-                    }`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.05,
-                      y: -2,
-                      transition: { type: "spring", stiffness: 400, damping: 10 }
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {category.name} ({category.count})
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Results Summary */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.8 }}
-              className="mb-6"
-            >
-              <p className="text-gray-600 dark:text-gray-400">
-                Showing {filteredProjects.length} of {projects.length} projects
-                {searchTerm && ` for "${searchTerm}"`}
-              </p>
-            </motion.div>
-
-            {/* Projects Grid/List */}
-            <motion.div
-              layout
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                  : "space-y-6"
-              }
-            >
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={viewMode === "list" ? "max-w-4xl" : ""}
+            {/* Search */}
+            <div className="relative w-full sm:w-64 shrink-0">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                style={{ width: "13px", height: "13px", color: "#4B5563" }}
+              />
+              <input
+                type="text"
+                placeholder="Search projects…"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-8 pl-8 pr-7 text-[12px] text-gray-300 placeholder-gray-600 rounded-lg outline-none transition-all duration-200"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  // focus handled via onFocus/onBlur
+                }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(220,38,38,0.35)"; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  aria-label="Clear search"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
                 >
-                  <ProjectCard project={project} />
-                </motion.div>
-              ))}
-            </motion.div>
+                  <X style={{ width: "11px", height: "11px" }} />
+                </button>
+              )}
+            </div>
 
-            {/* No Results */}
-            {filteredProjects.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4 }}
-                className="text-center py-20"
-              >
-                <div className="max-w-md mx-auto">
-                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                    No projects found
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Try adjusting your search terms or category filter.
+            {/* Category pills */}
+            <div className="flex flex-wrap gap-1.5 flex-1">
+              {categories.map((cat) => {
+                const isActive = activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className="h-7 px-2.5 rounded-md text-[11px] font-medium transition-all duration-200 whitespace-nowrap"
+                    style={{
+                      background: isActive ? "rgba(220,38,38,0.12)" : "transparent",
+                      color: isActive ? "#DC2626" : "#4B5563",
+                      border: isActive ? "1px solid rgba(220,38,38,0.25)" : "1px solid transparent",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) e.currentTarget.style.color = "#9CA3AF";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) e.currentTarget.style.color = "#4B5563";
+                    }}
+                  >
+                    {cat.name}
+                    <span className="ml-1 opacity-40 text-[10px]">{cat.count}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* View toggle */}
+            <div
+              className="flex items-center gap-0.5 shrink-0 rounded-lg p-0.5"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              {[
+                { mode: "grid" as const, icon: <Grid3x3 style={{ width: "14px", height: "14px" }} />, label: "Grid view" },
+                { mode: "list" as const, icon: <LayoutList style={{ width: "14px", height: "14px" }} />, label: "List view" },
+              ].map(({ mode, icon, label }) => (
+                <button
+                  key={mode}
+                  aria-label={label}
+                  onClick={() => setViewMode(mode)}
+                  className="w-7 h-7 rounded-md flex items-center justify-center transition-all duration-200"
+                  style={{
+                    background: viewMode === mode ? "rgba(220,38,38,0.12)" : "transparent",
+                    color: viewMode === mode ? "#DC2626" : "#4B5563",
+                  }}
+                >
+                  {icon}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Main Content ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+          {/* Ambient glow — subtle atmospheric depth */}
+          <div
+            className="fixed inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse 60% 40% at 50% 20%, rgba(220,38,38,0.03) 0%, transparent 65%)",
+              zIndex: 0,
+            }}
+          />
+
+          {/* Results count */}
+          <motion.p
+            key={filteredProjects.length + searchTerm}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-[11px] mb-7 relative z-10"
+            style={{ color: "#374151" }}
+          >
+            {filteredProjects.length === projects.length
+              ? `${projects.length} projects`
+              : `${filteredProjects.length} of ${projects.length}`}
+            {searchTerm && (
+              <span style={{ color: "#4B5563" }}>
+                {" "}matching <span style={{ color: "#6B7280" }}>"{searchTerm}"</span>
+              </span>
+            )}
+          </motion.p>
+
+          {/* Grid / List */}
+          <div className="relative z-10">
+            <AnimatePresence mode="wait">
+              {filteredProjects.length > 0 ? (
+                <motion.div
+                  key={viewMode + activeCategory}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                      : "flex flex-col gap-3 max-w-2xl"
+                  }
+                >
+                  {filteredProjects.map((project, index) => (
+                    <motion.div
+                      key={project.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, delay: index * 0.04 }}
+                    >
+                      <ProjectCard project={project} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-28 text-center"
+                >
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                    style={{ background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.1)" }}
+                  >
+                    <Search style={{ width: "18px", height: "18px", color: "rgba(220,38,38,0.5)" }} />
+                  </div>
+                  <p className="text-[14px] font-medium text-white mb-1.5">No projects found</p>
+                  <p className="text-[12px] mb-6 max-w-xs" style={{ color: "#4B5563" }}>
+                    Try a different term or select another category.
                   </p>
                   <button
-                    onClick={() => {
-                      setSearchTerm("");
-                      setActiveCategory("all");
-                    }}
-                    className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
+                    onClick={() => { setSearchTerm(""); setActiveCategory("all"); }}
+                    className="h-8 px-4 rounded-lg text-[12px] font-medium text-white transition-all duration-200 hover:brightness-110"
+                    style={{ background: "#DC2626" }}
                   >
-                    Clear Filters
+                    Clear filters
                   </button>
-                </div>
-              </motion.div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>

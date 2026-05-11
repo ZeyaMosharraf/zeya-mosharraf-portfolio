@@ -698,7 +698,7 @@ const Hero = () => {
 
             {/* Headline with rotating gradient keywords */}
             <motion.h1
-              className="text-4xl md:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] tracking-tight text-white max-w-xl"
+              className="text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] tracking-tight text-white max-w-xl"
               variants={heroItemFadeUp}
             >
               Building{" "}
@@ -713,7 +713,7 @@ const Hero = () => {
             </motion.h1>
 
             <motion.p
-              className="text-lg text-gray-400 max-w-lg leading-relaxed"
+              className="text-[15px] md:text-lg text-gray-400 max-w-lg leading-relaxed"
               variants={heroItemFadeUp}
             >
               Designing reliable data pipelines, transformations, and analytics
@@ -733,12 +733,12 @@ const Hero = () => {
 
             {/* CTA buttons */}
             <motion.div
-              className="flex items-center gap-3 pt-2"
+              className="flex flex-wrap items-center gap-3 pt-2"
               variants={heroItemFadeUp}
             >
               <button
                 onClick={() => handleSectionClick("contact")}
-                className="group h-[42px] px-5 text-[14px] text-white rounded-lg font-semibold flex items-center transition-all duration-300 hover:brightness-110"
+                className="group h-[42px] px-5 text-[13px] sm:text-[14px] text-white rounded-lg font-semibold flex items-center transition-all duration-300 hover:brightness-110"
                 style={{ background: '#DC2626' }}
               >
                 Work With Me <ArrowRight className="ml-2 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
@@ -746,7 +746,7 @@ const Hero = () => {
 
               <button
                 onClick={() => setLocation("/case-studies")}
-                className="h-[42px] px-5 text-[14px] text-gray-300 rounded-lg font-medium transition-all duration-300 hover:border-red-500 hover:text-white"
+                className="h-[42px] px-4 sm:px-5 text-[13px] sm:text-[14px] text-gray-300 rounded-lg font-medium transition-all duration-300 hover:border-red-500 hover:text-white"
                 style={{ border: '1px solid rgba(255,255,255,0.10)' }}
               >
                 View Case Studies
@@ -765,7 +765,7 @@ const Hero = () => {
 
           {/* ─── Right Column — Interactive Terminal ─── */}
           <motion.div
-            className="lg:col-span-5"
+            className="lg:col-span-5 hidden sm:block"
             {...heroRightTerminal}
           >
             <div

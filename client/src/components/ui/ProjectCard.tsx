@@ -1,23 +1,22 @@
 import { useLocation } from "wouter";
-import { FaGithub, FaEye } from "react-icons/fa";
-import { TrendingUp } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import { ArrowUpRight, TrendingUp } from "lucide-react";
 import { Project } from "@/data/projects";
 
 interface ProjectCardProps {
   project: Project;
 }
 
-// Dark-theme category tint map
 const getCategoryAccent = (category: string) => {
   switch (category) {
-    case "SQL":              return { bg: 'rgba(251,191,36,0.06)', color: '#FBBF24', border: 'rgba(251,191,36,0.12)' };
-    case "Python":           return { bg: 'rgba(59,130,246,0.06)', color: '#60A5FA', border: 'rgba(59,130,246,0.12)' };
-    case "Machine Learning": return { bg: 'rgba(168,85,247,0.06)', color: '#C084FC', border: 'rgba(168,85,247,0.12)' };
-    case "Power BI":         return { bg: 'rgba(234,179,8,0.06)', color: '#FACC15', border: 'rgba(234,179,8,0.12)' };
-    case "Excel":            return { bg: 'rgba(34,197,94,0.06)', color: '#4ADE80', border: 'rgba(34,197,94,0.12)' };
-    case "Tableau":          return { bg: 'rgba(99,102,241,0.06)', color: '#818CF8', border: 'rgba(99,102,241,0.12)' };
-    case "Looker Studio":    return { bg: 'rgba(20,184,166,0.06)', color: '#2DD4BF', border: 'rgba(20,184,166,0.12)' };
-    default:                 return { bg: 'rgba(255,255,255,0.04)', color: '#9CA3AF', border: 'rgba(255,255,255,0.08)' };
+    case "SQL":              return { color: "#FBBF24", dot: "rgba(251,191,36,0.7)" };
+    case "Python":           return { color: "#60A5FA", dot: "rgba(59,130,246,0.7)"  };
+    case "Machine Learning": return { color: "#C084FC", dot: "rgba(168,85,247,0.7)" };
+    case "Power BI":         return { color: "#FACC15", dot: "rgba(234,179,8,0.7)"   };
+    case "Excel":            return { color: "#4ADE80", dot: "rgba(34,197,94,0.7)"   };
+    case "Tableau":          return { color: "#818CF8", dot: "rgba(99,102,241,0.7)"  };
+    case "Looker Studio":    return { color: "#2DD4BF", dot: "rgba(20,184,166,0.7)"  };
+    default:                 return { color: "#9CA3AF", dot: "rgba(156,163,175,0.5)" };
   }
 };
 
@@ -25,92 +24,162 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
   const [, setLocation] = useLocation();
   const accent = getCategoryAccent(project.category);
 
-  const handleViewProject = () => { setLocation(`/project/${project.slug}`); };
+  const handleView = () => setLocation(`/project/${project.slug}`);
 
   return (
     <div
-      className="group relative rounded-xl overflow-hidden cursor-pointer flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white/2 border border-white/6 backdrop-blur-sm"
-      onClick={handleViewProject}
+      className="group relative flex flex-col overflow-hidden cursor-pointer rounded-xl transition-all duration-500"
+      style={{
+        background: "rgba(255,255,255,0.02)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.4)",
+      }}
+      onClick={handleView}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
+        e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(220,38,38,0.08)";
+        e.currentTarget.style.transform = "translateY(-3px)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
+        e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.4)";
+        e.currentTarget.style.transform = "translateY(0)";
+      }}
     >
-      {/* Thumbnail */}
+      {/* ── Thumbnail ── */}
       {project.thumbhnailUrl && (
-        <div className="relative h-40 overflow-hidden" style={{ background: '#0a0a0a' }}>
+        <div className="relative overflow-hidden" style={{ height: "168px", background: "#080808" }}>
           <img
             src={project.thumbhnailUrl}
-            alt={(project.title || "Project") + ' preview'}
+            alt={(project.title || "Project") + " preview"}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+            style={{ opacity: 0.65, filter: "saturate(0.8) brightness(0.9)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14] via-transparent to-transparent" />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="rounded-full p-2.5" style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              <FaEye className="text-white text-sm" />
-            </div>
+          {/* Cinematic layered overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 40%, rgba(10,10,10,0.85) 100%)",
+            }}
+          />
+          {/* Subtle color tint from category */}
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{ background: `radial-gradient(ellipse 80% 60% at 50% 100%, ${accent.dot}08 0%, transparent 70%)` }}
+          />
+          {/* Category dot — top left, minimal */}
+          <div className="absolute top-3 left-3 flex items-center gap-1.5">
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: accent.dot, boxShadow: `0 0 6px ${accent.dot}` }}
+            />
+            <span
+              className="text-[9px] font-semibold uppercase tracking-widest"
+              style={{ color: accent.color, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+            >
+              {project.category}
+            </span>
           </div>
+          {/* GitHub icon — top right, ghost on hover */}
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub repository"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-white"
+              style={{
+                background: "rgba(0,0,0,0.5)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              <FaGithub className="text-xs" />
+            </a>
+          )}
         </div>
       )}
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-5">
-        {/* Category badge */}
-        <span
-          className="self-start px-2 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide mb-3"
-          style={{ background: accent.bg, color: accent.color, border: `1px solid ${accent.border}` }}
-        >
-          {project.category}
-        </span>
+      {/* ── Content ── */}
+      <div className="flex flex-col flex-1 p-5 gap-3">
 
         {/* Title */}
-        <h3 className="text-[15px] font-bold text-white group-hover:text-red-400 transition-colors duration-200 line-clamp-2 mb-2 leading-snug">
+        <h3
+          className="text-[14px] font-semibold leading-snug line-clamp-2 transition-colors duration-200"
+          style={{ color: "#E5E7EB", letterSpacing: "-0.01em" }}
+          onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "#fff"; }}
+          onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "#E5E7EB"; }}
+        >
           {project.title}
         </h3>
 
-        {/* Description */}
-        <p className="text-[12px] text-gray-500 line-clamp-2 leading-relaxed mb-4 flex-1">
+        {/* Description — 2 lines max, muted */}
+        <p className="text-[12px] leading-relaxed line-clamp-2 flex-1" style={{ color: "#6B7280" }}>
           {project.description}
         </p>
 
-        {/* Impact metric */}
+        {/* Impact — the most valuable line */}
         {project.resultsAndImpact && (
-          <div className="flex items-start gap-2 mb-4 p-2.5 rounded-lg bg-white/2 border border-white/4">
-            <TrendingUp className="w-3 h-3 text-red-400/70 mt-0.5 flex-shrink-0" />
-            <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">{project.resultsAndImpact}</p>
+          <div
+            className="flex items-start gap-2 px-3 py-2 rounded-lg"
+            style={{ background: "rgba(220,38,38,0.04)", border: "1px solid rgba(220,38,38,0.08)" }}
+          >
+            <TrendingUp
+              className="flex-shrink-0 mt-0.5"
+              style={{ width: "11px", height: "11px", color: "rgba(220,38,38,0.55)" }}
+            />
+            <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "#6B7280" }}>
+              {project.resultsAndImpact}
+            </p>
           </div>
         )}
 
-        {/* Skills */}
+        {/* Skills — minimal, 3 max, no borders */}
         {project.skills && project.skills.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-4">
+          <div className="flex flex-wrap gap-1.5">
             {project.skills.slice(0, 3).map((skill, idx) => (
-              <span key={idx} className="px-2 py-0.5 text-[10px] font-medium text-gray-500 rounded bg-white/2 border border-white/5">
-                {skill}
+              <span
+                key={idx}
+                className="text-[10px] font-medium"
+                style={{ color: "#4B5563" }}
+              >
+                {skill}{idx < Math.min(project.skills.length, 3) - 1 && <span className="ml-1.5 opacity-40">·</span>}
               </span>
             ))}
             {project.skills.length > 3 && (
-              <span className="px-2 py-0.5 text-[10px] font-medium text-gray-600 rounded" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>+{project.skills.length - 3}</span>
+              <span className="text-[10px]" style={{ color: "#374151" }}>
+                +{project.skills.length - 3}
+              </span>
             )}
           </div>
         )}
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 mt-auto">
+        {/* CTA — ghost link, not a big red button */}
+        <div
+          className="flex items-center justify-between pt-2 mt-auto"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+        >
           <button
-            onClick={(e) => { e.stopPropagation(); handleViewProject(); }}
-            className="flex-1 flex items-center justify-center gap-2 h-[34px] rounded-lg text-[12px] font-medium text-white transition-all duration-200 hover:brightness-110"
-            style={{ background: '#DC2626' }}
+            onClick={(e) => { e.stopPropagation(); handleView(); }}
+            className="group/cta flex items-center gap-1.5 text-[12px] font-medium transition-all duration-200"
+            style={{ color: "#6B7280" }}
+            onMouseEnter={(e) => { (e.currentTarget).style.color = "#DC2626"; }}
+            onMouseLeave={(e) => { (e.currentTarget).style.color = "#6B7280"; }}
           >
-            <FaEye className="text-[10px]" /> View Project
+            View case study
+            <ArrowUpRight
+              className="transition-transform duration-200 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
+              style={{ width: "12px", height: "12px" }}
+            />
           </button>
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-[34px] h-[34px] rounded-lg flex items-center justify-center text-gray-500 hover:text-white transition-all duration-200 hover:bg-white/5 border border-white/6 bg-white/2"
-            aria-label="GitHub repository"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <FaGithub className="text-sm" />
-          </a>
+
+          {/* Year or a subtle indicator */}
+          <span className="text-[10px]" style={{ color: "#374151" }}>
+            {project.category}
+          </span>
         </div>
       </div>
     </div>
@@ -118,4 +187,3 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
 };
 
 export default ProjectCard;
-
