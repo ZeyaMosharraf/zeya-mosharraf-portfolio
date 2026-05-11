@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 
-import {projects} from "./client/src/data/projects";
-import {blogPosts} from "./client/src/data/blog";
-import {caseStudies} from "./client/src/data/caseStudies";
+import { projects } from "./client/src/data/projects";
+import { blogPosts } from "./client/src/data/blog";
+import { caseStudies } from "./client/src/data/caseStudies";
 
 const baseUrl = "https://zeyamosharraf.vercel.app";
 
@@ -34,9 +34,9 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     .join("")}
 </urlset>`;
 
-const outDir = path.resolve("dist", "public");
+const outDir = path.resolve("dist");
 if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true });
 }
 fs.writeFileSync(path.resolve(outDir, "sitemap.xml"), sitemap);
-console.log("✅ Sitemap generated at dist/public/sitemap.xml");
+console.log("Sitemap generated at dist/sitemap.xml");
