@@ -9,7 +9,9 @@ import {
   Target,
   Zap
 } from "lucide-react";
-import { caseStudies } from "../../data/caseStudies";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { CaseStudy } from "@/types/supabase";
+import { useMemo } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { ease, pageHeaderAnimation, rotatingWordAnimation } from "@/lib/animations";
 
@@ -24,7 +26,8 @@ const getCategoryColor = (cat: string) => {
 
 const getPrimaryCat = (cat: string) => cat.split("|")[0].trim();
 
-const firstSentence = (text: string) => {
+const firstSentence = (text: string | null) => {
+  if (!text) return "";
   const s = text.split('.')[0];
   return s + '.';
 };
@@ -35,9 +38,18 @@ const FeaturedCaseStudySection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.12 });
 
+  const orderBy = useMemo(() => ({ column: "sort_order", ascending: true }), []);
+  const { data: allCaseStudies, loading } = useSupabaseTable<CaseStudy>("case_studies", orderBy);
+
+  const featuredStudies = useMemo(() => {
+    if (!allCaseStudies) return [];
+    return allCaseStudies.filter(cs => cs.featured);
+  }, [allCaseStudies]);
+
   const [activeIndex, setActiveIndex] = useState(0);
-  const active = caseStudies[activeIndex];
-  const catColor = getCategoryColor(active.category);
+  const active = featuredStudies[activeIndex];
+  
+  const catColor = useMemo(() => active ? getCategoryColor(active.category) : "#34d399", [active]);
 
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -62,7 +74,9 @@ const FeaturedCaseStudySection = () => {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [featuredStudies]);
+
+  if (loading || !active) return null;
 
   return (
     <section className="relative overflow-hidden" style={{ background: "#0d0d0d" }}>
@@ -116,7 +130,9 @@ const FeaturedCaseStudySection = () => {
                       {getPrimaryCat(active.category)}
                     </span>
                   </div>
-                  <span className="text-[10px] text-gray-700 font-bold uppercase tracking-widest">{active.date}</span>
+                  <span className="text-[10px] text-gray-700 font-bold uppercase tracking-widest">
+                    {new Date(active.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  </span>
                 </div>
 
                 <h3 className="text-2xl lg:text-3xl font-bold text-white mb-6 leading-tight">
@@ -124,7 +140,7 @@ const FeaturedCaseStudySection = () => {
                 </h3>
 
                 <p className="text-[14px] text-gray-500 leading-relaxed mb-8">
-                  {active.shortDescription}
+                  {active.summary}
                 </p>
 
                 {/* Impact Highlight */}
@@ -160,8 +176,10 @@ const FeaturedCaseStudySection = () => {
               className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 scrollbar-hide"
               style={{ scrollbarWidth: "none" }}
             >
-              {caseStudies.map((cs, i) => {
+              {featuredStudies.map((cs: CaseStudy, i: number) => {
                 const isActive = activeIndex === i;
+                const tools = Array.isArray(cs.tools) ? cs.tools : (cs.tools?.split(',') || []);
+                
                 return (
                   <div
                     key={cs.id}
@@ -189,15 +207,17 @@ const FeaturedCaseStudySection = () => {
                       </h4>
 
                       <div className="flex flex-wrap gap-2 mb-8">
-                        {cs.toolsUsed.slice(0, 3).map((tool, j) => (
+                        {tools.slice(0, 3).map((tool, j) => (
                           <span key={j} className="text-[9px] font-bold uppercase tracking-widest text-gray-600">
-                            {tool}
+                            {tool.trim()}
                           </span>
                         ))}
                       </div>
 
                       <div className="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
-                        <span className="text-[11px] text-gray-600 font-medium uppercase tracking-widest">{cs.date}</span>
+                        <span className="text-[11px] text-gray-600 font-medium uppercase tracking-widest">
+                          {new Date(cs.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </span>
                         <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-red-500/30 group-hover:text-red-500 transition-all">
                           <ArrowRight className="w-4 h-4" />
                         </div>

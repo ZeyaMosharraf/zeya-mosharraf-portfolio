@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useLocation } from "wouter";
-import { 
-  Calendar, 
-  Search, 
-  Zap, 
-  Target, 
-  CheckCircle2, 
+import {
+  Calendar,
+  Search,
+  Zap,
+  Target,
+  CheckCircle2,
   Activity,
   ArrowRight,
   Shield,
@@ -15,52 +15,44 @@ import {
   Layers,
   Clock
 } from "lucide-react";
-import { caseStudies } from "@/data/caseStudies";
-import { Helmet } from "react-helmet-async";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { CaseStudy } from "@/types/supabase";
+import { useMemo } from "react";
 import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { SEO } from "@/components/SEO";
-
-// Case study type definition
-type CaseStudy = {
-  id: number;
-  title: string;
-  category: string;
-  shortDescription: string;
-  fullDescription: string;
-  bulletPoints?: string[];
-  date: string;
-  toolsUsed: string[];
-  imageUrl?: string;
-  results: string;
-  slug: string;
-};
 
 const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "list" | "detail", params?: { slug: string } }) => {
   const hookParams = useParams<{ slug: string }>();
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
-  const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(() => {
-    if (viewMode === "detail" && params?.slug) {
-      return caseStudies.find(cs => cs.slug === params.slug) ?? null;
-    }
-    return null;
-  });
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredCaseStudies = caseStudies.filter(cs =>
-    cs.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cs.shortDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cs.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cs.toolsUsed.some(tool => tool.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const orderBy = useMemo(() => ({ column: "sort_order", ascending: true }), []);
+  const { data: allCaseStudies, loading } = useSupabaseTable<CaseStudy>("case_studies", orderBy);
+
+  const selectedCaseStudy = useMemo(() => {
+    if (viewMode === "detail" && params?.slug && allCaseStudies) {
+      return allCaseStudies.find(cs => cs.slug === params.slug) ?? null;
+    }
+    return null;
+  }, [viewMode, params?.slug, allCaseStudies]);
+
+  const filteredCaseStudies = useMemo(() => {
+    if (!allCaseStudies) return [];
+    return allCaseStudies.filter(cs => {
+      const search = searchTerm.toLowerCase();
+      const tools = typeof cs.tools === 'string' ? cs.tools : (Array.isArray(cs.tools) ? cs.tools.join(' ') : '');
+
+      return (cs.title || '').toLowerCase().includes(search) ||
+        (cs.summary || '').toLowerCase().includes(search) ||
+        (cs.category || '').toLowerCase().includes(search) ||
+        tools.toLowerCase().includes(search);
+    });
+  }, [allCaseStudies, searchTerm]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (viewMode === "detail" && params?.slug) {
-      const found = caseStudies.find(cs => cs.slug === params.slug);
-      setSelectedCaseStudy(found ?? null);
-    }
   }, [viewMode, params?.slug]);
 
   const renderDetailView = () => {
@@ -82,9 +74,9 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
 
     return (
       <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
-        <SEO 
+        <SEO
           title={`${selectedCaseStudy.title} | Engineering Case Study`}
-          description={selectedCaseStudy.shortDescription}
+          description={selectedCaseStudy.summary ?? undefined}
         />
 
         {/* ── ATMOSPHERIC DEPTH (aligned with Projects section) ── */}
@@ -101,9 +93,9 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="flex flex-col items-start max-w-3xl">
               <AnimatedBackButton onClick={() => setLocation("/case-studies")} label="Back to Case Studies" />
-              
+
               {/* Contextual Label */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.15, duration: 0.4 }}
@@ -116,7 +108,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
               </motion.div>
 
               {/* Title — restrained 24/32/38/42px */}
-              <motion.h1 
+              <motion.h1
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
@@ -126,7 +118,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
               </motion.h1>
 
               {/* Metadata Row */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25, duration: 0.4 }}
@@ -134,7 +126,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
               >
                 <div className="flex items-center gap-2">
                   <Calendar className="w-3.5 h-3.5 opacity-40" />
-                  <span>{selectedCaseStudy.date}</span>
+                  <span>{new Date(selectedCaseStudy.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                 </div>
                 <div className="w-1 h-1 rounded-full bg-white/5" />
                 <div className="flex items-center gap-2">
@@ -157,7 +149,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
               >
                 <div className="absolute top-0 left-0 bottom-0 w-1 bg-red-600/40" />
                 <p className="text-[14px] md:text-[15px] text-gray-400 leading-relaxed font-medium">
-                  {selectedCaseStudy.shortDescription}
+                  {selectedCaseStudy.summary}
                 </p>
               </motion.div>
             </div>
@@ -167,10 +159,10 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
         {/* ── MAIN CONTENT (WIDER LAYOUT) ── */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
-            
+
             {/* Storytelling Column */}
             <div className="lg:col-span-8 space-y-24">
-              
+
               {/* Editorial Summary */}
               <motion.section
                 initial={{ opacity: 0, y: 15 }}
@@ -184,16 +176,16 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                 </h2>
                 <div className="prose prose-invert prose-red max-w-none">
                   <p className="text-[15px] md:text-[17px] text-gray-200 leading-[1.7] font-medium mb-8">
-                    {selectedCaseStudy.fullDescription.split('\n\n')[0]}
+                    {selectedCaseStudy.problem}
                   </p>
                   <p className="text-[13px] md:text-[14px] text-gray-500 leading-[1.8] whitespace-pre-line">
-                    {selectedCaseStudy.fullDescription.split('\n\n').slice(1).join('\n\n')}
+                    {selectedCaseStudy.solution}
                   </p>
                 </div>
               </motion.section>
 
               {/* Execution Flow (Refined) */}
-              {selectedCaseStudy.bulletPoints && (
+              {selectedCaseStudy.results && (
                 <motion.section
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -204,25 +196,31 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                     <Cpu className="w-3.5 h-3.5" />
                     Technical Execution
                   </h2>
-                  
+
                   <div className="grid grid-cols-1 gap-3">
-                    {selectedCaseStudy.bulletPoints.map((point, idx) => (
-                      <motion.div 
-                        key={idx}
-                        initial={{ opacity: 0, y: 8 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.05, duration: 0.4 }}
-                        className="group flex items-center gap-5 p-5 rounded-xl bg-white/[0.015] border border-white/[0.04] hover:bg-white/[0.025] hover:border-white/[0.08] transition-all duration-300"
-                      >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center group-hover:border-red-500/20 group-hover:bg-red-500/[0.02] transition-colors duration-300">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-gray-700 group-hover:text-red-500 transition-colors" />
-                        </div>
-                        <span className="text-[14px] text-gray-500 group-hover:text-gray-300 leading-relaxed transition-colors duration-300">
-                          {point}
-                        </span>
-                      </motion.div>
-                    ))}
+                    {typeof selectedCaseStudy.results === 'string' && selectedCaseStudy.results.includes('\n') ? (
+                      selectedCaseStudy.results.split('\n').map((point, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, y: 8 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: idx * 0.05, duration: 0.4 }}
+                          className="group flex items-center gap-5 p-5 rounded-xl bg-white/[0.015] border border-white/[0.04] hover:bg-white/[0.025] hover:border-white/[0.08] transition-all duration-300"
+                        >
+                          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center group-hover:border-red-500/20 group-hover:bg-red-500/[0.02] transition-colors duration-300">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-gray-700 group-hover:text-red-500 transition-colors" />
+                          </div>
+                          <span className="text-[14px] text-gray-500 group-hover:text-gray-300 leading-relaxed transition-colors duration-300">
+                            {point.trim()}
+                          </span>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <div className="p-5 rounded-xl bg-white/[0.015] border border-white/[0.04] text-[14px] text-gray-500">
+                        {selectedCaseStudy.results}
+                      </div>
+                    )}
                   </div>
                 </motion.section>
               )}
@@ -238,17 +236,17 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                 {/* Atmospheric depth */}
                 <div className="absolute inset-0 bg-red-600/[0.01] pointer-events-none" />
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-red-500/[0.03] blur-[80px] rounded-full" />
-                
+
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-10 flex items-center gap-3">
                   <BarChart3 className="w-4 h-4" />
                   Measurable Impact
                 </h2>
-                
+
                 <div className="relative z-10">
                   <p className="text-[16px] md:text-[18px] lg:text-[20px] text-white leading-[1.6] font-medium italic mb-10 tracking-tight">
                     "{selectedCaseStudy.results}"
                   </p>
-                  
+
                   <div className="flex items-center gap-4 pt-8 border-t border-white/[0.05]">
                     <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
                       <Zap className="w-5 h-5 text-red-500" />
@@ -278,9 +276,9 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                     Tech Stack
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
-                    {selectedCaseStudy.toolsUsed.map((tool, idx) => (
+                    {(Array.isArray(selectedCaseStudy.tools) ? selectedCaseStudy.tools : (selectedCaseStudy.tools?.split(',') || [])).map((tool, idx) => (
                       <span key={idx} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-[11px] text-gray-500 font-medium">
-                        {tool}
+                        {tool.trim()}
                       </span>
                     ))}
                   </div>
@@ -309,7 +307,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                 </div>
 
                 {/* CTA */}
-                <div 
+                <div
                   className="p-7 rounded-2xl relative overflow-hidden group cursor-pointer"
                   style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.08)" }}
                   onClick={() => setLocation('/contact')}
@@ -334,13 +332,13 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
   const renderListView = () => {
     return (
       <div className="min-h-screen bg-[#0d0d0d]">
-        <SEO 
+        <SEO
           title="Case Studies | Operational Engineering"
           description="Detailed analyses of real-world operational challenges and measurable engineering solutions."
         />
-        
+
         <PageHero
-          title="Operational Stories"
+          title="Case Studies"
           subtitle="How data engineering and automation solve real-world business bottlenecks."
         />
 
@@ -367,7 +365,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
           </div>
 
           <div className="grid grid-cols-1 gap-12 lg:gap-20">
-            {filteredCaseStudies.map((cs, index) => (
+            {filteredCaseStudies.map((cs: CaseStudy, index: number) => (
               <motion.article
                 key={cs.slug}
                 initial={{ opacity: 0, y: 20 }}
@@ -391,7 +389,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                       {cs.category.split('|')[0]}
                     </span>
                     <span className="text-gray-700 text-[10px]">•</span>
-                    <span className="text-[11px] text-gray-600 font-medium">{cs.date}</span>
+                    <span className="text-[11px] text-gray-600 font-medium">{new Date(cs.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                   </div>
 
                   <h3 className="text-2xl lg:text-3xl font-bold text-white group-hover:text-red-50 transition-colors leading-tight">
@@ -399,13 +397,13 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                   </h3>
 
                   <p className="text-[14px] text-gray-500 leading-relaxed max-w-2xl">
-                    {cs.shortDescription}
+                    {cs.summary}
                   </p>
 
                   <div className="flex flex-wrap gap-2 pt-2">
-                    {cs.toolsUsed.slice(0, 4).map((tool, j) => (
+                    {(Array.isArray(cs.tools) ? cs.tools : (cs.tools?.split(',') || [])).slice(0, 4).map((tool, j, arr) => (
                       <span key={j} className="text-[10px] text-gray-700 font-medium uppercase tracking-wider">
-                        {tool}{j < Math.min(cs.toolsUsed.length, 4) - 1 ? ' • ' : ''}
+                        {tool.trim()}{j < arr.length - 1 ? ' • ' : ''}
                       </span>
                     ))}
                   </div>
@@ -417,14 +415,14 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                       <Zap className="w-10 h-10 text-red-500" />
                     </div>
-                    
+
                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-red-500/60 mb-4 flex items-center gap-2">
                       <Target className="w-3.5 h-3.5" />
                       Key Outcome
                     </h4>
-                    
+
                     <p className="text-[12px] text-gray-500 leading-relaxed line-clamp-4 italic">
-                      "{cs.results.split('.')[0]}."
+                      "{(cs.results || '').split('.')[0]}."
                     </p>
 
                     <div className="mt-6 flex items-center gap-2 text-[12px] font-bold text-red-500 group-hover:gap-4 transition-all">

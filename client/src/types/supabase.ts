@@ -35,6 +35,30 @@ export interface HeroMetric {
   sort_order: number;
 }
 
+export interface CaseStudyMetric {
+  label: string;
+  value: string;
+  suffix?: string;
+}
+
+export interface CaseStudy {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  summary: string | null;
+  problem: string | null;
+  solution: string | null;
+  results: string | null;
+  metrics: CaseStudyMetric[] | null;
+  featured: boolean;
+  github_url: string | null;
+  embed_url: string | null;
+  tools: string[] | string | null;
+  sort_order: number | string | null;
+  created_at: string;
+}
+
 export interface PortfolioInfo {
   id: string;
   category: string;

@@ -2,19 +2,7 @@ import { ArrowRight, Calendar, Target } from "lucide-react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 
-interface CaseStudy {
-  id: number;
-  title: string;
-  category: string;
-  shortDescription: string;
-  fullDescription: string;
-  bulletPoints?: string[];
-  date: string;
-  toolsUsed: string[];
-  imageUrl?: string;
-  results: string;
-  slug: string;
-}
+import { CaseStudy } from "@/types/supabase";
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy;
@@ -48,7 +36,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
             </span>
           </div>
           <span className="text-[10px] text-gray-700 font-bold uppercase tracking-widest">
-            {caseStudy.date}
+            {new Date(caseStudy.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
           </span>
         </div>
 
@@ -59,7 +47,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
 
         {/* Description */}
         <p className="text-[13px] text-gray-500 leading-relaxed mb-6 line-clamp-3">
-          {caseStudy.shortDescription}
+          {caseStudy.summary}
         </p>
 
         {/* Outcome Snippet */}
@@ -72,16 +60,16 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
             <span className="text-[9px] font-bold uppercase tracking-widest">Impact</span>
           </div>
           <p className="text-[11px] text-gray-500 leading-relaxed italic line-clamp-2">
-            "{caseStudy.results.split('.')[0]}."
+            "{(caseStudy.results || '').split('.')[0]}."
           </p>
         </div>
 
         {/* Footer */}
         <div className="mt-6 flex items-center justify-between pt-6 border-t border-white/5">
           <div className="flex flex-wrap gap-2">
-            {caseStudy.toolsUsed.slice(0, 2).map((tool, idx) => (
+            {(Array.isArray(caseStudy.tools) ? caseStudy.tools : (caseStudy.tools?.split(',') || [])).slice(0, 2).map((tool, idx) => (
               <span key={idx} className="text-[9px] font-bold uppercase tracking-widest text-gray-600">
-                {tool}
+                {tool.trim()}
               </span>
             ))}
           </div>
