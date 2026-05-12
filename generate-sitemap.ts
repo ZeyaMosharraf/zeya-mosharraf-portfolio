@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
 
-import { blogPosts } from "./client/src/data/blog";
-
 const baseUrl = "https://zeyamosharraf.vercel.app";
 
 // Static pages
@@ -10,7 +8,7 @@ const staticRoutes = ["/", "/projects", "/case-studies", "/blog"];
 
 // Dynamic routes (will be empty for now since static data was moved to Supabase)
 const projectRoutes: string[] = []; 
-const blogRoutes = blogPosts.map((b) => `/blog/${b.slug}`);
+const blogRoutes: string[] = [];
 const caseStudyRoutes: string[] = [];
 
 const allRoutes = [

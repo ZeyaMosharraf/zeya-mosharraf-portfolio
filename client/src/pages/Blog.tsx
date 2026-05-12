@@ -1,24 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useLocation } from "wouter";
-import { ArrowLeft, Calendar, Tag, User, ArrowUpRight, BookOpen, Clock } from "lucide-react";
-import { blogPosts } from "@/data/blog";
-import { Helmet } from "react-helmet-async";
-import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
+import { Calendar, Tag, User, ArrowUpRight, Clock } from "lucide-react";
+import { BlogPost } from "@/types/supabase";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { SEO } from "@/components/SEO";
-
-type BlogPost = {
-  id: number;
-  title: string;
-  category: string;
-  date: string;
-  author: string;
-  shortDescription: string;
-  fullContent: string;
-  imageUrl?: string;
-  tags: string[];
-  slug: string;
-}
+import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 
 interface BlogProps {
   viewMode?: "list" | "detail";
@@ -29,19 +16,21 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   const hookParams = useParams<{ slug: string }>();
   const params = routeParams || hookParams;
   const [, setLocation] = useLocation();
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(() => {
-    if (viewMode === "detail" && params?.slug) {
-      return blogPosts.find(p => p.slug === params.slug) ?? null;
+  
+  const { data: allPosts, loading } = useSupabaseTable<BlogPost>("blog_posts", { 
+    column: "published_date", 
+    ascending: false 
+  });
+
+  const selectedPost = useMemo(() => {
+    if (viewMode === "detail" && params?.slug && allPosts.length > 0) {
+      return allPosts.find(p => p.slug === params.slug) ?? null;
     }
     return null;
-  });
+  }, [viewMode, params?.slug, allPosts]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (viewMode === "detail" && params?.slug) {
-      const post = blogPosts.find(p => p.slug === params.slug);
-      setSelectedPost(post || null);
-    }
   }, [viewMode, params?.slug]);
 
   const renderDetailView = () => {
@@ -65,7 +54,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
       <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
         <SEO 
           title={`${selectedPost.title} | Engineering Journal`}
-          description={selectedPost.shortDescription}
+          description={selectedPost.short_description ?? undefined}
         />
 
         {/* ── ATMOSPHERIC DEPTH ── */}
@@ -120,7 +109,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                 <div className="w-1 h-1 rounded-full bg-white/5" />
                 <div className="flex items-center gap-2">
                   <Calendar className="w-3.5 h-3.5 opacity-40" />
-                  <span>{selectedPost.date}</span>
+                  <span>{selectedPost.published_date ? new Date(selectedPost.published_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently Published'}</span>
                 </div>
                 <div className="w-1 h-1 rounded-full bg-white/5" />
                 <div className="flex items-center gap-2">
@@ -151,7 +140,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
               >
                 <div 
                   className="text-gray-400 leading-[1.8] text-[14px] md:text-[15px] space-y-8"
-                  dangerouslySetInnerHTML={{ __html: selectedPost.fullContent }} 
+                  dangerouslySetInnerHTML={{ __html: selectedPost.full_content }} 
                 />
               </motion.article>
 
@@ -167,7 +156,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                   Indexed Topics
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {selectedPost.tags.map((tag, idx) => (
+                  {(selectedPost.tags || []).map((tag, idx) => (
                     <span key={idx} className="px-3 py-1 bg-white/[0.03] border border-white/[0.05] rounded-lg text-[11px] text-gray-500 font-medium">
                       {tag}
                     </span>
@@ -268,7 +257,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-            {blogPosts.map((post, index) => (
+            {allPosts.map((post, index) => (
               <motion.article
                 key={post.slug}
                 initial={{ opacity: 0, y: 20 }}
@@ -293,7 +282,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                         </span>
                       </div>
                       <span className="text-[11px] text-gray-600 font-medium">
-                        {post.date}
+                        {post.published_date ? new Date(post.published_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Latest'}
                       </span>
                     </div>
 
@@ -304,7 +293,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
 
                     {/* Description */}
                     <p className="text-[14px] text-gray-500 leading-relaxed mb-8 line-clamp-3 flex-grow">
-                      {post.shortDescription}
+                      {post.short_description}
                     </p>
 
                     {/* Footer */}

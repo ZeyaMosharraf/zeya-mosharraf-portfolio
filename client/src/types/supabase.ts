@@ -69,3 +69,20 @@ export interface PortfolioInfo {
   icon_name?: string;
   sort_order?: number;
 }
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  author: string;
+  short_description: string | null;
+  full_content: string;
+  image_url: string | null;
+  tags: string[] | null;
+  published_date: string | null;
+  featured: boolean;
+  sort_order: number | null;
+  created_at: string;
+  updated_at: string;
+}

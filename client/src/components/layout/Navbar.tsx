@@ -137,7 +137,7 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 15 }}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center">
+      <nav className="container mx-auto px-8 sm:px-6 lg:px-8 h-14 flex items-center">
         <button
           onClick={goToHomePage}
           className="flex items-center gap-2.5 mr-8 shrink-0"
@@ -156,7 +156,7 @@ const Navbar = () => {
         </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-0.5 ml-auto">
+        <div className="hidden md:flex items-center gap-3 ml-auto">
           <NavItem section="home" label="Home" />
 
           {/* Projects dropdown */}
@@ -268,7 +268,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center ml-auto">
           <button
             className="p-1.5 rounded-lg text-gray-400 hover:text-gray-200 transition-colors duration-200"
             onClick={toggleMenu}
@@ -290,7 +290,7 @@ const Navbar = () => {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
           >
-            <div className="px-4 py-3 space-y-1">
+            <div className="px-8 py-3 space-y-1">
               {[
                 { label: "Home", action: () => { goToHomePage(); }, section: "home" },
               ].map(item => (
