@@ -21,6 +21,7 @@ import { useMemo } from "react";
 import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { SEO } from "@/components/SEO";
+import { formatDate } from "@/lib/utils/formatDate";
 
 const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "list" | "detail", params?: { slug: string } }) => {
   const hookParams = useParams<{ slug: string }>();
@@ -126,7 +127,7 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
               >
                 <div className="flex items-center gap-2">
                   <Calendar className="w-3.5 h-3.5 opacity-40" />
-                  <span>{new Date(selectedCaseStudy.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                  <span>{formatDate(selectedCaseStudy.created_at)}</span>
                 </div>
                 <div className="w-1 h-1 rounded-full bg-white/5" />
                 <div className="flex items-center gap-2">

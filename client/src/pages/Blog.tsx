@@ -1,11 +1,12 @@
-import { useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useParams, useLocation } from "wouter";
-import { Calendar, Tag, User, ArrowUpRight, Clock } from "lucide-react";
 import { BlogPost } from "@/types/supabase";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { SEO } from "@/components/SEO";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
+import { formatDate } from "@/lib/utils/formatDate";
+import { useEffect, useMemo } from "react";
+import { useParams, useLocation } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
+import { User, Calendar, Tag, Clock, ArrowUpRight } from "lucide-react";
 
 interface BlogProps {
   viewMode?: "list" | "detail";
@@ -109,7 +110,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                 <div className="w-1 h-1 rounded-full bg-white/5" />
                 <div className="flex items-center gap-2">
                   <Calendar className="w-3.5 h-3.5 opacity-40" />
-                  <span>{selectedPost.published_date ? new Date(selectedPost.published_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently Published'}</span>
+                  <span>{formatDate(selectedPost.published_date)}</span>
                 </div>
                 <div className="w-1 h-1 rounded-full bg-white/5" />
                 <div className="flex items-center gap-2">
@@ -282,7 +283,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                         </span>
                       </div>
                       <span className="text-[11px] text-gray-600 font-medium">
-                        {post.published_date ? new Date(post.published_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Latest'}
+                        {formatDate(post.published_date, { month: 'short', year: 'numeric' })}
                       </span>
                     </div>
 
