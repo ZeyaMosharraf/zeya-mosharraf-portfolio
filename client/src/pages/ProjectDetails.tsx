@@ -3,7 +3,8 @@ import { useLocation, useParams } from "wouter";
 import { motion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 import { ArrowLeft, ArrowUpRight, ExternalLink, TrendingUp, Code2, Wrench, CheckCircle2, Circle } from "lucide-react";
-import { projects, Project } from "@/data/projects";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { Project } from "@/types/supabase";
 import { Helmet } from "react-helmet-async";
 
 const getCategoryAccent = (category: string) => {
@@ -36,11 +37,26 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
   const [, setLocation] = useLocation();
   const { slug } = useParams<{ slug: string }>();
 
+  const { data: allProjects, loading } = useSupabaseTable<Project>("projects");
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    const found = projects.find((p) => p.slug === slug);
-    if (found) setProject(found);
-  }, [slug]);
+    if (allProjects && allProjects.length > 0) {
+      const found = allProjects.find((p) => p.slug === slug);
+      if (found) setProject(found);
+    }
+  }, [allProjects, slug]);
+
+  if (loading && !project) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0d0d0d" }}>
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 rounded-full border-2 border-red-600/20 border-t-red-600 animate-spin mb-4" />
+          <p className="text-[11px] uppercase tracking-widest text-gray-600">Loading Case Study...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -61,20 +77,20 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
 
   const accent = getCategoryAccent(project.category);
   const methodBullets = parseBullets(project.methodology || "");
-  const impactBullets = parseBullets(project.resultsAndImpact || "");
-  const hasEmbed = !!(project.powerBiEmbedUrl || project.lookerstudioEmbedUrl || project.tableauEmbedUrl);
-  const embedUrl = project.powerBiEmbedUrl || project.lookerstudioEmbedUrl || project.tableauEmbedUrl;
-  const embedLabel = project.powerBiEmbedUrl ? "Power BI" : project.lookerstudioEmbedUrl ? "Looker Studio" : "Tableau";
+  const impactBullets = parseBullets(project.results || "");
+  const hasEmbed = !!project.embed_url;
+  const embedUrl = project.embed_url;
+  const embedLabel = project.category === "Power BI" ? "Power BI" : project.category === "Looker Studio" ? "Looker Studio" : "Interactive Report";
 
   return (
     <>
       <Helmet>
         <title>{project.title} · {project.category} · Zeya Mosharraf</title>
         <meta name="description" content={project.description} />
-        <meta name="keywords" content={project.skills?.join(", ") || ""} />
+        <meta name="keywords" content={project.tools?.join(", ") || ""} />
         <meta property="og:title" content={`${project.title} | Case Study`} />
         <meta property="og:description" content={project.description} />
-        {project.imageUrl && <meta property="og:image" content={project.imageUrl} />}
+        {project.thumbnail_url && <meta property="og:image" content={project.thumbnail_url} />}
       </Helmet>
 
       <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
@@ -83,10 +99,10 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
         <div className="relative overflow-hidden" style={{ minHeight: "clamp(380px, 52vh, 520px)" }}>
 
           {/* Background image with cinematic treatment */}
-          {project.thumbhnailUrl && (
+          {project.thumbnail_url && (
             <div className="absolute inset-0">
               <img
-                src={project.thumbhnailUrl}
+                src={project.thumbnail_url}
                 alt=""
                 aria-hidden="true"
                 className="w-full h-full object-cover"
@@ -160,9 +176,9 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
 
             {/* CTA row */}
             <motion.div className="flex flex-wrap items-center gap-3" {...fadeUp(0.25)}>
-              {project.githubUrl && (
+              {project.github_url && (
                 <a
-                  href={project.githubUrl}
+                  href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-2 h-9 px-4 rounded-lg text-[12px] font-medium text-white transition-all duration-200"
@@ -185,18 +201,6 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                 >
                   <ExternalLink style={{ width: "11px", height: "11px" }} />
                   Live {embedLabel}
-                </a>
-              )}
-              {project.excelDashboardUrl && (
-                <a
-                  href={project.excelDashboardUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 h-9 px-4 rounded-lg text-[12px] font-medium text-white transition-all duration-200 hover:brightness-110"
-                  style={{ background: "#DC2626" }}
-                >
-                  <ExternalLink style={{ width: "11px", height: "11px" }} />
-                  View Dashboard
                 </a>
               )}
             </motion.div>
@@ -256,7 +260,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
           )}
 
           {/* Static image for non-embed projects */}
-          {project.imageUrl && !hasEmbed && (
+          {project.thumbnail_url && !hasEmbed && (
             <motion.div className="mb-16" {...fadeUp(0.1)}>
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "#374151" }}>
@@ -283,7 +287,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                   </div>
                 </div>
                 <img
-                  src={project.imageUrl}
+                  src={project.thumbnail_url}
                   alt={project.title + " dashboard"}
                   className="w-full"
                   style={{ opacity: 0.9 }}
@@ -360,14 +364,14 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
             {/* RIGHT — sidebar */}
             <div className="space-y-6">
 
-              {/* Skills */}
-              {project.skills && project.skills.length > 0 && (
+              {/* Skills/Tools */}
+              {project.tools && project.tools.length > 0 && (
                 <motion.div {...fadeUp(0.2)}>
                   <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: "#374151" }}>
                     Skills Applied
                   </p>
                   <div className="flex flex-wrap gap-1.5">
-                    {project.skills.map((skill, i) => (
+                    {project.tools.map((tool, i) => (
                       <span
                         key={i}
                         className="text-[11px] font-medium px-2.5 py-1 rounded-lg"
@@ -377,7 +381,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                           color: "#6B7280",
                         }}
                       >
-                        {skill}
+                        {tool}
                       </span>
                     ))}
                   </div>
@@ -418,9 +422,9 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                 <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: "#374151" }}>
                   Project Links
                 </p>
-                {project.githubUrl && (
+                {project.github_url && (
                   <a
-                    href={project.githubUrl}
+                    href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-[12px] font-medium transition-all duration-200 group"
@@ -437,23 +441,6 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                     <span className="flex items-center gap-2">
                       <FaGithub className="text-sm opacity-50" />
                       View source code
-                    </span>
-                    <ArrowUpRight style={{ width: "11px", height: "11px", opacity: 0.3 }} />
-                  </a>
-                )}
-                {project.excelDashboardUrl && (
-                  <a
-                    href={project.excelDashboardUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-[12px] font-medium transition-all duration-200"
-                    style={{ background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.12)", color: "#9CA3AF" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(220,38,38,0.10)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(220,38,38,0.06)"; }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <ExternalLink style={{ width: "12px", height: "12px", opacity: 0.5 }} />
-                      View dashboard
                     </span>
                     <ArrowUpRight style={{ width: "11px", height: "11px", opacity: 0.3 }} />
                   </a>

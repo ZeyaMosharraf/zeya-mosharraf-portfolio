@@ -1,4 +1,4 @@
-import { Project } from "@/data/projects";
+import { Project } from "@/types/supabase";
 
 /**
  * Project filtering and transformation utilities
@@ -59,7 +59,7 @@ export const filterProjectsBySearch = (
   return projects.filter(project =>
     project.title.toLowerCase().includes(lowerSearchTerm) ||
     project.description.toLowerCase().includes(lowerSearchTerm) ||
-    project.skills?.some(skill => skill.toLowerCase().includes(lowerSearchTerm))
+    project.tools?.some(tool => tool.toLowerCase().includes(lowerSearchTerm))
   );
 };
 
@@ -87,32 +87,14 @@ export const calculateTechnologyStats = (projects: Project[]): TechnologyStats =
 };
 
 /**
- * Select featured projects with one per category (priority-based)
+ * Select featured projects based on the 'featured' flag and 'sort_order' from Supabase
  */
 export const selectFeaturedProjects = (
-  projects: Project[],
-  limit: number = 6
+  projects: Project[]
 ): Project[] => {
-  const featuredProjects: Project[] = [];
-  const usedCategories = new Set<string>();
-  const priorityCategories = ["SQL", "Power BI", "Python", "Machine Learning", "Excel", "Tableau"];
-  
-  // First pass: one project per priority category
-  for (const category of priorityCategories) {
-    const project = projects.find(p => p.category === category && !usedCategories.has(p.category));
-    if (project && featuredProjects.length < limit) {
-      featuredProjects.push(project);
-      usedCategories.add(project.category);
-    }
-  }
-  
-  // Second pass: fill remaining slots with any available projects
-  if (featuredProjects.length < limit) {
-    const remaining = projects.filter(p => !featuredProjects.includes(p));
-    featuredProjects.push(...remaining.slice(0, limit - featuredProjects.length));
-  }
-  
-  return featuredProjects;
+  return projects
+    .filter(p => p.featured)
+    .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 };
 
 /**

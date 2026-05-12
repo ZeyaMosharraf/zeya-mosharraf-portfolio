@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { ProjectCard } from "@/components/ui/common";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { projects } from "@/data/projects";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { Project } from "@/types/supabase";
 import { FaGithub, FaFilter } from "react-icons/fa";
 import { FolderGit2, ArrowRight } from "lucide-react";
 import { ease, staggerContainer, staggerItem } from "@/lib/animations";
-import { getProjectCategories, selectFeaturedProjects, filterProjectsByCategory } from "@/lib/dataTransforms";
-
-const categories = getProjectCategories(projects);
+import { getProjectCategories, selectFeaturedProjects, filterProjectsByCategory, ProjectCategory } from "@/lib/dataTransforms";
 
 interface ProjectsSectionProps {
   showFeaturedOnly?: boolean;
@@ -19,12 +18,22 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
   const [activeCategory, setActiveCategory] = useState("all");
   const [, setLocation] = useLocation();
 
-  const projectsToShow = showFeaturedOnly ? selectFeaturedProjects(projects) : projects;
-  const [projectsData, setProjectsData] = useState(projectsToShow);
+  const orderBy = useMemo(() => ({
+    column: "sort_order",
+    ascending: true
+  }), []);
 
-  useEffect(() => {
-    setProjectsData(showFeaturedOnly ? selectFeaturedProjects(projects) : projects);
-  }, [showFeaturedOnly]);
+  const { data: allProjects, loading } = useSupabaseTable<Project>("projects", orderBy);
+
+  const projectsData = useMemo(() => {
+    if (!allProjects) return [];
+    return showFeaturedOnly ? selectFeaturedProjects(allProjects) : allProjects;
+  }, [allProjects, showFeaturedOnly]);
+
+  const categories = useMemo(() => {
+    if (!allProjects) return [];
+    return getProjectCategories(allProjects);
+  }, [allProjects]);
 
   const filteredProjects = filterProjectsByCategory(projectsData, activeCategory);
 
@@ -52,7 +61,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
           {/* Category Filter Pills */}
           {!showFeaturedOnly && (
             <div className="flex flex-wrap justify-center gap-2 mt-4">
-              {categories.map(category => (
+              {categories.map((category: ProjectCategory) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
@@ -74,7 +83,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
         {/* Mobile: Horizontal scroll */}
         <div className="md:hidden">
           <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide scroll-smooth">
-            {filteredProjects.map((project, index) => (
+            {filteredProjects.map((project: Project, index: number) => (
               <motion.div
                 key={project.slug}
                 className="flex-none w-72"
@@ -89,9 +98,8 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
           </div>
         </div>
 
-        {/* Desktop: Grid */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6">
-          {filteredProjects.map((project, index) => (
+          {filteredProjects.map((project: Project, index: number) => (
             <motion.div
               key={project.slug}
               initial={{ opacity: 0, y: 20 }}
@@ -152,7 +160,7 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
               className="inline-flex items-center gap-2 h-[36px] px-5 text-[12px] font-medium rounded-lg transition-all duration-200"
               style={{ background: '#DC2626', color: '#fff' }}
             >
-              View All {categories.find(c => c.id === activeCategory)?.name} Projects
+              View All {categories.find((c: ProjectCategory) => c.id === activeCategory)?.name} Projects
             </button>
           </div>
         )}

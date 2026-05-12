@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { FaGithub } from "react-icons/fa";
 import { ArrowUpRight, TrendingUp } from "lucide-react";
-import { Project } from "@/data/projects";
+import { Project } from "@/types/supabase";
 
 interface ProjectCardProps {
   project: Project;
@@ -47,10 +47,10 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
       }}
     >
       {/* ── Thumbnail ── */}
-      {project.thumbhnailUrl && (
+      {project.thumbnail_url && (
         <div className="relative overflow-hidden" style={{ height: "168px", background: "#080808" }}>
           <img
-            src={project.thumbhnailUrl}
+            src={project.thumbnail_url}
             alt={(project.title || "Project") + " preview"}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
@@ -83,9 +83,9 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             </span>
           </div>
           {/* GitHub icon — top right, ghost on hover */}
-          {project.githubUrl && (
+          {project.github_url && (
             <a
-              href={project.githubUrl}
+              href={project.github_url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"
@@ -122,7 +122,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         </p>
 
         {/* Impact — the most valuable line */}
-        {project.resultsAndImpact && (
+        {project.results && (
           <div
             className="flex items-start gap-2 px-3 py-2 rounded-lg"
             style={{ background: "rgba(220,38,38,0.04)", border: "1px solid rgba(220,38,38,0.08)" }}
@@ -132,26 +132,26 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
               style={{ width: "11px", height: "11px", color: "rgba(220,38,38,0.55)" }}
             />
             <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "#6B7280" }}>
-              {project.resultsAndImpact}
+              {project.results}
             </p>
           </div>
         )}
 
-        {/* Skills — minimal, 3 max, no borders */}
-        {project.skills && project.skills.length > 0 && (
+        {/* Skills/Tools — minimal, 3 max, no borders */}
+        {project.tools && project.tools.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {project.skills.slice(0, 3).map((skill, idx) => (
+            {project.tools.slice(0, 3).map((tool, idx) => (
               <span
                 key={idx}
                 className="text-[10px] font-medium"
                 style={{ color: "#4B5563" }}
               >
-                {skill}{idx < Math.min(project.skills.length, 3) - 1 && <span className="ml-1.5 opacity-40">·</span>}
+                {tool}{idx < Math.min(project.tools.length, 3) - 1 && <span className="ml-1.5 opacity-40">·</span>}
               </span>
             ))}
-            {project.skills.length > 3 && (
+            {project.tools.length > 3 && (
               <span className="text-[10px]" style={{ color: "#374151" }}>
-                +{project.skills.length - 3}
+                +{project.tools.length - 3}
               </span>
             )}
           </div>

@@ -1,23 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Grid3x3, LayoutList, X } from "lucide-react";
 import { ProjectCard } from "@/components/ui/common";
 import PageHero from "@/components/ui/PageHero";
-import { projects } from "@/data/projects";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { Project } from "@/types/supabase";
 import { SEO } from "@/components/SEO";
-import { getProjectCategories, filterProjects } from "@/lib/dataTransforms";
-
-const categories = getProjectCategories(projects);
+import { getProjectCategories, filterProjects, ProjectCategory } from "@/lib/dataTransforms";
 
 const AllProjects = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [filteredProjects, setFilteredProjects] = useState(projects);
+  
+  const orderBy = useMemo(() => ({
+    column: "sort_order",
+    ascending: true
+  }), []);
 
-  useEffect(() => {
-    setFilteredProjects(filterProjects(projects, activeCategory, searchTerm));
-  }, [activeCategory, searchTerm]);
+  const { data: projects, loading } = useSupabaseTable<Project>("projects", orderBy);
+
+  const categories = useMemo(() => {
+    if (!projects) return [];
+    return getProjectCategories(projects);
+  }, [projects]);
+
+  const filteredProjects = useMemo(() => {
+    if (!projects) return [];
+    return filterProjects(projects, activeCategory, searchTerm);
+  }, [projects, activeCategory, searchTerm]);
 
   return (
     <>
@@ -78,7 +89,7 @@ const AllProjects = () => {
 
             {/* Category pills */}
             <div className="flex flex-wrap gap-1.5 flex-1">
-              {categories.map((cat) => {
+              {categories.map((cat: ProjectCategory) => {
                 const isActive = activeCategory === cat.id;
                 return (
                   <button
@@ -176,7 +187,7 @@ const AllProjects = () => {
                       : "flex flex-col gap-3 max-w-2xl"
                   }
                 >
-                  {filteredProjects.map((project, index) => (
+                  {filteredProjects.map((project: Project, index: number) => (
                     <motion.div
                       key={project.id}
                       initial={{ opacity: 0, y: 12 }}

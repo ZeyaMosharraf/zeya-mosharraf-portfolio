@@ -49,6 +49,8 @@ export function prefetchSupabaseTable(table: string, orderBy?: OrderBy) {
  * @param orderBy - Optional ordering configuration
  * @returns Object with data array, loading state, and error state
  */
+const EMPTY_ARRAY: any[] = [];
+
 export function useSupabaseTable<T>(
   table: string,
   orderBy?: OrderBy
@@ -61,7 +63,7 @@ export function useSupabaseTable<T>(
   });
 
   return { 
-    data: data || [], 
+    data: data || (EMPTY_ARRAY as T[]), 
     loading: isLoading, 
     error: error ? error.message : null 
   };

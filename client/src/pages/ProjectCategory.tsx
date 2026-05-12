@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { FaArrowLeft } from "react-icons/fa";
-import { projects, Project } from "@/data/projects";
+import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { Project } from "@/types/supabase";
 import { ProjectCard } from "@/components/ui/common";
 import { slugToCategoryName, filterProjectsByExactCategory } from "@/lib/dataTransforms";
 
@@ -57,16 +58,24 @@ const getCategoryDescription = (category: string): string => {
 };
 
 const ProjectCategory = ({ params }: ProjectCategoryProps) => {
-  const [categoryProjects, setCategoryProjects] = useState<Project[]>([]);
   const [, setLocation] = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    const categoryName = slugToCategoryName(params.category);
-    const filtered = filterProjectsByExactCategory(projects, categoryName);
-    setCategoryProjects(filtered);
   }, [params.category]);
+
+  const orderBy = useMemo(() => ({
+    column: "sort_order",
+    ascending: true
+  }), []);
+
+  const { data: allProjects, loading } = useSupabaseTable<Project>("projects", orderBy);
+
+  const categoryProjects = useMemo(() => {
+    if (!allProjects) return [];
+    const categoryName = slugToCategoryName(params.category);
+    return filterProjectsByExactCategory(allProjects, categoryName);
+  }, [allProjects, params.category]);
 
   const categoryName = slugToCategoryName(params.category);
   const displayName = getDisplayName(categoryName);
@@ -127,7 +136,7 @@ const ProjectCategory = ({ params }: ProjectCategoryProps) => {
               initial="hidden"
               animate="visible"
             >
-              {categoryProjects.map((project) => (
+              {categoryProjects.map((project: Project) => (
                 <motion.div key={project.id} variants={itemVariants}>
                   <ProjectCard project={project} />
                 </motion.div>

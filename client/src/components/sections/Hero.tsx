@@ -6,28 +6,9 @@ import { FaHackerrank } from "react-icons/fa6";
 import { SiGooglecloud } from "react-icons/si";
 import { useLocation } from "wouter";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
+import { PortfolioInfo, HeroMetric } from "@/types/supabase";
 import { SocialLinks } from "@/components/ui/common";
-import {
-  ease,
-  heroLeftColumn,
-  heroItemFadeUp,
-  heroRightTerminal,
-  rotatingWordAnimation,
-  shimmerTransition,
-  shimmerSlide,
-  terminalLineAnimation
-} from "@/lib/animations";
-
-interface PortfolioInfo {
-  id: string;
-  category: string;
-  label: string;
-  value: string;
-  display_value?: string;
-  link_url?: string | null;
-  icon_name?: string;
-  sort_order?: number;
-}
+import { ease, heroLeftColumn, heroItemFadeUp, heroRightTerminal, rotatingWordAnimation, shimmerTransition, shimmerSlide, terminalLineAnimation } from "@/lib/animations";
 
 /* ═══════════════════════════════════════════════════════
    Terminal Syntax Highlighting Helper
@@ -462,18 +443,6 @@ function useHeroCanvas(
 
 
 
-/* ═══════════════════════════════════════════════════════
-   Hero Metrics — Supabase types & hook
-   ═══════════════════════════════════════════════════════ */
-
-interface HeroMetric {
-  id: number;
-  label: string;
-  value: string;
-  icon: string;
-  sort_order: number;
-}
-
 /** Maps icon name strings stored in Supabase to Lucide components */
 const ICON_MAP: Record<string, React.ReactNode> = {
   database: <Database className="w-3.5 h-3.5" />,
@@ -487,11 +456,10 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   wifi: <Wifi className="w-3.5 h-3.5" />,
 };
 
+const METRICS_ORDER = { column: "sort_order", ascending: true };
+
 function useHeroMetrics() {
-  return useSupabaseTable<HeroMetric>("hero_metrics", {
-    column: "sort_order",
-    ascending: true
-  });
+  return useSupabaseTable<HeroMetric>("hero_metrics", METRICS_ORDER);
 }
 
 /* ─── Hero Component ─── */
