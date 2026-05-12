@@ -1,19 +1,17 @@
 import fs from "fs";
 import path from "path";
 
-import { projects } from "./client/src/data/projects";
 import { blogPosts } from "./client/src/data/blog";
-import { caseStudies } from "./client/src/data/caseStudies";
 
 const baseUrl = "https://zeyamosharraf.vercel.app";
 
-// Static pages (About & Contact are sections on Home, not separate routes)
+// Static pages
 const staticRoutes = ["/", "/projects", "/case-studies", "/blog"];
 
-// Dynamic routes
-const projectRoutes = projects.map((p) => `/project/${p.slug}`);
+// Dynamic routes (will be empty for now since static data was moved to Supabase)
+const projectRoutes: string[] = []; 
 const blogRoutes = blogPosts.map((b) => `/blog/${b.slug}`);
-const caseStudyRoutes = caseStudies.map((cs) => `/case-study/${cs.slug}`);
+const caseStudyRoutes: string[] = [];
 
 const allRoutes = [
   ...staticRoutes,
