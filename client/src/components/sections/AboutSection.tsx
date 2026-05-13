@@ -1,6 +1,6 @@
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { User2 } from "lucide-react";
-import { ease, fadeInRight } from "@/lib/animations";
+import { fadeInRight } from "@/lib/animations";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 

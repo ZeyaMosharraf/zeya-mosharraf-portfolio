@@ -4,7 +4,6 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { Code2 } from "lucide-react";
 import { ease, fadeInLeft, fadeInRight } from "@/lib/animations";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
-import { FONTS } from "@/lib/constants";
 
 interface Skill {
   id: number;

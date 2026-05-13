@@ -1,11 +1,9 @@
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { useRef, useState, useEffect } from "react";
 import {
   Sparkles,
   ArrowRight,
-  Calendar,
-  CheckCircle2,
   Target,
   Zap
 } from "lucide-react";
@@ -13,7 +11,7 @@ import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { CaseStudy } from "@/types/supabase";
 import { useMemo } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { ease, pageHeaderAnimation, rotatingWordAnimation } from "@/lib/animations";
+import { ease } from "@/lib/animations";
 
 const getCategoryColor = (cat: string) => {
   const c = cat.toLowerCase();

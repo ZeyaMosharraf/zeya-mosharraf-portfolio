@@ -66,6 +66,17 @@ export const terminalLineAnimation = {
 };
 
 
+// ── Section Reveal (scroll-triggered upward reveal) ─────────────
+export const sectionReveal = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease },
+  },
+};
+
+
 // ── Stagger Container/Item (for lists & grids) ─────────────────
 export const staggerContainer = {
   hidden: { opacity: 0 },
@@ -80,18 +91,6 @@ export const staggerItem = {
   show: { opacity: 1, y: 0 },
 };
 
-// ── Section Reveal (scroll-triggered upward reveal) ─────────────
-export const sectionReveal = {
-  hidden: { opacity: 0, y: 60 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease },
-  },
-};
-
-// ── Hover presets (none currently in use — placeholder)
-
 // ── WhileInView FadeUp (for cards and sections) ────────────────
 export const whileInViewFadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
@@ -100,7 +99,8 @@ export const whileInViewFadeUp = (delay = 0) => ({
   transition: { duration: 0.7, ease, delay },
 });
 
-// ── Badge animations (for "About Me" and similar badges) ────────
+
+// ── Badge animations (for ShimmerBadge and Hero badges) ──────────
 export const badgeFadeIn = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },

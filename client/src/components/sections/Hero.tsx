@@ -1,570 +1,33 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { ArrowRight, Activity, Database, Zap, Clock, Wifi, Shield, Cpu, Timer } from "lucide-react";
-import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
-import { FaHackerrank } from "react-icons/fa6";
-import { SiGooglecloud } from "react-icons/si";
-import { useLocation } from "wouter";
-import { useSupabaseTable } from "@/hooks/useSupabaseTable";
-import { PortfolioInfo, HeroMetric } from "@/types/supabase";
-import { SocialLinks } from "@/components/ui/common";
-import { ease, heroLeftColumn, heroItemFadeUp, heroRightTerminal, rotatingWordAnimation, shimmerTransition, shimmerSlide, terminalLineAnimation } from "@/lib/animations";
+import React, { useRef, useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { heroLeftColumn, heroRightTerminal } from "@/lib/animations";
 
-/* ═══════════════════════════════════════════════════════
-   Terminal Syntax Highlighting Helper
-   ═══════════════════════════════════════════════════════ */
+/* Modular Sub-components */
+import { HeroContent } from "./Hero/HeroContent";
+import { HeroCTA } from "./Hero/HeroCTA";
+import { HeroTerminal } from "./Hero/HeroTerminal";
+import { HeroMetricsTicker } from "./Hero/HeroMetricsTicker";
+import { useHeroCanvas } from "./Hero/useHeroCanvas";
 
-function highlightText(text: string): JSX.Element {
-  // Skip empty lines
-  if (!text || text.trim() === "") {
-    return <span>{text}</span>;
-  }
-
-  const parts: (string | JSX.Element)[] = [];
-  let lastIndex = 0;
-
-  // Pattern for numbers with units
-  const numberRegex = /(\d+\.?\d*[MBK%]?\+?)/g;
-  let match;
-
-  const processText = (str: string) => {
-    const result: (string | JSX.Element)[] = [];
-    let idx = 0;
-
-    // Match numbers
-    const numMatches = Array.from(str.matchAll(numberRegex));
-    if (numMatches.length > 0) {
-      numMatches.forEach((m, i) => {
-        if (m.index! > idx) {
-          result.push(str.slice(idx, m.index));
-        }
-        result.push(
-          <span key={`num-${i}`} style={{ color: '#60A5FA' }}>
-            {m[0]}
-          </span>
-        );
-        idx = m.index! + m[0].length;
-      });
-      if (idx < str.length) {
-        result.push(str.slice(idx));
-      }
-      return result;
-    }
-
-    // Match bullets/symbols
-    const bulletRegex = /(✓|•|└|├|─)/g;
-    const bulletMatches = Array.from(str.matchAll(bulletRegex));
-    if (bulletMatches.length > 0) {
-      idx = 0;
-      bulletMatches.forEach((m, i) => {
-        if (m.index! > idx) {
-          result.push(str.slice(idx, m.index));
-        }
-        result.push(
-          <span key={`bullet-${i}`} style={{ color: '#34D399' }}>
-            {m[0]}
-          </span>
-        );
-        idx = m.index! + m[0].length;
-      });
-      if (idx < str.length) {
-        result.push(str.slice(idx));
-      }
-      return result;
-    }
-
-    // Match quoted text
-    const quoteRegex = /(".*?")/g;
-    const quoteMatches = Array.from(str.matchAll(quoteRegex));
-    if (quoteMatches.length > 0) {
-      idx = 0;
-      quoteMatches.forEach((m, i) => {
-        if (m.index! > idx) {
-          result.push(str.slice(idx, m.index));
-        }
-        result.push(
-          <span key={`quote-${i}`} style={{ color: '#F8B4D4' }}>
-            {m[0]}
-          </span>
-        );
-        idx = m.index! + m[0].length;
-      });
-      if (idx < str.length) {
-        result.push(str.slice(idx));
-      }
-      return result;
-    }
-
-    // Match keywords
-    const keywordRegex = /\b(true|false|success|active|online|error|failed|offline)\b/gi;
-    const keywordMatches = Array.from(str.matchAll(keywordRegex));
-    if (keywordMatches.length > 0) {
-      idx = 0;
-      keywordMatches.forEach((m, i) => {
-        if (m.index! > idx) {
-          result.push(str.slice(idx, m.index));
-        }
-        const isError = /error|failed|offline/i.test(m[0]);
-        result.push(
-          <span key={`kw-${i}`} style={{ color: isError ? '#F87171' : '#34D399' }}>
-            {m[0]}
-          </span>
-        );
-        idx = m.index! + m[0].length;
-      });
-      if (idx < str.length) {
-        result.push(str.slice(idx));
-      }
-      return result;
-    }
-
-    return [str];
-  };
-
-  return <span>{processText(text)}</span>;
-}
-
-/* ═══════════════════════════════════════════════════════
-   Animated Counter Hook
-   ═══════════════════════════════════════════════════════ */
-
-function useCountUp(target: number, duration = 2000, delay = 0) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      setValue(target);
-      return;
-    }
-    const startTime = performance.now() + delay;
-    let rafId: number;
-    const tick = (now: number) => {
-      const elapsed = now - startTime;
-      if (elapsed < 0) { rafId = requestAnimationFrame(tick); return; }
-      const progress = Math.min(elapsed / duration, 1);
-      // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(eased * target));
-      if (progress < 1) rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [target, duration, delay]);
-  return value;
-}
-
-
-
-/* ═══════════════════════════════════════════════════════
-   Terminal Output Data
-   ═══════════════════════════════════════════════════════ */
-
-/* ── Rotating Words Animation ── */
-const ROTATING_WORDS = ["Automated", "Observable", "Modular", "Performant"];
-
-const RotatingWord = () => {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex(prev => (prev + 1) % ROTATING_WORDS.length);
-    }, 2800);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <span className="inline-block relative" style={{ minWidth: 'clamp(160px, 30vw, 280px)', minHeight: '1.2em' }}>
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={ROTATING_WORDS[index]}
-          className="inline-block bg-clip-text text-transparent leading-relaxed"
-          style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-          {...rotatingWordAnimation}
-        >
-          {ROTATING_WORDS[index]}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
-};
-
-
-
-/* ── Animated Border for Terminal ── */
-const AnimatedBorder = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="relative p-[1px] rounded-xl" style={{ background: 'rgba(220,38,38,0.2)' }}>
-      <div className="rounded-xl overflow-hidden relative" style={{ background: '#0D0D0D' }}>
-        {children}
-      </div>
-    </div>
-  );
-};
-
-interface TermLine {
-  text: string;
-  color?: string;        // default #A0AEC0 (gray-400ish)
-  accent?: boolean;      // use --accent-primary
-  dim?: boolean;         // 50% opacity
-}
-
-const COMMANDS: Record<string, { cmd: string; lines: TermLine[] }> = {
-  stack: {
-    cmd: "cat stack.yml",
-    lines: [
-      { text: "version: '3.8'", dim: true },
-      { text: "services:", dim: true },
-      { text: "  warehouse: Snowflake" },
-      { text: "  transformation: dbt Core" },
-      { text: "  orchestration: Dagster / Airflow" },
-      { text: "  infrastructure: Terraform / AWS" },
-      { text: "  visualization: Power BI / Looker" },
-      { text: "" },
-      { text: "✓ Stack initialized.", accent: true },
-    ],
-  },
-  pipelines: {
-    cmd: "dbt run --select tag:production",
-    lines: [
-      { text: "08:31:12 | Concurrency: 8 threads", dim: true },
-      { text: "08:31:12 | Found 142 models, 458 tests" },
-      { text: "08:31:14 | 1 of 142 START table model.fct_orders", dim: true },
-      { text: "08:31:16 | 1 of 142 OK created table model.fct_orders" },
-      { text: "08:31:17 | 2 of 142 START view model.dim_customers", dim: true },
-      { text: "08:31:18 | 2 of 142 OK created view model.dim_customers" },
-      { text: "" },
-      { text: "✓ All models completed successfully.", accent: true },
-    ],
-  },
-  automation: {
-    cmd: "python automation/monitor_quality.py",
-    lines: [
-      { text: "[INFO] Connecting to warehouse..." },
-      { text: "[INFO] Validating schema consistency..." },
-      { text: "[INFO] Testing null constraints..." },
-      { text: "├─ table: raw_events ........... [PASS]", accent: true },
-      { text: "├─ table: processed_sales ...... [PASS]", accent: true },
-      { text: "└─ table: fct_revenue .......... [PASS]", accent: true },
-      { text: "" },
-      { text: "✓ Quality checks passed. No anomalies detected.", accent: true },
-    ],
-  },
-  experience: {
-    cmd: "whoami --detailed",
-    lines: [
-      { text: "▸ Analytics Engineer", accent: true },
-      { text: "  Bridging the gap between raw data and" },
-      { text: "  business-critical insights." },
-      { text: "" },
-      { text: "▸ Focus Areas", accent: true },
-      { text: "  • Scalable Data Modeling (Star/Snowflake)" },
-      { text: "  • Automated Quality Assurance" },
-      { text: "  • CI/CD for Data Pipelines" },
-      { text: "" },
-      { text: "Profile verified.", accent: true },
-    ],
-  },
-};
-
-const CMD_KEYS = Object.keys(COMMANDS) as (keyof typeof COMMANDS)[];
-
-/* ══════════════════════════════════════════════════════════
-   Interactive Particle Field
-   ══════════════════════════════════════════════════════════ */
-
-interface Dot {
-  x: number; y: number;
-  vx: number; vy: number;
-  r: number;
-  isWhite: boolean;     // false = red accent
-  baseAlpha: number;
-}
-
-function useHeroCanvas(
-  canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  sectionRef: React.RefObject<HTMLElement | null>,
-) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const section = sectionRef.current;
-    if (!canvas || !section) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
-    if (!ctx) return;
-
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) return; // Disable canvas particles on mobile to improve TBT & LCP
-
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    const cs = getComputedStyle(document.documentElement);
-    const accentPrimary = cs.getPropertyValue("--accent-primary").trim() || "#EF4444";
-
-    let w = 0, h = 0;
-
-    /* ── Mouse tracking ── */
-    let mx = -9999, my = -9999;
-    const MOUSE_RADIUS = 140;         // interaction zone
-    const MOUSE_FORCE = 2.8;         // push strength
-
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      mx = e.clientX - rect.left;
-      my = e.clientY - rect.top;
-    };
-    const onMouseLeave = () => { mx = -9999; my = -9999; };
-
-    /* Listen on the section (not canvas) so hover works even over content */
-    section.addEventListener("mousemove", onMouseMove, { passive: true });
-    section.addEventListener("mouseleave", onMouseLeave, { passive: true });
-
-    /* ── Particles ── */
-    const COUNT = isMobile ? 35 : 85;
-    const CONNECT_DIST = isMobile ? 60 : 90;
-    const dots: Dot[] = [];
-
-    const initDots = () => {
-      dots.length = 0;
-      for (let i = 0; i < COUNT; i++) {
-        dots.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          r: 0.8 + Math.random() * 1.2,
-          isWhite: Math.random() < 0.35,
-          baseAlpha: 0.12 + Math.random() * 0.18,
-        });
-      }
-    };
-
-    /* ── Draw & update particles ── */
-    const drawDots = () => {
-      for (const d of dots) {
-        /* Mouse repulsion */
-        const dx = d.x - mx;
-        const dy = d.y - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MOUSE_RADIUS && dist > 0) {
-          const force = (1 - dist / MOUSE_RADIUS) * MOUSE_FORCE;
-          d.vx += (dx / dist) * force * 0.15;
-          d.vy += (dy / dist) * force * 0.15;
-        }
-
-        /* Velocity damping */
-        d.vx *= 0.985;
-        d.vy *= 0.985;
-
-        /* Move */
-        d.x += d.vx;
-        d.y += d.vy;
-
-        /* Wrap edges */
-        if (d.x < -10) d.x = w + 10;
-        if (d.x > w + 10) d.x = -10;
-        if (d.y < -10) d.y = h + 10;
-        if (d.y > h + 10) d.y = -10;
-
-        /* Draw dot with glow effect */
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        // Create radial gradient for glow
-        const gradient = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 2.5);
-        if (d.isWhite) {
-          gradient.addColorStop(0, `rgba(255,255,255,${d.baseAlpha * 0.8})`);
-          gradient.addColorStop(0.5, `rgba(255,255,255,${d.baseAlpha * 0.4})`);
-          gradient.addColorStop(1, 'rgba(255,255,255,0)');
-        } else {
-          gradient.addColorStop(0, `rgba(239,68,68,${d.baseAlpha * 0.6})`);
-          gradient.addColorStop(0.5, `rgba(239,68,68,${d.baseAlpha * 0.3})`);
-          gradient.addColorStop(1, 'rgba(239,68,68,0)');
-        }
-        ctx.fillStyle = gradient;
-        ctx.fill();
-      }
-
-      /* Connection lines between nearby particles */
-      for (let i = 0; i < dots.length; i++) {
-        for (let j = i + 1; j < dots.length; j++) {
-          const dx = dots[i].x - dots[j].x;
-          const dy = dots[i].y - dots[j].y;
-          const d = dx * dx + dy * dy;
-          if (d < CONNECT_DIST * CONNECT_DIST) {
-            const dist = Math.sqrt(d);
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            // mix: if either is white → white line, else red
-            const isW = dots[i].isWhite || dots[j].isWhite;
-            ctx.strokeStyle = isW ? "rgba(255,255,255,0.06)" : accentPrimary;
-            // Add subtle pulse animation to connections
-            const pulseAmount = Math.sin(performance.now() * 0.002) * 0.05;
-            ctx.globalAlpha = (1 - dist / CONNECT_DIST) * (0.14 + pulseAmount);
-            ctx.lineWidth = 0.4;
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-          }
-        }
-      }
-    };
-
-    /* ── Canvas sizing ── */
-    const resize = () => {
-      const rect = section.getBoundingClientRect();
-      w = rect.width;
-      h = rect.height;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + "px";
-      canvas.style.height = h + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      initDots();
-    };
-    resize();
-
-    /* ── Animation loop ── */
-    let rafId: number;
-    const tick = () => {
-      ctx.clearRect(0, 0, w, h);
-      drawDots();
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    window.addEventListener("resize", resize, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", resize);
-      section.removeEventListener("mousemove", onMouseMove);
-      section.removeEventListener("mouseleave", onMouseLeave);
-    };
-  }, [canvasRef, sectionRef]);
-}
-
-
-
-
-const METRICS_ORDER = { column: "sort_order", ascending: true };
-
-function useHeroMetrics() {
-  return useSupabaseTable<HeroMetric>("hero_metrics", METRICS_ORDER);
-}
-
-/* ─── Hero Component ─── */
+/**
+ * Hero — Main Landing Section.
+ * 
+ * Orchestrates the modular components into a cohesive, high-performance 
+ * editorial engineering experience. Uses a split-column layout on desktop:
+ * - Left: Narrative content and primary actions.
+ * - Right: Interactive interactive terminal (parallax-aware).
+ * - Bottom: Ambient metrics ticker.
+ */
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
-  const termBodyRef = useRef<HTMLDivElement>(null);
   const [editorOffset, setEditorOffset] = useState(0);
-  const [, setLocation] = useLocation();
 
-  /* Terminal state */
-  const [activeCmd, setActiveCmd] = useState<string | null>(null);
-  const [visibleLines, setVisibleLines] = useState<TermLine[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
-  const [typedCmd, setTypedCmd] = useState("");
-  const [showCursor, setShowCursor] = useState(true);
-  const typingTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  /* Interactive particle field + heartbeat ring */
+  /* Interactive particle field (Canvas Background) */
   useHeroCanvas(canvasRef, sectionRef);
 
-  /* Blinking cursor */
-  useEffect(() => {
-    const id = setInterval(() => setShowCursor(c => !c), 530);
-    return () => clearInterval(id);
-  }, []);
-
-  /* Auto-scroll terminal body */
-  useEffect(() => {
-    const el = termBodyRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [visibleLines, typedCmd]);
-
-  /* Button ripple effect */
-  const createRipple = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const ripple = document.createElement('span');
-    ripple.style.cssText = `
-      position: absolute;
-      left: ${x}px;
-      top: ${y}px;
-      width: 8px;
-      height: 8px;
-      background: rgba(239,68,68,0.6);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      animation: ripple-expand 0.6s ease-out;
-    `;
-
-    if (button.style.position !== 'absolute' && button.style.position !== 'relative') {
-      button.style.position = 'relative';
-    }
-    button.style.overflow = 'hidden';
-    button.appendChild(ripple);
-
-    setTimeout(() => ripple.remove(), 600);
-  };
-
-  /* Run a command */
-  const runCommand = useCallback((key: string) => {
-    if (isTyping) return;
-    const data = COMMANDS[key];
-    if (!data) return;
-
-    /* Clear previous timers */
-    typingTimers.current.forEach(clearTimeout);
-    typingTimers.current = [];
-
-    setActiveCmd(key);
-    setVisibleLines([]);
-    setTypedCmd("");
-    setIsTyping(true);
-
-    /* Phase 1: type the command character by character */
-    const cmdChars = data.cmd.split("");
-    const charDelay = 35;                                // ms per char
-    const cmdDuration = cmdChars.length * charDelay;
-
-    cmdChars.forEach((_, ci) => {
-      const t = setTimeout(() => {
-        setTypedCmd(data.cmd.slice(0, ci + 1));
-      }, ci * charDelay);
-      typingTimers.current.push(t);
-    });
-
-    /* Phase 2: print output lines one by one */
-    const lineDelay = 220;                               // ms per line
-    data.lines.forEach((line, li) => {
-      const t = setTimeout(() => {
-        setVisibleLines(prev => [...prev, line]);
-        if (li === data.lines.length - 1) {
-          setIsTyping(false);
-        }
-      }, cmdDuration + 300 + li * lineDelay);            // 300ms pause after cmd
-      typingTimers.current.push(t);
-    });
-  }, [isTyping]);
-
-  /* Run "skills" on mount for an initial impression */
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      // Instant print on mobile to avoid main thread blocking
-      setActiveCmd("stack");
-      setVisibleLines(COMMANDS["stack"].lines);
-      setTypedCmd(COMMANDS["stack"].cmd);
-      return;
-    }
-    const t = setTimeout(() => runCommand("stack"), 600);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  /* Desktop-only parallax */
+  /* Desktop-only parallax for the Terminal window */
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
     if (!mq.matches) return;
@@ -576,6 +39,7 @@ const Hero = () => {
         if (!el) return;
         const rect = el.getBoundingClientRect();
         const vh = window.innerHeight;
+        // Calculate offset based on scroll position relative to center
         const progress = (rect.top + rect.height / 2 - vh / 2) / (vh / 2);
         setEditorOffset(Math.max(-1, Math.min(1, progress)) * 15);
       });
@@ -583,13 +47,11 @@ const Hero = () => {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafId); };
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
-
-  const handleSectionClick = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
-  };
 
   return (
     <section
@@ -598,16 +60,14 @@ const Hero = () => {
       className="relative pt-24 md:pt-32 pb-12 md:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0d0d0d 0%, #0d0d0d 55%, #1a0a0a 100%)' }}
     >
-      {/* Interactive canvas (full hero background) */}
+      {/* Layer 1: Interactive canvas (full hero background) */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0"
         style={{ zIndex: 1 }}
       />
 
-
-
-      {/* One-sided accent gradient glow (bottom-right) */}
+      {/* Layer 2: One-sided accent gradient glow (bottom-right) */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -615,105 +75,26 @@ const Hero = () => {
         }}
       />
 
-      {/* Layer 3 — Grid overlay */}
-      <div className="absolute inset-0 pointer-events-none hero-grid-overlay" style={{ opacity: 0.06, zIndex: 2 }} />
+      {/* Layer 3: Engineering grid overlay */}
+      <div 
+        className="absolute inset-0 pointer-events-none hero-grid-overlay" 
+        style={{ opacity: 0.06, zIndex: 2 }} 
+      />
 
       <div className="container mx-auto max-w-7xl relative" style={{ zIndex: 10 }}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
-          {/* ─── Left Column ─── */}
+          {/* ─── Left Column: Narrative & Action ─── */}
           <motion.div
-            className="lg:col-span-7 space-y-6"
+            className="lg:col-span-7"
             initial={heroLeftColumn.initial}
             animate={heroLeftColumn.animate}
           >
-            {/* Badge with live pulse + shimmer */}
-            <motion.div
-              variants={heroItemFadeUp}
-            >
-              <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold relative overflow-hidden"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent-primary)', border: '1px solid rgba(255,255,255,0.04)' }}
-              >
-                {/* Shimmer sweep */}
-                <motion.div
-                  className="absolute inset-0"
-                  style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)' }}
-                  animate={shimmerSlide}
-                  transition={shimmerTransition}
-                />
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: 'var(--accent-primary)' }} />
-                  <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--accent-primary)' }} />
-                </span>
-                <span className="relative z-10">Analytics Engineer</span>
-              </div>
-            </motion.div>
-
-            {/* Headline with rotating gradient keywords */}
-            <motion.h1
-              className="text-[2.25rem] sm:text-4xl md:text-5xl lg:text-[3.6rem] font-bold leading-[1.1] tracking-tight text-white max-w-2xl"
-              variants={heroItemFadeUp}
-            >
-              <span className="sr-only">Zeya Mosharraf – </span>
-              Building{" "}
-              <RotatingWord />
-              <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{ backgroundImage: 'linear-gradient(135deg, var(--accent-primary) 0%, #F97316 100%)' }}
-              >
-                Data Systems
-              </span>
-            </motion.h1>
-
-            <motion.p
-              className="text-[16px] md:text-lg text-gray-400 max-w-md leading-relaxed"
-              variants={heroItemFadeUp}
-            >
-              Architecting high-performance data infrastructure and automated 
-              analytics workflows for{" "}
-              <span className="text-gray-200 font-medium">
-                operational intelligence
-              </span>.
-            </motion.p>
-
-
-            {/* CTA buttons */}
-            <motion.div
-              className="flex flex-wrap items-center gap-4 pt-8"
-              variants={heroItemFadeUp}
-            >
-              <button
-                onClick={() => handleSectionClick("contact")}
-                className="group h-[52px] px-8 text-[14px] text-white rounded-xl font-bold flex items-center transition-all duration-300 hover:brightness-110 active:scale-[0.98]"
-                style={{ background: '#DC2626', boxShadow: '0 8px 24px -8px rgba(220,38,38,0.4)' }}
-              >
-                Work With Me <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
-
-              <button
-                onClick={() => setLocation("/case-studies")}
-                className="group h-[52px] px-8 text-[14px] text-gray-400 rounded-xl font-semibold transition-all duration-300 hover:text-white hover:bg-white/5 active:scale-[0.98]"
-                style={{ border: '1px solid rgba(255,255,255,0.06)' }}
-              >
-                View Case Studies
-              </button>
-            </motion.div>
-
-            {/* Social links — tight under CTAs */}
-
-            <motion.div
-              className="flex items-center gap-4 pt-6"
-              variants={heroItemFadeUp}
-            >
-              <SocialLinks />
-              <div className="w-10 h-px bg-white/5" />
-              <span className="text-[11px] font-medium tracking-widest uppercase text-gray-600 select-none">Connect</span>
-            </motion.div>
+            <HeroContent />
+            <HeroCTA />
           </motion.div>
 
-          {/* ─── Right Column — Interactive Terminal ─── */}
+          {/* ─── Right Column: Interactive Terminal ─── */}
           <motion.div
             className="lg:col-span-5 hidden sm:block"
             {...heroRightTerminal}
@@ -721,176 +102,18 @@ const Hero = () => {
             <div
               ref={editorRef}
               className="relative will-change-transform"
-              style={{ transform: `translateY(${editorOffset}px)`, transition: 'transform 0.15s ease-out' }}
+              style={{ 
+                transform: `translateY(${editorOffset}px)`, 
+                transition: 'transform 0.15s ease-out' 
+              }}
             >
-              {/* Backlight glow */}
+              {/* Terminal Backdrop Glow */}
               <div
                 className="absolute -inset-12 -z-10 rounded-full blur-[120px] opacity-10"
                 style={{ background: 'var(--accent-primary)' }}
               />
 
-              <AnimatedBorder>
-                {/* Title bar */}
-                <div className="flex items-center justify-between px-4 py-2.5" style={{ background: '#1A1A1A' }}>
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF5F57' }} />
-                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#FFBD2E' }} />
-                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#28CA40' }} />
-                    </div>
-                    <span
-                      className="text-xs"
-                      style={{ fontFamily: "'JetBrains Mono', monospace", color: '#6B6B6B' }}
-                    >
-                      zeya@portfolio ~ %
-                    </span>
-                  </div>
-                </div>
-
-                {/* Command buttons */}
-                <div className="flex gap-2 px-4 py-2.5" style={{ background: '#141414', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  {CMD_KEYS.map(key => (
-                    <button
-                      key={key}
-                      onClick={(e) => {
-                        createRipple(e);
-                        runCommand(key);
-                      }}
-                      disabled={isTyping}
-                      className="px-3 py-1 rounded-md text-xs font-medium transition-all duration-200"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        background: activeCmd === key ? 'var(--accent-soft)' : 'rgba(255,255,255,0.04)',
-                        color: activeCmd === key ? 'var(--accent-primary)' : '#8892A0',
-                        border: activeCmd === key ? '1px solid var(--accent-primary)' : '1px solid rgba(255,255,255,0.06)',
-                        opacity: isTyping ? 0.5 : 1,
-                        cursor: isTyping ? 'wait' : 'pointer',
-                      }}
-                    >
-                      {key}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Terminal body */}
-                <div
-                  ref={termBodyRef}
-                  className="overflow-y-auto"
-                  style={{
-                    background: '#0D0D0D',
-                    minHeight: '340px',
-                    maxHeight: '400px',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '12.5px',
-                    lineHeight: '1.7',
-                    padding: '16px',
-                  }}
-                >
-                  {/* Command line */}
-                  {typedCmd !== "" && (
-                    <div style={{ color: '#A0AEC0' }}>
-                      <span style={{ color: 'var(--accent-primary)' }}>$</span>
-                      <span style={{ color: '#6B7280' }}>{" ~ "}</span>
-                      <span>{typedCmd}</span>
-                      {isTyping && visibleLines.length === 0 && (
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            width: '7px',
-                            height: '14px',
-                            background: 'var(--accent-primary)',
-                            marginLeft: '2px',
-                            verticalAlign: 'middle',
-                            opacity: showCursor ? 0.9 : 0,
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-
-                  {/* Output lines */}
-                  <AnimatePresence>
-                    {visibleLines.map((line, i) => (
-                      <motion.div
-                        key={`${activeCmd}-${i}`}
-                        {...terminalLineAnimation}
-                        style={{
-                          color: line.accent
-                            ? 'var(--accent-primary)'
-                            : line.color || '#A0AEC0',
-                          opacity: line.dim ? 0.4 : 1,
-                          minHeight: line.text === "" ? '10px' : undefined,
-                          whiteSpace: 'pre',
-                        }}
-                      >
-                        {line.accent || line.color ? line.text : highlightText(line.text)}
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-
-                  {/* Idle prompt with cursor */}
-                  {!isTyping && typedCmd !== "" && (
-                    <div style={{ color: '#A0AEC0', marginTop: '4px' }}>
-                      <span style={{ color: 'var(--accent-primary)' }}>$</span>
-                      <span style={{ color: '#6B7280' }}>{" ~ "}</span>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: '7px',
-                          height: '14px',
-                          background: 'var(--accent-primary)',
-                          verticalAlign: 'middle',
-                          opacity: showCursor ? 0.9 : 0,
-                          transition: 'opacity 0.1s',
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {/* Initial state before any command */}
-                  {typedCmd === "" && (
-                    <div style={{ color: '#A0AEC0' }}>
-                      <span style={{ color: 'var(--accent-primary)' }}>$</span>
-                      <span style={{ color: '#6B7280' }}>{" ~ "}</span>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: '7px',
-                          height: '14px',
-                          background: 'var(--accent-primary)',
-                          verticalAlign: 'middle',
-                          opacity: showCursor ? 0.9 : 0,
-                          transition: 'opacity 0.1s',
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Terminal status bar */}
-                <div
-                  className="flex items-center justify-between px-4 py-1.5"
-                  style={{
-                    background: '#0A0A0A',
-                    borderTop: '1px solid rgba(255,255,255,0.04)',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '10px',
-                    color: '#4A5568',
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1">
-                      <Wifi className="w-3 h-3" style={{ color: '#28CA40' }} />
-                      <span style={{ color: '#28CA40' }}>connected</span>
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>latency: 12ms</span>
-                    </span>
-                  </div>
-                  <span>zsh · node v20.11</span>
-                </div>
-              </AnimatedBorder>
+              <HeroTerminal />
             </div>
           </motion.div>
         </div>
@@ -900,56 +123,8 @@ const Hero = () => {
           <HeroMetricsTicker />
         </div>
       </div>
-
     </section>
   );
 };
 
-
-/* ─── HeroMetricsTicker: fetches from Supabase and renders ambient marquee ─── */
-const HeroMetricsTicker = () => {
-  const { data: metrics, loading } = useHeroMetrics();
-
-  if (loading || metrics.length === 0) return <div className="h-6" />;
-
-  const tickerContent = [...metrics, ...metrics]; // Duplicate for seamless loop
-
-  return (
-    <div className="relative w-full overflow-hidden py-2 select-none">
-      {/* Edge Fading Masks */}
-      <div 
-        className="absolute inset-y-0 left-0 w-24 z-10 pointer-events-none"
-        style={{ background: 'linear-gradient(to right, #0d0d0d, transparent)' }}
-      />
-      <div 
-        className="absolute inset-y-0 right-0 w-24 z-10 pointer-events-none"
-        style={{ background: 'linear-gradient(to left, #0d0d0d, transparent)' }}
-      />
-
-      <motion.div 
-        className="flex items-center gap-12 whitespace-nowrap"
-        animate={{
-          x: [0, -1035], // Approx width calculation
-        }}
-        transition={{
-          duration: 40,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        whileHover={{ animationPlayState: 'paused' }}
-      >
-        {tickerContent.map((metric, i) => (
-          <div key={`${metric.id}-${i}`} className="flex items-center gap-4">
-            <span className="text-[13px] md:text-[14px] font-medium text-gray-300 tracking-wide">
-              <span className="text-white font-bold">{metric.value}</span> {metric.label}
-            </span>
-            <span className="text-white/10 select-none">•</span>
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-};
-
 export default Hero;
-

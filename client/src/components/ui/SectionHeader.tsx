@@ -2,9 +2,10 @@
  * SectionHeader — reusable animated section header with badge + title + subtitle.
  * Replaces the duplicated header pattern across 7+ section components.
  */
-import { motion, useInView } from "framer-motion";
-import { useRef, type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { type ReactNode } from "react";
 import { ease, shimmerTransition } from "@/lib/animations";
+import { COLORS, BADGE_COLORS } from "@/lib/constants";
 import type { LucideIcon } from "lucide-react";
 
 interface SectionHeaderProps {
@@ -36,9 +37,9 @@ const SectionHeader = ({
       <motion.div
         className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
         style={{
-          background: "rgba(239,68,68,0.08)",
-          color: "rgba(239,68,68,0.8)",
-          border: "1px solid rgba(239,68,68,0.12)",
+          background: BADGE_COLORS.red.bg,
+          color: BADGE_COLORS.red.text,
+          border: BADGE_COLORS.red.border,
         }}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +72,7 @@ const SectionHeader = ({
         <span
           className="bg-clip-text text-transparent"
           style={{
-            backgroundImage: "linear-gradient(135deg, #DC2626 0%, #F97316 100%)",
+            backgroundImage: COLORS.gradient,
           }}
         >
           {highlight}
