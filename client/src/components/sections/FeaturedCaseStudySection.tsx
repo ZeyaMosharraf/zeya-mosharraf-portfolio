@@ -36,7 +36,6 @@ const FeaturedCaseStudySection = () => {
   const [, setLocation] = useLocation();
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.12 });
 
   const orderBy = useMemo(() => ({ column: "sort_order", ascending: true }), []);
   const { data: allCaseStudies, loading } = useSupabaseTable<CaseStudy>("case_studies", orderBy);
@@ -93,19 +92,15 @@ const FeaturedCaseStudySection = () => {
         ref={sectionRef}
         className="container mx-auto max-w-7xl relative z-10 px-4 sm:px-6 lg:px-8 py-24"
       >
-        <motion.div
-          {...pageHeaderAnimation}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="mb-16"
-        >
+        <div className="mb-16">
           <SectionHeader
             icon={Sparkles}
-            badge="Case Studies"
-            title="Operational"
-            highlight="Impact"
+            badge="Portfolio"
+            title="Featured"
+            highlight="Case Studies"
             subtitle="Deep dives into engineering challenges, automated workflows, and measurable business outcomes."
           />
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* LEFT: Executive Summary */}

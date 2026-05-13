@@ -30,11 +30,8 @@ const SectionHeader = ({
   subtitle,
   children,
 }: SectionHeaderProps) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.3 });
-
   return (
-    <div ref={ref} className="text-center mb-10">
+    <div className="text-center mb-10">
       {/* Badge */}
       <motion.div
         className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
@@ -43,8 +40,9 @@ const SectionHeader = ({
           color: "rgba(239,68,68,0.8)",
           border: "1px solid rgba(239,68,68,0.12)",
         }}
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.7, ease }}
       >
         {/* Shimmer sweep */}
@@ -64,8 +62,9 @@ const SectionHeader = ({
       {/* Title */}
       <motion.h2
         className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-4"
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.7, ease, delay: 0.06 }}
       >
         {title}{" "}
@@ -83,8 +82,9 @@ const SectionHeader = ({
       {subtitle && (
         <motion.p
           className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed"
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.7, ease, delay: 0.12 }}
         >
           {subtitle}

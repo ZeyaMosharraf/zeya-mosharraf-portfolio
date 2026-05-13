@@ -159,7 +159,7 @@ function useCountUp(target: number, duration = 2000, delay = 0) {
    ═══════════════════════════════════════════════════════ */
 
 /* ── Rotating Words Animation ── */
-const ROTATING_WORDS = ["Scalable", "Reliable", "Intelligent", "Production"];
+const ROTATING_WORDS = ["Automated", "Observable", "Modular", "Performant"];
 
 const RotatingWord = () => {
   const [index, setIndex] = useState(0);
@@ -208,61 +208,59 @@ interface TermLine {
 }
 
 const COMMANDS: Record<string, { cmd: string; lines: TermLine[] }> = {
-  skills: {
-    cmd: "cat skills.json",
-    lines: [
-      { text: "{", dim: true },
-      { text: '  "languages":  ["Python", "SQL", "TypeScript"],' },
-      { text: '  "data":       ["Spark", "Airflow", "dbt", "Kafka"],' },
-      { text: '  "cloud":      ["AWS", "GCP", "Snowflake"],' },
-      { text: '  "databases":  ["PostgreSQL", "BigQuery", "Redis"],' },
-      { text: '  "tools":      ["Docker", "Git", "Terraform"]' },
-      { text: "}", dim: true },
-      { text: "" },
-      { text: "✓ Skills loaded successfully.", accent: true },
-    ],
-  },
-  projects: {
-    cmd: "ls ./projects --featured",
-    lines: [
-      { text: "NAME                   STATUS    STACK", dim: true },
-      { text: "──────────────────────────────────────────", dim: true },
-      { text: "etl-pipeline           live      Python, Airflow" },
-      { text: "analytics-dashboard    live      React, D3, SQL" },
-      { text: "stream-processor       live      Kafka, Flink" },
-      { text: "data-warehouse         live      dbt, Snowflake" },
-      { text: "ml-feature-store       beta      Python, Redis" },
-      { text: "" },
-      { text: "5 projects found.", accent: true },
-    ],
-  },
   stack: {
-    cmd: "zeya --stack",
+    cmd: "cat stack.yml",
     lines: [
-      { text: "┌────────────────────────────────────────┐", dim: true },
-      { text: "│  Ingestion    │  Airflow, Kafka, APIs   │" },
-      { text: "│  Transform    │  dbt, Spark, Python     │" },
-      { text: "│  Storage      │  Snowflake, S3, BQ      │" },
-      { text: "│  Serve        │  REST, GraphQL, React   │" },
-      { text: "│  Observe      │  Datadog, Great Expect. │" },
-      { text: "└────────────────────────────────────────┘", dim: true },
+      { text: "version: '3.8'", dim: true },
+      { text: "services:", dim: true },
+      { text: "  warehouse: Snowflake" },
+      { text: "  transformation: dbt Core" },
+      { text: "  orchestration: Dagster / Airflow" },
+      { text: "  infrastructure: Terraform / AWS" },
+      { text: "  visualization: Power BI / Looker" },
       { text: "" },
-      { text: "Architecture ready.", accent: true },
+      { text: "✓ Stack initialized.", accent: true },
+    ],
+  },
+  pipelines: {
+    cmd: "dbt run --select tag:production",
+    lines: [
+      { text: "08:31:12 | Concurrency: 8 threads", dim: true },
+      { text: "08:31:12 | Found 142 models, 458 tests" },
+      { text: "08:31:14 | 1 of 142 START table model.fct_orders", dim: true },
+      { text: "08:31:16 | 1 of 142 OK created table model.fct_orders" },
+      { text: "08:31:17 | 2 of 142 START view model.dim_customers", dim: true },
+      { text: "08:31:18 | 2 of 142 OK created view model.dim_customers" },
+      { text: "" },
+      { text: "✓ All models completed successfully.", accent: true },
+    ],
+  },
+  automation: {
+    cmd: "python automation/monitor_quality.py",
+    lines: [
+      { text: "[INFO] Connecting to warehouse..." },
+      { text: "[INFO] Validating schema consistency..." },
+      { text: "[INFO] Testing null constraints..." },
+      { text: "├─ table: raw_events ........... [PASS]", accent: true },
+      { text: "├─ table: processed_sales ...... [PASS]", accent: true },
+      { text: "└─ table: fct_revenue .......... [PASS]", accent: true },
+      { text: "" },
+      { text: "✓ Quality checks passed. No anomalies detected.", accent: true },
     ],
   },
   experience: {
-    cmd: "zeya --experience --summary",
+    cmd: "whoami --detailed",
     lines: [
       { text: "▸ Analytics Engineer", accent: true },
-      { text: "  Building production data pipelines" },
-      { text: "  Processing 2M+ records daily" },
+      { text: "  Bridging the gap between raw data and" },
+      { text: "  business-critical insights." },
       { text: "" },
-      { text: "▸ Key Achievements", accent: true },
-      { text: "  • Reduced pipeline latency by 60%" },
-      { text: "  • Built real-time analytics dashboard" },
-      { text: "  • Automated data quality checks" },
+      { text: "▸ Focus Areas", accent: true },
+      { text: "  • Scalable Data Modeling (Star/Snowflake)" },
+      { text: "  • Automated Quality Assurance" },
+      { text: "  • CI/CD for Data Pipelines" },
       { text: "" },
-      { text: "Experience verified.", accent: true },
+      { text: "Profile verified.", accent: true },
     ],
   },
 };
@@ -319,8 +317,8 @@ function useHeroCanvas(
     section.addEventListener("mouseleave", onMouseLeave, { passive: true });
 
     /* ── Particles ── */
-    const COUNT = isMobile ? 55 : 130;
-    const CONNECT_DIST = isMobile ? 70 : 100;
+    const COUNT = isMobile ? 35 : 85;
+    const CONNECT_DIST = isMobile ? 60 : 90;
     const dots: Dot[] = [];
 
     const initDots = () => {
@@ -443,18 +441,6 @@ function useHeroCanvas(
 
 
 
-/** Maps icon name strings stored in Supabase to Lucide components */
-const ICON_MAP: Record<string, React.ReactNode> = {
-  database: <Database className="w-3.5 h-3.5" />,
-  activity: <Activity className="w-3.5 h-3.5" />,
-  zap: <Zap className="w-3.5 h-3.5" />,
-  clock: <Clock className="w-3.5 h-3.5" />,
-  shield: <Shield className="w-3.5 h-3.5" />,
-  timer: <Timer className="w-3.5 h-3.5" />,
-  cpu: <Cpu className="w-3.5 h-3.5" />,
-  // Fallback for any unmapped icons
-  wifi: <Wifi className="w-3.5 h-3.5" />,
-};
 
 const METRICS_ORDER = { column: "sort_order", ascending: true };
 
@@ -568,12 +554,12 @@ const Hero = () => {
   useEffect(() => {
     if (window.innerWidth < 768) {
       // Instant print on mobile to avoid main thread blocking
-      setActiveCmd("skills");
-      setVisibleLines(COMMANDS["skills"].lines);
-      setTypedCmd(COMMANDS["skills"].cmd);
+      setActiveCmd("stack");
+      setVisibleLines(COMMANDS["stack"].lines);
+      setTypedCmd(COMMANDS["stack"].cmd);
       return;
     }
-    const t = setTimeout(() => runCommand("skills"), 600);
+    const t = setTimeout(() => runCommand("stack"), 600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -609,7 +595,7 @@ const Hero = () => {
     <section
       ref={sectionRef}
       id="home"
-      className="relative pt-20 md:pt-24 pb-10 md:pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative pt-24 md:pt-32 pb-12 md:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0d0d0d 0%, #0d0d0d 55%, #1a0a0a 100%)' }}
     >
       {/* Interactive canvas (full hero background) */}
@@ -633,11 +619,11 @@ const Hero = () => {
       <div className="absolute inset-0 pointer-events-none hero-grid-overlay" style={{ opacity: 0.06, zIndex: 2 }} />
 
       <div className="container mx-auto max-w-7xl relative" style={{ zIndex: 10 }}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
           {/* ─── Left Column ─── */}
           <motion.div
-            className="lg:col-span-7 space-y-5"
+            className="lg:col-span-7 space-y-6"
             initial={heroLeftColumn.initial}
             animate={heroLeftColumn.animate}
           >
@@ -646,8 +632,8 @@ const Hero = () => {
               variants={heroItemFadeUp}
             >
               <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold relative overflow-hidden"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent-primary)', border: '1px solid rgba(255,255,255,0.06)' }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold relative overflow-hidden"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent-primary)', border: '1px solid rgba(255,255,255,0.04)' }}
               >
                 {/* Shimmer sweep */}
                 <motion.div
@@ -666,7 +652,7 @@ const Hero = () => {
 
             {/* Headline with rotating gradient keywords */}
             <motion.h1
-              className="text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] tracking-tight text-white max-w-xl"
+              className="text-[2.25rem] sm:text-4xl md:text-5xl lg:text-[3.6rem] font-bold leading-[1.1] tracking-tight text-white max-w-2xl"
               variants={heroItemFadeUp}
             >
               <span className="sr-only">Zeya Mosharraf – </span>
@@ -682,53 +668,48 @@ const Hero = () => {
             </motion.h1>
 
             <motion.p
-              className="text-[15px] md:text-lg text-gray-400 max-w-lg leading-relaxed"
+              className="text-[16px] md:text-lg text-gray-400 max-w-md leading-relaxed"
               variants={heroItemFadeUp}
             >
-              Designing reliable data pipelines, transformations, and analytics
-              infrastructure that power{" "}
+              Architecting high-performance data infrastructure and automated 
+              analytics workflows for{" "}
               <span className="text-gray-200 font-medium">
-                data-driven decisions
+                operational intelligence
               </span>.
             </motion.p>
 
-            {/* Metrics strip */}
-            <motion.div
-              className="flex flex-wrap gap-6 pt-1 min-h-[52px]"
-              variants={heroItemFadeUp}
-            >
-              <HeroMetricsStrip />
-            </motion.div>
 
             {/* CTA buttons */}
             <motion.div
-              className="flex flex-wrap items-center gap-3 pt-2"
+              className="flex flex-wrap items-center gap-4 pt-8"
               variants={heroItemFadeUp}
             >
               <button
                 onClick={() => handleSectionClick("contact")}
-                className="group h-[42px] px-5 text-[13px] sm:text-[14px] text-white rounded-lg font-semibold flex items-center transition-all duration-300 hover:brightness-110"
-                style={{ background: '#DC2626' }}
+                className="group h-[52px] px-8 text-[14px] text-white rounded-xl font-bold flex items-center transition-all duration-300 hover:brightness-110 active:scale-[0.98]"
+                style={{ background: '#DC2626', boxShadow: '0 8px 24px -8px rgba(220,38,38,0.4)' }}
               >
-                Work With Me <ArrowRight className="ml-2 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                Work With Me <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
 
               <button
                 onClick={() => setLocation("/case-studies")}
-                className="h-[42px] px-4 sm:px-5 text-[13px] sm:text-[14px] text-gray-300 rounded-lg font-medium transition-all duration-300 hover:border-red-500 hover:text-white"
-                style={{ border: '1px solid rgba(255,255,255,0.10)' }}
+                className="group h-[52px] px-8 text-[14px] text-gray-400 rounded-xl font-semibold transition-all duration-300 hover:text-white hover:bg-white/5 active:scale-[0.98]"
+                style={{ border: '1px solid rgba(255,255,255,0.06)' }}
               >
                 View Case Studies
               </button>
             </motion.div>
 
             {/* Social links — tight under CTAs */}
+
             <motion.div
-              className="flex items-center gap-3 pt-1"
+              className="flex items-center gap-4 pt-6"
               variants={heroItemFadeUp}
             >
               <SocialLinks />
-              <span className="text-[10px] font-mono text-gray-600 ml-0.5 select-none">·  Let's connect</span>
+              <div className="w-10 h-px bg-white/5" />
+              <span className="text-[11px] font-medium tracking-widest uppercase text-gray-600 select-none">Connect</span>
             </motion.div>
           </motion.div>
 
@@ -744,8 +725,8 @@ const Hero = () => {
             >
               {/* Backlight glow */}
               <div
-                className="absolute -inset-8 -z-10 rounded-3xl"
-                style={{ background: 'radial-gradient(ellipse at 50% 50%, var(--accent-glow), transparent 70%)' }}
+                className="absolute -inset-12 -z-10 rounded-full blur-[120px] opacity-10"
+                style={{ background: 'var(--accent-primary)' }}
               />
 
               <AnimatedBorder>
@@ -913,105 +894,60 @@ const Hero = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Ambient Editorial Ticker */}
+        <div className="mt-20 md:mt-24 pt-10 border-t border-white/5">
+          <HeroMetricsTicker />
+        </div>
       </div>
 
     </section>
   );
 };
 
-/* ─── Metric Pill ─── */
-const MetricPill = ({ icon, value, suffix, label }: {
-  icon: React.ReactNode;
-  value: number;
-  suffix: string;
-  label: string;
-}) => (
-  <div
-    className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg"
-    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
-  >
-    <div
-      className="flex items-center justify-center w-7 h-7 rounded-md"
-      style={{ background: 'var(--accent-soft)', color: 'var(--accent-primary)' }}
-    >
-      {icon}
-    </div>
-    <div>
-      <div className="text-sm font-bold text-white leading-none">
-        {value}{suffix}
-      </div>
-      <div className="text-[10px] text-gray-500 mt-0.5">{label}</div>
-    </div>
-  </div>
-);
 
-/* ─── MetricPillDynamic: animates a single numeric metric value ─── */
-const MetricPillDynamic = ({ metric }: { metric: { label: string; value: string; icon: string } }) => {
-  // Parse value like "2M+", "99.9%", "60%"
-  const numMatch = metric.value.match(/^(\d+\.?\d*)/);
-  const numericTarget = numMatch ? parseFloat(numMatch[1]) : 0;
-  const suffix = metric.value.replace(/^\d+\.?\d*/, "");
+/* ─── HeroMetricsTicker: fetches from Supabase and renders ambient marquee ─── */
+const HeroMetricsTicker = () => {
+  const { data: metrics, loading } = useHeroMetrics();
 
-  const animated = useCountUp(Math.round(numericTarget), 2000, 800);
+  if (loading || metrics.length === 0) return <div className="h-6" />;
 
-  // Case-insensitive icon lookup
-  const iconKey = metric.icon.toLowerCase();
-  const iconComponent = ICON_MAP[iconKey] ?? <Activity className="w-3.5 h-3.5" />;
+  const tickerContent = [...metrics, ...metrics]; // Duplicate for seamless loop
 
   return (
-    <MetricPill
-      icon={iconComponent}
-      value={animated}
-      suffix={suffix}
-      label={metric.label}
-    />
-  );
-};
+    <div className="relative w-full overflow-hidden py-2 select-none">
+      {/* Edge Fading Masks */}
+      <div 
+        className="absolute inset-y-0 left-0 w-24 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(to right, #0d0d0d, transparent)' }}
+      />
+      <div 
+        className="absolute inset-y-0 right-0 w-24 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(to left, #0d0d0d, transparent)' }}
+      />
 
-/* ─── HeroMetricsStrip: fetches from Supabase and renders pills ─── */
-const HeroMetricsStrip = () => {
-  const { data: metrics, loading, error } = useHeroMetrics();
-
-  if (loading) {
-    return (
-      <>
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg animate-pulse"
-            style={{
-              width: "140px",
-              height: "52px",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          />
-        ))}
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <span
-        className="text-[12px] px-3 py-1.5 rounded-md"
-        style={{
-          color: "rgba(239,68,68,0.7)",
-          background: "rgba(220,38,38,0.06)",
-          border: "1px solid rgba(220,38,38,0.15)",
+      <motion.div 
+        className="flex items-center gap-12 whitespace-nowrap"
+        animate={{
+          x: [0, -1035], // Approx width calculation
         }}
+        transition={{
+          duration: 40,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        whileHover={{ animationPlayState: 'paused' }}
       >
-        {error}
-      </span>
-    );
-  }
-
-  return (
-    <>
-      {metrics.map((metric) => (
-        <MetricPillDynamic key={metric.id} metric={metric} />
-      ))}
-    </>
+        {tickerContent.map((metric, i) => (
+          <div key={`${metric.id}-${i}`} className="flex items-center gap-4">
+            <span className="text-[13px] md:text-[14px] font-medium text-gray-300 tracking-wide">
+              <span className="text-white font-bold">{metric.value}</span> {metric.label}
+            </span>
+            <span className="text-white/10 select-none">•</span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
   );
 };
 
