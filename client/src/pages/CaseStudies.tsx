@@ -13,7 +13,8 @@ import {
   Cpu,
   BarChart3,
   Layers,
-  Clock
+  Clock,
+  X
 } from "lucide-react";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { CaseStudy } from "@/types/supabase";
@@ -360,27 +361,58 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
           subtitle="How data engineering and automation solve real-world business bottlenecks."
         />
 
-        {/* Atmospheric Depth */}
+        {/* Atmospheric Depth refined */}
         <div
           className="fixed inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.03) 0%, transparent 65%)",
+            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.02) 0%, transparent 65%)",
             zIndex: 0,
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-          {/* Minimal Search */}
-          <div className="relative max-w-xl mx-auto mb-20">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-600" />
-            <input
-              type="text"
-              placeholder="Search operational stories..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-11 pl-11 pr-4 bg-white/[0.02] border border-white/[0.06] rounded-xl text-[12px] text-white focus:border-red-500/30 outline-none transition-all"
-            />
+        {/* ── Editorial Command Bar ── */}
+        <div
+          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-3"
+          style={{
+            background: "rgba(13,13,13,0.85)",
+            backdropFilter: "blur(20px)",
+            borderBottom: "1px solid rgba(255,255,255,0.03)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Left: Search */}
+            <div className="relative group w-full max-w-md">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200"
+                style={{ width: "12px", height: "12px", color: "#374151" }}
+              />
+              <input
+                type="text"
+                placeholder="Filter operational stories..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-8 pl-8 pr-7 text-[11px] text-gray-300 placeholder-gray-700 bg-white/[0.02] border border-white/[0.04] rounded-lg outline-none transition-all duration-300 focus:border-red-500/20 focus:bg-white/[0.04]"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-500 transition-colors"
+                >
+                  <X style={{ width: "10px", height: "10px" }} />
+                </button>
+              )}
+            </div>
+
+            {/* Right: Breadcrumb/Context */}
+            <div className="flex items-center gap-3">
+               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-700 hidden sm:block">Archive</span>
+               <div className="w-1 h-1 rounded-full bg-white/5 hidden sm:block" />
+               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500/50">Operational Engineering</span>
+            </div>
           </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative z-10">
 
           <div className="grid grid-cols-1 gap-12 lg:gap-20">
             {filteredCaseStudies.map((cs: CaseStudy, index: number) => (

@@ -25,7 +25,7 @@ function DataNodeCanvas({ className }: { className?: string }) {
     const canvas = ref.current; if (!canvas) return;
     const ctx = canvas.getContext("2d"); if (!ctx) return;
     let id: number; let nodes: Node[] = [];
-    const N = 50, MAX = 130;
+    const N = 22, MAX = 110;
     const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; init(); };
     const init = () => {
       nodes = Array.from({ length: N }, () => ({
@@ -139,8 +139,8 @@ function ScanSweep() {
           "linear-gradient(90deg, transparent, rgba(220,38,38,0.5) 40%, rgba(249,115,22,0.4) 60%, transparent)",
         boxShadow: "0 0 8px rgba(220,38,38,0.3)",
       }}
-      animate={{ top: ["0%", "100%"], opacity: [0, 1, 1, 0] }}
-      transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 4, ease: "linear" }}
+      animate={{ top: ["0%", "100%"], opacity: [0, 0.4, 0.4, 0] }}
+      transition={{ duration: 6, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
     />
   );
 }
@@ -148,9 +148,8 @@ function ScanSweep() {
 // ─── Floating Data Symbol Tags ────────────────────────────────────────────────
 
 const SYMBOLS = [
-  "SELECT *", "Python", "SQL", "{ JSON }", "∑ SUM",
-  "BigQuery", "Power BI", "ETL", ">_ pandas", "ML Model",
-  "GROUP BY", "R² = 0.97", "📊", "INNER JOIN", "→ Pipeline",
+  "Python", "SQL", "{ JSON }",
+  "BigQuery", "ETL", "GROUP BY", "INNER JOIN", "→ Pipeline",
 ];
 
 function FloatingSymbols() {
@@ -301,7 +300,7 @@ interface PageHeroProps {
   topContent?: ReactNode;
   bottomContent?: ReactNode;
   center?: boolean;
-  /** Show the live stats bar (default true) */
+  /** Show the live stats bar (default false for archive refinement) */
   showStats?: boolean;
 }
 
@@ -313,18 +312,18 @@ const PageHero = ({
   topContent,
   bottomContent,
   center = true,
-  showStats = true,
+  showStats = false,
 }: PageHeroProps) => {
-  const typed = useTypewriter(subtitle ?? "", 22, 600);
+  const typed = useTypewriter(subtitle ?? "", 32, 700);
   const words = title.split(" ");
 
   return (
     <div
       className="relative overflow-hidden"
-      style={{ background: "#0d0d0d", minHeight: "clamp(200px, 26vh, 290px)" }}
+      style={{ background: "#0d0d0d", minHeight: "clamp(150px, 18vh, 220px)" }}
     >
       {/* Layer 1: node-graph canvas */}
-      <div className="absolute inset-0 opacity-55">
+      <div className="absolute inset-0 opacity-25">
         <DataNodeCanvas />
       </div>
 
@@ -349,7 +348,7 @@ const PageHero = ({
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 75% 65% at 50% 115%, rgba(220,38,38,0.2) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 75% 65% at 50% 115%, rgba(220,38,38,0.12) 0%, transparent 70%)",
         }}
       />
 
@@ -387,10 +386,10 @@ const PageHero = ({
 
           {/* Title — gradient first word + white rest */}
           <motion.h1
-            initial={{ opacity: 0, y: 26 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="text-3xl md:text-4xl lg:text-[42px] font-bold leading-tight mb-3"
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[28px] md:text-[34px] lg:text-[38px] font-bold leading-tight mb-2 tracking-tight"
           >
             <span
               className="bg-clip-text text-transparent"
@@ -405,7 +404,7 @@ const PageHero = ({
 
           {/* Subtitle — typewriter */}
           {subtitle && (
-            <p className="text-[13px] text-gray-400 max-w-2xl mx-auto leading-relaxed min-h-[1.6rem]">
+            <p className="text-[12px] text-gray-500 max-w-2xl mx-auto leading-relaxed min-h-[1.4rem]">
               {typed}
               {typed.length < subtitle.length && (
                 <motion.span

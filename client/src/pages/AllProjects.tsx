@@ -45,113 +45,96 @@ const AllProjects = () => {
           subtitle="Explore my complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains."
         />
 
-        {/* ── Sticky Controls ── */}
+        {/* ── Editorial Command Bar ── */}
         <div
-          className="sticky top-14 z-30 px-4 sm:px-6 lg:px-8 py-2.5"
+          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-3"
           style={{
-            background: "rgba(10,10,10,0.95)",
-            backdropFilter: "blur(16px)",
-            borderBottom: "1px solid rgba(255,255,255,0.04)",
+            background: "rgba(13,13,13,0.85)",
+            backdropFilter: "blur(20px)",
+            borderBottom: "1px solid rgba(255,255,255,0.03)",
           }}
         >
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-2.5 sm:items-center">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            
+            {/* Left: Search + Categories */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-grow max-w-4xl">
+              {/* Integrated Search */}
+              <div className="relative group w-full sm:w-60">
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200"
+                  style={{ width: "12px", height: "12px", color: "#374151" }}
+                />
+                <input
+                  type="text"
+                  placeholder="Filter projects..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full h-8 pl-8 pr-7 text-[11px] text-gray-300 placeholder-gray-700 bg-white/[0.02] border border-white/[0.04] rounded-lg outline-none transition-all duration-300 focus:border-red-500/20 focus:bg-white/[0.04]"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-500 transition-colors"
+                  >
+                    <X style={{ width: "10px", height: "10px" }} />
+                  </button>
+                )}
+              </div>
 
-            {/* Search */}
-            <div className="relative w-full sm:w-64 shrink-0">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                style={{ width: "13px", height: "13px", color: "#4B5563" }}
-              />
-              <input
-                type="text"
-                placeholder="Search projects…"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-8 pl-8 pr-7 text-[12px] text-gray-300 placeholder-gray-600 rounded-lg outline-none transition-all duration-200"
-                style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  // focus handled via onFocus/onBlur
-                }}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(220,38,38,0.35)"; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  aria-label="Clear search"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors"
-                >
-                  <X style={{ width: "11px", height: "11px" }} />
-                </button>
-              )}
+              {/* Vertical Divider (Desktop) */}
+              <div className="hidden sm:block w-px h-4 bg-white/5 mx-1" />
+
+              {/* Category Nav */}
+              <div className="flex flex-wrap items-center gap-1">
+                {categories.map((cat: ProjectCategory) => {
+                  const isActive = activeCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className="h-7 px-2.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap"
+                      style={{
+                        background: isActive ? "rgba(220,38,38,0.08)" : "transparent",
+                        color: isActive ? "#DC2626" : "#4B5563",
+                      }}
+                    >
+                      {cat.name}
+                      <span className={`ml-1.5 opacity-30 text-[9px] ${isActive ? "text-red-500/60" : ""}`}>{cat.count}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Category pills */}
-            <div className="flex flex-wrap gap-1.5 flex-1">
-              {categories.map((cat: ProjectCategory) => {
-                const isActive = activeCategory === cat.id;
-                return (
+            {/* Right: View Toggle */}
+            <div className="flex items-center gap-1 justify-end">
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-700 mr-2 hidden sm:block">View Mode</span>
+              <div
+                className="flex items-center p-0.5 rounded-lg bg-white/[0.02] border border-white/[0.04]"
+              >
+                {[
+                  { mode: "grid" as const, icon: <Grid3x3 style={{ width: "13px", height: "13px" }} /> },
+                  { mode: "list" as const, icon: <LayoutList style={{ width: "13px", height: "13px" }} /> },
+                ].map(({ mode, icon }) => (
                   <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className="h-7 px-2.5 rounded-md text-[11px] font-medium transition-all duration-200 whitespace-nowrap"
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className="w-7 h-7 rounded-md flex items-center justify-center transition-all duration-300"
                     style={{
-                      background: isActive ? "rgba(220,38,38,0.12)" : "transparent",
-                      color: isActive ? "#DC2626" : "#4B5563",
-                      border: isActive ? "1px solid rgba(220,38,38,0.25)" : "1px solid transparent",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) e.currentTarget.style.color = "#9CA3AF";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) e.currentTarget.style.color = "#4B5563";
+                      background: viewMode === mode ? "rgba(220,38,38,0.1)" : "transparent",
+                      color: viewMode === mode ? "#DC2626" : "#374151",
                     }}
                   >
-                    {cat.name}
-                    <span className="ml-1 opacity-40 text-[10px]">{cat.count}</span>
+                    {icon}
                   </button>
-                );
-              })}
-            </div>
-
-            {/* View toggle */}
-            <div
-              className="flex items-center gap-0.5 shrink-0 rounded-lg p-0.5"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              {[
-                { mode: "grid" as const, icon: <Grid3x3 style={{ width: "14px", height: "14px" }} />, label: "Grid view" },
-                { mode: "list" as const, icon: <LayoutList style={{ width: "14px", height: "14px" }} />, label: "List view" },
-              ].map(({ mode, icon, label }) => (
-                <button
-                  key={mode}
-                  aria-label={label}
-                  onClick={() => setViewMode(mode)}
-                  className="w-7 h-7 rounded-md flex items-center justify-center transition-all duration-200"
-                  style={{
-                    background: viewMode === mode ? "rgba(220,38,38,0.12)" : "transparent",
-                    color: viewMode === mode ? "#DC2626" : "#4B5563",
-                  }}
-                >
-                  {icon}
-                </button>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         {/* ── Main Content ── */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-          {/* Ambient glow — subtle atmospheric depth */}
-          <div
-            className="fixed inset-0 pointer-events-none"
-            style={{
-              background: "radial-gradient(ellipse 60% 40% at 50% 20%, rgba(220,38,38,0.03) 0%, transparent 65%)",
-              zIndex: 0,
-            }}
-          />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
 
           {/* Results count */}
           <motion.p
