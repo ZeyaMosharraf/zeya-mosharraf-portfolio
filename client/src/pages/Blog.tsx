@@ -1,6 +1,7 @@
 import { BlogPost } from "@/types/supabase";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { SEO } from "@/components/SEO";
+import { getBlogPostingSchema, getBreadcrumbSchema, getWebsiteSchema } from "@/lib/schema";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { formatDate } from "@/lib/utils/formatDate";
 import { useEffect, useMemo } from "react";
@@ -56,6 +57,15 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
         <SEO 
           title={`${selectedPost.title} | Engineering Journal`}
           description={selectedPost.short_description ?? undefined}
+          article={true}
+          schemaData={[
+            getBlogPostingSchema(selectedPost),
+            getBreadcrumbSchema([
+              { name: "Home", item: "/" },
+              { name: "Journal", item: "/blog" },
+              { name: selectedPost.title, item: `/blog/${selectedPost.slug}` }
+            ])
+          ]}
         />
 
         {/* ── ATMOSPHERIC DEPTH ── */}
@@ -207,7 +217,8 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
       <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
         <SEO 
           title="Engineering Journal | Technical Insights"
-          description="A collection of technical articles, engineering insights, and data analysis tutorials."
+          description="A collection of technical articles, engineering insights, and data analysis tutorials by Zeya Mosharraf."
+          schemaData={getWebsiteSchema()}
         />
 
         {/* ── ATMOSPHERIC DEPTH ── */}

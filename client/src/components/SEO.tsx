@@ -10,6 +10,7 @@ interface SEOProps {
   twitterHandle?: string;
   largeTwitterCard?: boolean;
   noIndex?: boolean;
+  schemaData?: object | object[];
 }
 
 export const SEO = ({
@@ -22,8 +23,9 @@ export const SEO = ({
   twitterHandle = "zeyamosharraf",
   largeTwitterCard = true,
   noIndex = false,
+  schemaData,
 }: SEOProps) => {
-  const siteUrl = window.location.origin;
+  const siteUrl = "https://zeyamosharraf.vercel.app"; // Production URL for canonical consistency
 
   const defaultTitle = "Zeya Mosharraf | Data Analyst & Analytics Engineer";
 
@@ -49,12 +51,16 @@ export const SEO = ({
 
   const defaultImage = `${siteUrl}/assets/og-image.png`;
 
+  // Determine actual canonical URL
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+  const finalCanonicalUrl = canonicalUrl || `${siteUrl}${currentPath}`;
+
   const seo = {
     title: title ? `${title} | Zeya Mosharraf` : defaultTitle,
     description: description || defaultDescription,
     keywords: keywords || defaultKeywords,
     image: image || defaultImage,
-    url: typeof window !== "undefined" ? window.location.href : canonicalUrl || siteUrl,
+    url: finalCanonicalUrl,
   };
 
   return (
@@ -67,7 +73,7 @@ export const SEO = ({
       <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow"} />
 
       {/* Canonical URL */}
-      {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+      <link rel="canonical" href={seo.url} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={article ? "article" : "website"} />
@@ -85,8 +91,15 @@ export const SEO = ({
       <meta name="twitter:image" content={seo.image} />
       {twitterHandle && <meta name="twitter:creator" content={`@${twitterHandle}`} />}
       <meta name="twitter:site" content={`@${twitterHandle}`} />
+
+      {/* Structured Data (JSON-LD) */}
+      {schemaData && (
+        <script type="application/ld+json">
+          {JSON.stringify(schemaData)}
+        </script>
+      )}
     </Helmet>
   );
 };
 
-export default SEO;
+export default SEO;

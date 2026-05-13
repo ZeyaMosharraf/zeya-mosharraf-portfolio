@@ -5,7 +5,8 @@ import { FaGithub } from "react-icons/fa";
 import { ArrowLeft, ArrowUpRight, ExternalLink, TrendingUp, Code2, Wrench, CheckCircle2, Circle } from "lucide-react";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { Project } from "@/types/supabase";
-import { Helmet } from "react-helmet-async";
+import { SEO } from "@/components/SEO";
+import { getProjectSchema, getBreadcrumbSchema } from "@/lib/schema";
 
 const getCategoryAccent = (category: string) => {
   switch (category) {
@@ -82,16 +83,25 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
   const embedUrl = project.embed_url;
   const embedLabel = project.category === "Power BI" ? "Power BI" : project.category === "Looker Studio" ? "Looker Studio" : "Interactive Report";
 
+  // Dynamic Alt Text for SEO
+  const descriptiveAlt = `Analytics dashboard for ${project.title} showing ${project.category} implementation by Zeya Mosharraf`;
+
   return (
     <>
-      <Helmet>
-        <title>{project.title} · {project.category} · Zeya Mosharraf</title>
-        <meta name="description" content={project.description} />
-        <meta name="keywords" content={project.tools?.join(", ") || ""} />
-        <meta property="og:title" content={`${project.title} | Case Study`} />
-        <meta property="og:description" content={project.description} />
-        {project.thumbnail_url && <meta property="og:image" content={project.thumbnail_url} />}
-      </Helmet>
+      <SEO
+        title={`${project.title} | ${project.category} Case Study`}
+        description={project.description.slice(0, 160)}
+        keywords={`${project.title}, ${project.category}, ${project.tools?.join(", ")}, Analytics Engineering`}
+        image={project.thumbnail_url}
+        schemaData={[
+          getProjectSchema(project),
+          getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Projects", item: "/projects" },
+            { name: project.title, item: `/project/${project.slug}` }
+          ])
+        ]}
+      />
 
       <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
 
@@ -288,7 +298,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                 </div>
                 <img
                   src={project.thumbnail_url}
-                  alt={project.title + " dashboard"}
+                  alt={descriptiveAlt}
                   className="w-full"
                   style={{ opacity: 0.9 }}
                 />

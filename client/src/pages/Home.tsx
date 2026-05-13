@@ -9,15 +9,16 @@ import ContactSection from "@/components/sections/ContactSection";
 import CertificatesScrolling from "@/components/ui/CertificatesScrolling";
 import { RevealSection } from "@/components/ui/common";
 import { SEO } from "@/components/SEO";
+import { getPersonSchema, getWebsiteSchema } from "@/lib/schema";
 
 const Home = () => {
   return (
     <>
       <SEO
         title="Zeya Mosharraf | Data Analyst & Analytics Engineer"
-        description="Welcome to Zeya Mosharraf's portfolio — a Data Analyst skilled in Python, SQL, Power BI, Google Cloud, and Machine Learning. View projects, certifications, and experience."
-        keywords="Zeya Mosharraf, Data Analyst, Analytics Engineer, Python, SQL, Power BI, Google Cloud, Machine Learning, BigQuery, Tableau, portfolio"
-        canonicalUrl="https://zeyamosharraf.com"
+        description="Zeya Mosharraf is a Data Analyst specializing in SQL, Python automation, and Power BI dashboards. Helping businesses reduce manual work and improve reporting accuracy."
+        keywords="Zeya Mosharraf, Data Analyst, Analytics Engineer, Python Automation, SQL Developer, Power BI Consultant, Excel Automation, Business Analytics, Data Engineering"
+        schemaData={[getPersonSchema(), getWebsiteSchema()]}
       />
 
       <div style={{ background: "#0d0d0d" }}>

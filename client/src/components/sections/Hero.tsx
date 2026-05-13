@@ -669,6 +669,7 @@ const Hero = () => {
               className="text-[2rem] sm:text-4xl md:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] tracking-tight text-white max-w-xl"
               variants={heroItemFadeUp}
             >
+              <span className="sr-only">Zeya Mosharraf – </span>
               Building{" "}
               <RotatingWord />
               <br />

@@ -21,6 +21,7 @@ import { useMemo } from "react";
 import PageHero from "@/components/ui/PageHero";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { SEO } from "@/components/SEO";
+import { getProjectSchema, getBreadcrumbSchema, getWebsiteSchema } from "@/lib/schema";
 import { formatDate } from "@/lib/utils/formatDate";
 
 const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "list" | "detail", params?: { slug: string } }) => {
@@ -78,6 +79,21 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
         <SEO
           title={`${selectedCaseStudy.title} | Engineering Case Study`}
           description={selectedCaseStudy.summary ?? undefined}
+          article={true}
+          schemaData={[
+            getProjectSchema({
+              title: selectedCaseStudy.title,
+              description: selectedCaseStudy.summary || "",
+              category: selectedCaseStudy.category,
+              slug: selectedCaseStudy.slug,
+              tools: Array.isArray(selectedCaseStudy.tools) ? selectedCaseStudy.tools : (selectedCaseStudy.tools?.split(',') || [])
+            }),
+            getBreadcrumbSchema([
+              { name: "Home", item: "/" },
+              { name: "Operations", item: "/case-studies" },
+              { name: selectedCaseStudy.title, item: `/case-study/${selectedCaseStudy.slug}` }
+            ])
+          ]}
         />
 
         {/* ── ATMOSPHERIC DEPTH (aligned with Projects section) ── */}
@@ -335,7 +351,8 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
       <div className="min-h-screen bg-[#0d0d0d]">
         <SEO
           title="Case Studies | Operational Engineering"
-          description="Detailed analyses of real-world operational challenges and measurable engineering solutions."
+          description="Detailed analyses of real-world operational challenges and measurable engineering solutions by Zeya Mosharraf."
+          schemaData={getWebsiteSchema()}
         />
 
         <PageHero

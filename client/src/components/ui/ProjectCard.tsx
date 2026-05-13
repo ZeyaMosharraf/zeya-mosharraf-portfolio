@@ -51,7 +51,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         <div className="relative overflow-hidden" style={{ height: "168px", background: "#080808" }}>
           <img
             src={project.thumbnail_url}
-            alt={(project.title || "Project") + " preview"}
+            alt={`Analytics project preview: ${project.title}`}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
             style={{ opacity: 0.65, filter: "saturate(0.8) brightness(0.9)" }}
