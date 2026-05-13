@@ -38,23 +38,25 @@ const AllProjects = () => {
         keywords="Data Analytics Projects, SQL Projects, Python Projects, Power BI Dashboards, Machine Learning, Excel Analysis, Tableau Visualizations, Looker Studio Reports"
       />
 
-      <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
-        {/* Hero */}
+      <div className="min-h-screen bg-[#0d0d0d]">
         <PageHero
+          variant="editorial"
+          center={false}
+          accentLabel="Technical Repository"
           title="All Projects"
-          subtitle="Explore my complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains."
+          subtitle="Explore a complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains."
         />
 
         {/* ── Editorial Command Bar ── */}
         <div
-          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-3"
+          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-2.5"
           style={{
-            background: "rgba(13,13,13,0.85)",
-            backdropFilter: "blur(20px)",
+            background: "rgba(10,10,10,0.8)",
+            backdropFilter: "blur(12px)",
             borderBottom: "1px solid rgba(255,255,255,0.03)",
           }}
         >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
             
             {/* Left: Search + Categories */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-grow max-w-4xl">
@@ -134,7 +136,7 @@ const AllProjects = () => {
         </div>
 
         {/* ── Main Content ── */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 relative z-10">
 
           {/* Results count */}
           <motion.p

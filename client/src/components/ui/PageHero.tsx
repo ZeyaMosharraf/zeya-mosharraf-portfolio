@@ -302,6 +302,8 @@ interface PageHeroProps {
   center?: boolean;
   /** Show the live stats bar (default false for archive refinement) */
   showStats?: boolean;
+  variant?: "cinematic" | "editorial";
+  accentLabel?: string;
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -313,53 +315,69 @@ const PageHero = ({
   bottomContent,
   center = true,
   showStats = false,
+  variant = "cinematic",
+  accentLabel,
 }: PageHeroProps) => {
   const typed = useTypewriter(subtitle ?? "", 32, 700);
   const words = title.split(" ");
+  const isEditorial = variant === "editorial";
 
   return (
     <div
       className="relative overflow-hidden"
-      style={{ background: "#0d0d0d", minHeight: "clamp(150px, 18vh, 220px)" }}
+      style={{ 
+        background: "#0d0d0d", 
+        minHeight: isEditorial ? "auto" : "clamp(150px, 18vh, 220px)" 
+      }}
     >
-      {/* Layer 1: node-graph canvas */}
-      <div className="absolute inset-0 opacity-25">
-        <DataNodeCanvas />
-      </div>
+      {!isEditorial && (
+        <>
+          {/* Layer 1: node-graph canvas */}
+          <div className="absolute inset-0 opacity-25">
+            <DataNodeCanvas />
+          </div>
 
-      {/* Layer 2: floating text symbols */}
-      <div className="absolute inset-0 overflow-hidden">
-        <FloatingSymbols />
-      </div>
+          {/* Layer 2: floating text symbols */}
+          <div className="absolute inset-0 overflow-hidden">
+            <FloatingSymbols />
+          </div>
 
-      {/* Layer 3: subtle red grid */}
+          {/* Layer 3: subtle red grid */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(220,38,38,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220,38,38,0.04) 1px, transparent 1px)
+              `,
+              backgroundSize: "48px 48px",
+            }}
+          />
+        </>
+      )}
+
+      {/* Layer 4: radial red glow (Always present but more restrained in editorial) */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(220,38,38,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(220,38,38,0.04) 1px, transparent 1px)
-          `,
-          backgroundSize: "48px 48px",
+          background: isEditorial 
+            ? "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.02) 0%, transparent 65%)"
+            : "radial-gradient(ellipse 75% 65% at 50% 115%, rgba(220,38,38,0.12) 0%, transparent 70%)",
         }}
       />
 
-      {/* Layer 4: radial red glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 75% 65% at 50% 115%, rgba(220,38,38,0.12) 0%, transparent 70%)",
-        }}
-      />
+      {!isEditorial && (
+        <>
+          {/* Layer 5: scan sweep */}
+          <ScanSweep />
 
-      {/* Layer 5: scan sweep */}
-      <ScanSweep />
+          {/* Layer 6: sparkline decoration */}
+          <Sparkline />
 
-      {/* Layer 6: sparkline decoration */}
-      <Sparkline />
-
-      {/* Layer 7: corner brackets */}
-      <CornerBrackets />
+          {/* Layer 7: corner brackets */}
+          <CornerBrackets />
+        </>
+      )}
 
       {/* Top glow line */}
       <div
@@ -370,50 +388,69 @@ const PageHero = ({
       />
 
       {/* ── Content ── */}
-      <div className="relative pt-14 pb-8 px-4 sm:px-6 lg:px-8">
-        <div className={`max-w-4xl mx-auto w-full ${center ? "text-center" : ""}`}>
+      <div className={`relative ${isEditorial ? "pt-24 pb-12 lg:pt-32 lg:pb-16" : "pt-14 pb-8"} px-4 sm:px-6 lg:px-8`}>
+        <div className={`max-w-7xl mx-auto w-full ${center ? "text-center" : "text-left"}`}>
 
-          {topContent && (
+          {(accentLabel || topContent) && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-4"
+              className="mb-6 flex items-center gap-2"
             >
+              {isEditorial && (
+                <div className="w-1 h-1 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.3)]" />
+              )}
+              {accentLabel && (
+                <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-red-500/80">
+                  {accentLabel}
+                </span>
+              )}
               {topContent}
             </motion.div>
           )}
 
-          {/* Title — gradient first word + white rest */}
+          {/* Title — White dominant for editorial, gradient first word for cinematic */}
           <motion.h1
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[28px] md:text-[34px] lg:text-[38px] font-bold leading-tight mb-2 tracking-tight"
+            className={`${isEditorial ? "text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-8" : "text-[28px] md:text-[34px] lg:text-[38px] leading-tight mb-4"} font-bold tracking-tight`}
           >
-            <span
-              className="bg-clip-text text-transparent"
-              style={{ backgroundImage: "linear-gradient(135deg, #DC2626 0%, #F97316 100%)" }}
-            >
-              {words[0]}
-            </span>
-            {words.length > 1 && (
-              <span className="text-white"> {words.slice(1).join(" ")}</span>
+            {isEditorial ? (
+              title
+            ) : (
+              <>
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: "linear-gradient(135deg, #DC2626 0%, #F97316 100%)" }}
+                >
+                  {words[0]}
+                </span>
+                {words.length > 1 && (
+                  <span className="text-white"> {words.slice(1).join(" ")}</span>
+                )}
+              </>
             )}
           </motion.h1>
 
-          {/* Subtitle — typewriter */}
+          {/* Subtitle — typewriter for cinematic, standard for editorial */}
           {subtitle && (
-            <p className="text-[12px] text-gray-500 max-w-2xl mx-auto leading-relaxed min-h-[1.4rem]">
-              {typed}
-              {typed.length < subtitle.length && (
+            <motion.p 
+              initial={isEditorial ? { opacity: 0, y: 10 } : {}}
+              animate={isEditorial ? { opacity: 1, y: 0 } : {}}
+              transition={isEditorial ? { delay: 0.2, duration: 0.6 } : {}}
+              className={`${isEditorial ? "text-[16px] md:text-[18px]" : "text-[12px]"} text-gray-500 max-w-3xl ${center ? "mx-auto" : ""} leading-relaxed`}
+            >
+              {isEditorial ? subtitle : typed}
+              {!isEditorial && typed.length < subtitle.length && (
                 <motion.span
                   animate={{ opacity: [1, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity }}
                   className="inline-block w-0.5 h-3.5 bg-red-500 ml-0.5 align-middle"
                 />
               )}
-            </p>
+            </motion.p>
           )}
 
           {/* Live stats bar */}
@@ -425,7 +462,7 @@ const PageHero = ({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="mt-5"
+              className="mt-8"
             >
               {bottomContent}
             </motion.div>

@@ -30,19 +30,18 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
     <div
       className="group relative flex flex-col overflow-hidden cursor-pointer rounded-xl transition-all duration-500"
       style={{
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.4)",
+        background: "rgba(255,255,255,0.015)",
+        border: "1px solid rgba(255,255,255,0.04)",
       }}
       onClick={handleView}
       onMouseEnter={(e) => {
-        e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)";
-        e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(220,38,38,0.08)";
-        e.currentTarget.style.transform = "translateY(-3px)";
+        e.currentTarget.style.border = "1px solid rgba(255,255,255,0.08)";
+        e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+        e.currentTarget.style.transform = "translateY(-2px)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.border = "1px solid rgba(255,255,255,0.06)";
-        e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.4)";
+        e.currentTarget.style.border = "1px solid rgba(255,255,255,0.04)";
+        e.currentTarget.style.background = "rgba(255,255,255,0.015)";
         e.currentTarget.style.transform = "translateY(0)";
       }}
     >
@@ -73,11 +72,11 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           <div className="absolute top-3 left-3 flex items-center gap-1.5">
             <span
               className="w-1.5 h-1.5 rounded-full"
-              style={{ background: accent.dot, boxShadow: `0 0 6px ${accent.dot}` }}
+              style={{ background: accent.dot }}
             />
             <span
               className="text-[9px] font-semibold uppercase tracking-widest"
-              style={{ color: accent.color, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+              style={{ color: accent.color }}
             >
               {project.category}
             </span>
@@ -125,7 +124,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         {project.results && (
           <div
             className="flex items-start gap-2 px-3 py-2 rounded-lg"
-            style={{ background: "rgba(220,38,38,0.04)", border: "1px solid rgba(220,38,38,0.08)" }}
+            style={{ background: "rgba(220,38,38,0.03)", border: "1px solid rgba(220,38,38,0.05)" }}
           >
             <TrendingUp
               className="flex-shrink-0 mt-0.5"

@@ -24,6 +24,7 @@ import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { SEO } from "@/components/SEO";
 import { getProjectSchema, getBreadcrumbSchema, getWebsiteSchema } from "@/lib/schema";
 import { formatDate } from "@/lib/utils/formatDate";
+import CaseStudyCard from "@/components/ui/CaseStudyCard";
 
 const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "list" | "detail", params?: { slug: string } }) => {
   const hookParams = useParams<{ slug: string }>();
@@ -357,29 +358,23 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
         />
 
         <PageHero
+          variant="editorial"
+          center={false}
+          accentLabel="Operational Engineering"
           title="Case Studies"
           subtitle="How data engineering and automation solve real-world business bottlenecks."
         />
 
-        {/* Atmospheric Depth refined */}
-        <div
-          className="fixed inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(220,38,38,0.02) 0%, transparent 65%)",
-            zIndex: 0,
-          }}
-        />
-
         {/* ── Editorial Command Bar ── */}
         <div
-          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-3"
+          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-2.5"
           style={{
-            background: "rgba(13,13,13,0.85)",
-            backdropFilter: "blur(20px)",
+            background: "rgba(10,10,10,0.8)",
+            backdropFilter: "blur(12px)",
             borderBottom: "1px solid rgba(255,255,255,0.03)",
           }}
         >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
             {/* Left: Search */}
             <div className="relative group w-full max-w-md">
               <Search
@@ -412,79 +407,19 @@ const CaseStudies = ({ viewMode = "list", params: routeParams }: { viewMode?: "l
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative z-10">
-
-          <div className="grid grid-cols-1 gap-12 lg:gap-20">
+        {/* ── Main Content ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {filteredCaseStudies.map((cs: CaseStudy, index: number) => (
-              <motion.article
+              <motion.div
                 key={cs.slug}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-start cursor-pointer"
-                onClick={() => setLocation(`/case-study/${cs.slug}`)}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                {/* Visual Accent */}
-                <div className="hidden lg:block lg:col-span-1 pt-2">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-center transition-colors group-hover:border-red-500/20 group-hover:bg-red-500/[0.02]">
-                    <span className="text-[12px] font-bold text-gray-700 group-hover:text-red-500/50">0{index + 1}</span>
-                  </div>
-                </div>
-
-                {/* Content Story */}
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-red-500/80">
-                      {cs.category.split('|')[0]}
-                    </span>
-                    <span className="text-gray-700 text-[10px]">•</span>
-                    <span className="text-[11px] text-gray-600 font-medium">{new Date(cs.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
-                  </div>
-
-                  <h3 className="text-2xl lg:text-3xl font-bold text-white group-hover:text-red-50 transition-colors leading-tight">
-                    {cs.title}
-                  </h3>
-
-                  <p className="text-[14px] text-gray-500 leading-relaxed max-w-2xl">
-                    {cs.summary}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {(Array.isArray(cs.tools) ? cs.tools : (cs.tools?.split(',') || [])).slice(0, 4).map((tool, j, arr) => (
-                      <span key={j} className="text-[10px] text-gray-700 font-medium uppercase tracking-wider">
-                        {tool.trim()}{j < arr.length - 1 ? ' • ' : ''}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Outcome Highlight */}
-                <div className="lg:col-span-4 lg:pl-8">
-                  <div className="relative p-6 lg:p-8 rounded-2xl bg-white/[0.01] border border-white/[0.04] overflow-hidden group-hover:bg-red-500/[0.01] group-hover:border-red-500/10 transition-all duration-500">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                      <Zap className="w-10 h-10 text-red-500" />
-                    </div>
-
-                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-red-500/60 mb-4 flex items-center gap-2">
-                      <Target className="w-3.5 h-3.5" />
-                      Key Outcome
-                    </h4>
-
-                    <p className="text-[12px] text-gray-500 leading-relaxed line-clamp-4 italic">
-                      "{(cs.results || '').split('.')[0]}."
-                    </p>
-
-                    <div className="mt-6 flex items-center gap-2 text-[12px] font-bold text-red-500 group-hover:gap-4 transition-all">
-                      Read full study
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Divider Line */}
-                <div className="absolute -bottom-8 lg:-bottom-12 left-0 right-0 h-px bg-white/5 group-last:hidden" />
-              </motion.article>
+                <CaseStudyCard caseStudy={cs} />
+              </motion.div>
             ))}
           </div>
         </div>

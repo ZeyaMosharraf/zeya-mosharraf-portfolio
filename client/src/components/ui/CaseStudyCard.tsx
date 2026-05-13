@@ -22,15 +22,15 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -2 }}
       onClick={() => setLocation(`/case-study/${caseStudy.slug}`)}
-      className="group relative flex flex-col h-full cursor-pointer rounded-2xl overflow-hidden transition-all duration-500 border border-white/5 bg-white/[0.015] hover:border-white/10"
+      className="group relative flex flex-col h-full cursor-pointer rounded-2xl overflow-hidden transition-all duration-500 border border-white/[0.04] bg-white/[0.015] hover:border-white/[0.08]"
     >
       <div className="p-6 lg:p-8 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: catColor, boxShadow: `0 0 8px ${catColor}` }} />
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: catColor }} />
             <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: catColor }}>
               {caseStudy.category.split('|')[0].trim()}
             </span>
@@ -53,7 +53,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
         {/* Outcome Snippet */}
         <div 
           className="mt-auto p-4 rounded-xl relative overflow-hidden"
-          style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.06)" }}
+          style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.04)" }}
         >
           <div className="flex items-center gap-2 text-red-500/60 mb-2">
             <Target className="w-3 h-3" />
