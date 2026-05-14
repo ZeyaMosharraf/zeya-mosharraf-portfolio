@@ -171,7 +171,7 @@ const FeaturedCaseStudySection = () => {
             >
               {featuredStudies.map((cs: CaseStudy, i: number) => {
                 const isActive = activeIndex === i;
-                const tools = Array.isArray(cs.tools) ? cs.tools : (cs.tools?.split(',') || []);
+                const tools = cs.tools_array || [];
                 
                 return (
                   <div
@@ -200,7 +200,7 @@ const FeaturedCaseStudySection = () => {
                       </h4>
 
                       <div className="flex flex-wrap gap-2 mb-8">
-                        {tools.slice(0, 3).map((tool, j) => (
+                        {tools.slice(0, 3).map((tool: string, j: number) => (
                           <span key={j} className="text-[9px] font-bold uppercase tracking-widest text-gray-600">
                             {tool.trim()}
                           </span>
