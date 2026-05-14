@@ -52,11 +52,26 @@ export interface CaseStudy {
   results: string | null;
   metrics: CaseStudyMetric[] | null;
   featured: boolean;
+  created_at: string;
   github_url: string | null;
   embed_url: string | null;
-  tools: string[] | string | null;
   sort_order: number | string | null;
-  created_at: string;
+  cover_image: string | null;
+  thumbnail: string | null;
+  live_url: string | null;
+  tags: string[] | null;
+  tools_array: string[] | null;
+  company_context: string | null;
+  project_type: string | null;
+  architecture: any | null;
+  workflow: any | null;
+  gallery: any | null;
+  impact_metrics: any | null;
+  technical_learnings: any | null;
+  challenges: any | null;
+  tech_stack: any | null;
+  seo: any | null;
+  published: boolean | null;
 }
 
 export interface PortfolioInfo {

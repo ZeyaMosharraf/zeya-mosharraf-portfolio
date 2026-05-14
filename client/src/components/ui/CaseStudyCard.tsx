@@ -51,7 +51,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
         </p>
 
         {/* Outcome Snippet */}
-        <div 
+        <div
           className="mt-auto p-4 rounded-xl relative overflow-hidden"
           style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.04)" }}
         >
@@ -67,7 +67,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
         {/* Footer */}
         <div className="mt-6 flex items-center justify-between pt-6 border-t border-white/5">
           <div className="flex flex-wrap gap-2">
-            {(Array.isArray(caseStudy.tools) ? caseStudy.tools : (caseStudy.tools?.split(',') || [])).slice(0, 2).map((tool, idx) => (
+            {(Array.isArray(caseStudy.tools_array) ? caseStudy.tools_array : []).slice(0, 2).map((tool: string, idx: number) => (
               <span key={idx} className="text-[9px] font-bold uppercase tracking-widest text-gray-600">
                 {tool.trim()}
               </span>
