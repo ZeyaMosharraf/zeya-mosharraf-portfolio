@@ -2,12 +2,12 @@ import { useRoute } from "wouter";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SEO } from "@/components/SEO";
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  Database, 
-  Cpu, 
-  Layout, 
+import {
+  ArrowRight,
+  CheckCircle2,
+  Database,
+  Cpu,
+  Layout,
   ArrowRightCircle,
   ExternalLink,
   Calendar,
@@ -23,6 +23,15 @@ import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabase";
 import { CaseStudy } from "@/types/supabase";
+
+const SPACING = {
+  hero: "pt-32 pb-24",
+  section: "py-20 md:py-24",
+  sectionTight: "py-12 md:py-16",
+  stack: "space-y-20 md:space-y-24",
+  content: "max-w-4xl mx-auto",
+  container: "max-w-[1200px] mx-auto px-6 sm:px-10"
+};
 
 const CaseStudyDetails = () => {
   const [, params] = useRoute("/case-study/:slug");
@@ -74,7 +83,7 @@ const CaseStudyDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 selection:bg-red-500/30 pb-32">
+    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 selection:bg-red-500/30">
       <SEO title={`${data.title} | Case Study`} description={data.summary ?? ""} />
 
       {/* ── AMBIENT DEPTH ── */}
@@ -83,25 +92,24 @@ const CaseStudyDetails = () => {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-red-500/[0.02] blur-[150px]" />
       </div>
 
-      <div className="max-w-[1100px] mx-auto px-6 sm:px-10 py-20 relative z-10">
-        <div className="mb-16">
+      <div className={`${SPACING.container} pt-32 relative z-10`}>
+        <div className="mb-12">
           <AnimatedBackButton label="Engineering Archive" onClick={() => window.history.back()} />
         </div>
 
         {/* ── HERO ── */}
-        <header className="pt-32 pb-24 border-b border-white/5">
+        <header className="pb-24 border-b border-white/5">
           <div className="flex items-center gap-4 mb-10">
             <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
               {data.category}
             </span>
-            <span className="text-[10px] text-gray-600 font-bold uppercase tracking-widest opacity-50">Project ID: {data.id.slice(0, 5)}</span>
           </div>
 
-          <h1 className="text-[40px] md:text-[56px] font-bold text-white mb-8 tracking-tighter leading-tight">
+          <h1 className="text-[40px] md:text-[64px] font-bold text-white mb-8 tracking-tighter leading-[1.05]">
             {data.title}
           </h1>
 
-          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-3xl mb-16 opacity-80">
+          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-4xl mb-16 opacity-80">
             {data.summary}
           </p>
 
@@ -121,18 +129,18 @@ const CaseStudyDetails = () => {
         </header>
 
         {/* ── CONTENT FLOW ── */}
-        <div className="py-24 space-y-32">
+        <div className={`${SPACING.section} ${SPACING.stack}`}>
           
           {/* Executive Summary */}
           {data.problem && (
-            <section className="max-w-3xl mx-auto">
+            <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Executive Summary</h2>
-              <div className="space-y-6">
-                <p className="text-gray-400 text-[16px] leading-[1.8] font-medium opacity-80">
+              <div className="space-y-8">
+                <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80">
                   {data.problem}
                 </p>
                 {data.solution && (
-                  <p className="text-gray-400 text-[16px] leading-[1.8] font-medium opacity-80">
+                  <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80">
                     {data.solution}
                   </p>
                 )}
@@ -142,7 +150,7 @@ const CaseStudyDetails = () => {
 
           {/* Business Comparison */}
           {data.workflow && (
-            <section className="grid md:grid-cols-2 gap-8">
+            <section className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
               <div className="p-10 rounded-3xl bg-white/[0.01] border border-white/5">
                 <span className="block text-[10px] text-gray-600 font-black uppercase tracking-[0.2em] mb-8">THE LEGACY STATE</span>
                 <div className="space-y-8">
@@ -170,7 +178,7 @@ const CaseStudyDetails = () => {
 
           {/* Architecture Diagram */}
           {data.architecture && (
-            <section className="text-center py-10">
+            <section className={`text-center ${SPACING.sectionTight}`}>
               <h2 className="text-2xl font-bold text-white mb-16 tracking-tight">Solution Architecture</h2>
               <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                 {[
@@ -198,16 +206,16 @@ const CaseStudyDetails = () => {
 
           {/* Challenges / Decisions */}
           {data.challenges && (
-            <section className="max-w-3xl mx-auto">
+            <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-12 tracking-tight">Engineering Decisions</h2>
               <div className="space-y-12">
                 {data.challenges.map((d: any, i: number) => (
                   <div key={i} className="pl-8 border-l border-red-500/30 relative">
                      <div className="absolute top-0 left-[-1px] w-[1px] h-full bg-red-500" />
-                     <h4 className="text-white text-[18px] font-bold mb-4">{d.title}</h4>
-                     <div className="space-y-3">
-                       <p className="text-gray-500 text-[14px] leading-relaxed"><span className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mr-2">Problem:</span> {d.problem}</p>
-                       <p className="text-gray-400 text-[14px] leading-relaxed"><span className="text-red-500/60 font-bold uppercase text-[10px] tracking-widest mr-2">Solution:</span> {d.solution}</p>
+                     <h4 className="text-white text-[19px] font-bold mb-4">{d.title}</h4>
+                     <div className="space-y-4">
+                       <p className="text-gray-500 text-[15px] leading-relaxed"><span className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mr-2">Problem:</span> {d.problem}</p>
+                       <p className="text-gray-400 text-[15px] leading-relaxed"><span className="text-red-500/60 font-bold uppercase text-[10px] tracking-widest mr-2">Solution:</span> {d.solution}</p>
                      </div>
                   </div>
                 ))}
@@ -217,32 +225,33 @@ const CaseStudyDetails = () => {
 
           {/* ── DASHBOARD EMBED — centerpiece ── */}
           {(data.live_url || data.cover_image) && (
-            <section className="text-center">
-              <div className="flex items-center gap-3 mb-8">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600">
-                  Interactive Operational Intelligence
-                </span>
-                <div className="flex-1 h-px bg-white/[0.03]" />
+            <section className="py-12">
+              <div className="max-w-5xl mx-auto px-4 mb-10">
+                <div className="flex items-center gap-4 mb-2">
+                   <div className="h-px flex-1 bg-white/[0.05]" />
+                   <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 whitespace-nowrap">Interactive Operational Intelligence</span>
+                   <div className="h-px flex-1 bg-white/[0.05]" />
+                </div>
               </div>
 
-              <div className="relative group max-w-5xl mx-auto">
+              <div className="relative group max-w-[1100px] mx-auto">
                 <div 
-                  className="overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-[#080808]"
-                  style={{ boxShadow: "0 32px 64px rgba(0,0,0,0.6)" }}
+                  className="overflow-hidden rounded-2xl border border-white/10 bg-[#080808]"
+                  style={{ boxShadow: "0 48px 96px rgba(0,0,0,0.8)" }}
                 >
                   {/* Title bar chrome */}
-                  <div className="flex items-center gap-2 px-4 py-2.5 bg-[#111] border-b border-white/[0.05]">
-                    <div className="flex gap-1.5">
+                  <div className="flex items-center gap-2 px-5 py-3 bg-[#111] border-b border-white/[0.05]">
+                    <div className="flex gap-2">
                       <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
                       <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
                       <div className="w-2.5 h-2.5 rounded-full bg-[#28CA40]" />
                     </div>
-                    <span className="text-[10px] ml-2 text-gray-700 font-mono">
-                      {data.title} — Live System
+                    <span className="text-[11px] ml-4 text-gray-700 font-mono tracking-widest uppercase opacity-40">
+                      {data.title} — System Output
                     </span>
                   </div>
 
-                  <div className="aspect-video w-full">
+                  <div className="aspect-video w-full bg-black">
                     {data.live_url ? (
                     <iframe
                       title="Ops Performance"
@@ -261,9 +270,9 @@ const CaseStudyDetails = () => {
                 </div>
                 
                 {data.github_url && (
-                  <div className="mt-10 flex justify-center">
-                    <a href={data.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full text-gray-400 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">
-                      View Source Code <ExternalLink className="w-3 h-3" />
+                  <div className="mt-12 flex justify-center">
+                    <a href={data.github_url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 px-10 py-5 bg-white/[0.03] border border-white/10 rounded-full text-gray-400 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all hover:text-white">
+                      Inspect Repository <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                     </a>
                   </div>
                 )}
@@ -273,24 +282,26 @@ const CaseStudyDetails = () => {
 
           {/* Impact Metrics */}
           {data.impact_metrics?.stats && (
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {data.impact_metrics.stats.map((m: any, i: number) => (
-                <div key={i} className="p-8 rounded-3xl bg-white/[0.01] border border-white/[0.03] text-center">
-                  <span className="block text-2xl md:text-3xl font-bold text-white mb-2">{m.v}</span>
-                  <span className="text-[9px] text-gray-600 font-black uppercase tracking-[0.2em]">{m.l}</span>
-                </div>
-              ))}
+            <section className="max-w-5xl mx-auto">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                {data.impact_metrics.stats.map((m: any, i: number) => (
+                  <div key={i} className="p-8 rounded-3xl bg-white/[0.01] border border-white/[0.03] text-center group hover:bg-red-500/[0.02] hover:border-red-500/10 transition-all">
+                    <span className="block text-3xl md:text-4xl font-bold text-white mb-3 tracking-tighter group-hover:text-red-500 transition-colors">{m.v}</span>
+                    <span className="text-[10px] text-gray-600 font-black uppercase tracking-[0.2em]">{m.l}</span>
+                  </div>
+                ))}
+              </div>
             </section>
           )}
 
           {/* Technical Learnings */}
           {data.technical_learnings && (
-            <section className="max-w-3xl mx-auto">
+            <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Technical Learnings</h2>
               <div className="grid gap-4">
                 {data.technical_learnings.map((l: string, i: number) => (
-                  <div key={i} className="flex gap-4 p-5 rounded-2xl bg-white/[0.01] border border-white/5 text-gray-400 text-[14px] font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                  <div key={i} className="flex gap-4 p-6 rounded-2xl bg-white/[0.01] border border-white/5 text-gray-400 text-[15px] font-medium hover:bg-white/[0.02] transition-colors">
+                    <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0 mt-1" />
                     {l}
                   </div>
                 ))}
@@ -300,21 +311,21 @@ const CaseStudyDetails = () => {
 
           {/* Results / Reflection */}
           {data.results && (
-            <section className="max-w-3xl mx-auto">
+            <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Engineering Reflection</h2>
-              <p className="text-gray-400 text-[16px] leading-[1.8] font-medium opacity-80">
+              <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80">
                 {data.results}
               </p>
             </section>
           )}
 
           {/* Footer CTA */}
-          <footer className="pt-24 border-t border-white/5 flex flex-col items-center">
-            <span className="text-[10px] text-gray-800 font-black uppercase tracking-[0.4em] mb-10">Explore more engineering narratives.</span>
+          <footer className="pt-20 pb-16 border-t border-white/5 flex flex-col items-center">
+            <span className="text-[11px] text-gray-800 font-black uppercase tracking-[0.4em] mb-8">Explore more engineering narratives.</span>
             <Link href="/case-studies">
-              <span className="group flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full text-[12px] font-black uppercase tracking-widest hover:scale-105 transition-transform cursor-pointer">
+              <span className="group flex items-center gap-5 px-12 py-6 bg-white text-black rounded-full text-[13px] font-black uppercase tracking-widest hover:scale-105 transition-all cursor-pointer shadow-xl hover:shadow-white/5">
                 View All Case Studies
-                <ArrowRightCircle className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRightCircle className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
           </footer>
