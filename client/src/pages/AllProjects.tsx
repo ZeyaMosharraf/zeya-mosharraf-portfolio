@@ -38,123 +38,53 @@ const AllProjects = () => {
         keywords="Data Analytics Projects, SQL Projects, Python Projects, Power BI Dashboards, Machine Learning, Excel Analysis, Tableau Visualizations, Looker Studio Reports"
       />
 
-      <div className="min-h-screen bg-[#0d0d0d]">
+      <div className="min-h-screen bg-[#0a0a0a]">
         <PageHero
           variant="editorial"
-          center={false}
+          center={true}
           accentLabel="Technical Repository"
           title="All Projects"
           subtitle="Explore a complete portfolio of data analysis projects showcasing expertise across multiple technologies and domains."
         />
 
-        {/* ── Editorial Command Bar ── */}
-        <div
-          className="sticky top-[64px] z-30 px-4 sm:px-6 lg:px-8 py-2.5"
-          style={{
-            background: "rgba(10,10,10,0.8)",
-            backdropFilter: "blur(12px)",
-            borderBottom: "1px solid rgba(255,255,255,0.03)",
-          }}
-        >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
-            
-            {/* Left: Search + Categories */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-grow max-w-4xl">
-              {/* Integrated Search */}
-              <div className="relative group w-full sm:w-60">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200"
-                  style={{ width: "12px", height: "12px", color: "#374151" }}
-                />
-                <input
-                  type="text"
-                  placeholder="Filter projects..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full h-8 pl-8 pr-7 text-[11px] text-gray-300 placeholder-gray-700 bg-white/[0.02] border border-white/[0.04] rounded-lg outline-none transition-all duration-300 focus:border-red-500/20 focus:bg-white/[0.04]"
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm("")}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-500 transition-colors"
-                  >
-                    <X style={{ width: "10px", height: "10px" }} />
-                  </button>
-                )}
-              </div>
-
-              {/* Vertical Divider (Desktop) */}
-              <div className="hidden sm:block w-px h-4 bg-white/5 mx-1" />
-
-              {/* Category Nav */}
-              <div className="flex flex-wrap items-center gap-1">
-                {categories.map((cat: ProjectCategory) => {
-                  const isActive = activeCategory === cat.id;
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategory(cat.id)}
-                      className="h-7 px-2.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap"
-                      style={{
-                        background: isActive ? "rgba(220,38,38,0.08)" : "transparent",
-                        color: isActive ? "#DC2626" : "#4B5563",
-                      }}
-                    >
-                      {cat.name}
-                      <span className={`ml-1.5 opacity-30 text-[9px] ${isActive ? "text-red-500/60" : ""}`}>{cat.count}</span>
-                    </button>
-                  );
-                })}
-              </div>
+        {/* ── Search / Filters ── */}
+        <div className="container mx-auto px-4 mb-12">
+          <div className="max-w-xl mx-auto relative group">
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-700 group-focus-within:text-red-500 transition-colors">
+              <Search className="w-4 h-4" />
             </div>
-
-            {/* Right: View Toggle */}
-            <div className="flex items-center gap-1 justify-end">
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-700 mr-2 hidden sm:block">View Mode</span>
-              <div
-                className="flex items-center p-0.5 rounded-lg bg-white/[0.02] border border-white/[0.04]"
+            <input
+              type="text"
+              placeholder="Search tech, category, or project name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white/[0.01] border border-white/5 rounded-2xl py-4 pl-14 pr-12 text-[12px] text-white placeholder-gray-700 focus:outline-none focus:border-red-500/30 focus:bg-white/[0.02] transition-all"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-500 transition-colors"
               >
-                {[
-                  { mode: "grid" as const, icon: <Grid3x3 style={{ width: "13px", height: "13px" }} /> },
-                  { mode: "list" as const, icon: <LayoutList style={{ width: "13px", height: "13px" }} /> },
-                ].map(({ mode, icon }) => (
-                  <button
-                    key={mode}
-                    onClick={() => setViewMode(mode)}
-                    className="w-7 h-7 rounded-md flex items-center justify-center transition-all duration-300"
-                    style={{
-                      background: viewMode === mode ? "rgba(220,38,38,0.1)" : "transparent",
-                      color: viewMode === mode ? "#DC2626" : "#374151",
-                    }}
-                  >
-                    {icon}
-                  </button>
-                ))}
-              </div>
-            </div>
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
-        </div>
 
-        {/* ── Main Content ── */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 relative z-10">
-
-          {/* Results count */}
+          {/* Results count (Subtle & Centered) */}
           <motion.p
             key={filteredProjects.length + searchTerm}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-[11px] mb-7 relative z-10"
-            style={{ color: "#374151" }}
+            className="text-center text-[10px] uppercase tracking-widest text-gray-800 mt-6"
           >
-            {filteredProjects.length === projects.length
-              ? `${projects.length} projects`
-              : `${filteredProjects.length} of ${projects.length}`}
-            {searchTerm && (
-              <span style={{ color: "#4B5563" }}>
-                {" "}matching <span style={{ color: "#6B7280" }}>"{searchTerm}"</span>
-              </span>
-            )}
+            {filteredProjects.length === (projects?.length || 0)
+              ? `Cataloging ${projects?.length || 0} engineering entries`
+              : `Found ${filteredProjects.length} of ${projects?.length || 0} matching entries`}
           </motion.p>
+        </div>
+
+        {/* ── Main Content ── */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10">
 
           {/* Grid / List */}
           <div className="relative z-10">

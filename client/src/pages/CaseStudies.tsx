@@ -22,7 +22,7 @@ const CaseStudies = () => {
   }, [caseStudies, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] pt-32 pb-20">
+    <div className="min-h-screen bg-[#0a0a0a] pt-32 pb-20">
       <SEO 
         title="Case Studies | Engineering & Analytics Editorial"
         description="Deep dives into complex engineering challenges, technical architecture, and measurable business outcomes."
@@ -30,27 +30,30 @@ const CaseStudies = () => {
 
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
-        <div className="mb-16">
-          <SectionHeader
-            icon={Sparkles}
-            badge="Engineering Archive"
-            title="Strategic"
-            highlight="Case Studies"
-            subtitle="Deep dives into technical architecture, operational intelligence, and high-impact engineering solutions."
-          />
+        <div className="mb-10 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/5 border border-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-widest mb-8">
+            <Sparkles className="w-3 h-3" />
+            Engineering Archive
+          </div>
+          <h1 className="text-[40px] md:text-[56px] font-bold text-white mb-6 tracking-tighter">
+            Strategic Case Studies
+          </h1>
+          <p className="text-gray-500 text-[14px] md:text-[16px] max-w-2xl mx-auto leading-relaxed opacity-70">
+            Deep dives into technical architecture, operational intelligence, and high-impact engineering solutions.
+          </p>
         </div>
 
         {/* Search / Filters */}
-        <div className="mb-16 relative group max-w-2xl mx-auto">
-          <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-600 group-focus-within:text-red-500 transition-colors">
+        <div className="mb-12 relative group max-w-xl mx-auto">
+          <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-700 group-focus-within:text-red-500 transition-colors">
             <Search className="w-4 h-4" />
           </div>
           <input
             type="text"
-            placeholder="Search by tech, category, or challenge..."
+            placeholder="Search tech, category, or challenge..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/[0.02] border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-[13px] text-white placeholder-gray-600 focus:outline-none focus:border-red-500/50 focus:bg-white/[0.04] transition-all"
+            className="w-full bg-white/[0.01] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[12px] text-white placeholder-gray-700 focus:outline-none focus:border-red-500/30 focus:bg-white/[0.02] transition-all"
           />
         </div>
 

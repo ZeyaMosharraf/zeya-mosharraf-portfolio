@@ -326,7 +326,7 @@ const PageHero = ({
     <div
       className="relative overflow-hidden"
       style={{ 
-        background: "#0d0d0d", 
+        background: "#0a0a0a", 
         minHeight: isEditorial ? "auto" : "clamp(150px, 18vh, 220px)" 
       }}
     >
@@ -396,7 +396,7 @@ const PageHero = ({
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-6 flex items-center gap-2"
+              className={`mb-6 flex items-center gap-2 ${center ? "justify-center" : "justify-start"}`}
             >
               {isEditorial && (
                 <div className="w-1 h-1 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.3)]" />

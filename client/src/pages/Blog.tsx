@@ -38,7 +38,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
   const renderDetailView = () => {
     if (!selectedPost) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
+        <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4 text-white">Entry Not Found</h2>
             <button
@@ -53,7 +53,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
     }
 
     return (
-      <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
+      <div className="min-h-screen bg-[#0a0a0a] selection:bg-red-500/30">
         <SEO 
           title={`${selectedPost.title} | Engineering Journal`}
           description={selectedPost.short_description ?? undefined}
@@ -77,41 +77,40 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
           }}
         />
 
-        {/* ── LEFT-ALIGNED EDITORIAL HERO ── */}
-        <section className="relative pt-20 pb-12 lg:pt-28 lg:pb-16 border-b border-white/[0.03]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="flex flex-col items-start max-w-3xl">
-              <AnimatedBackButton onClick={() => setLocation("/blog")} label="Back to Journal" />
-              
-              {/* Contextual Label */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.15, duration: 0.4 }}
-                className="mt-8 mb-5 flex items-center gap-2"
-              >
-                <div className="w-1 h-1 rounded-full bg-red-500" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/70">
-                  Engineering Journal Entry
-                </span>
-              </motion.div>
+        {/* ── CENTERED EDITORIAL HERO ── */}
+        <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-16 border-b border-white/[0.03]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center">
+            <AnimatedBackButton onClick={() => setLocation("/blog")} label="Back to Journal" />
+            
+            {/* Contextual Label */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.15, duration: 0.4 }}
+              className="mt-10 mb-6 flex items-center justify-center gap-2"
+            >
+              <div className="w-1 h-1 rounded-full bg-red-500" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/70">
+                Engineering Journal Entry
+              </span>
+            </motion.div>
 
-              {/* Title — restrained 24/32/38/42px */}
-              <motion.h1 
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[24px] sm:text-[32px] md:text-[38px] lg:text-[42px] font-bold text-white tracking-tight leading-[1.2] mb-6 max-w-[700px]"
-              >
-                {selectedPost.title}
-              </motion.h1>
+            {/* Title — centered */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[28px] sm:text-[36px] md:text-[44px] lg:text-[48px] font-bold text-white tracking-tight leading-[1.15] mb-8 max-w-4xl"
+            >
+              {selectedPost.title}
+            </motion.h1>
 
-              {/* Metadata Row */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.25, duration: 0.4 }}
-                className="flex flex-wrap items-center gap-5 text-[11px] text-gray-600 font-medium"
+            {/* Metadata Row — Centered */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25, duration: 0.4 }}
+              className="flex flex-wrap items-center justify-center gap-5 text-[11px] text-gray-600 font-medium"
               >
                 <div className="flex items-center gap-2">
                   <User className="w-3.5 h-3.5 opacity-40" />
@@ -134,7 +133,6 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
                 </div>
               </motion.div>
             </div>
-          </div>
         </section>
 
         {/* ── MAIN CONTENT ── */}
@@ -214,7 +212,7 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
 
   const renderListView = () => {
     return (
-      <div className="min-h-screen bg-[#0d0d0d] selection:bg-red-500/30">
+      <div className="min-h-screen bg-[#0a0a0a] selection:bg-red-500/30">
         <SEO 
           title="Engineering Journal | Technical Insights"
           description="A collection of technical articles, engineering insights, and data analysis tutorials by Zeya Mosharraf."
@@ -231,41 +229,53 @@ const Blog = ({ viewMode = "list", params: routeParams }: BlogProps) => {
         />
 
         {/* ── JOURNAL HERO ── */}
-        <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="max-w-3xl">
-              <motion.div 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="mb-6 flex items-center gap-2"
-              >
-                <div className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/80">
-                  Technical Repository
-                </span>
-              </motion.div>
-              
-              <motion.h1 
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-8"
-              >
-                Engineering Journal
-              </motion.h1>
-              
-              <motion.p 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="text-[16px] md:text-[18px] text-gray-500 leading-relaxed"
-              >
-                Documenting technical discoveries, engineering patterns, and data-driven insights.
-              </motion.p>
-            </div>
+        <section className="relative pt-32 pb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8 flex items-center justify-center gap-2"
+            >
+              <div className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-red-500/80">
+                Technical Repository
+              </span>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-8"
+            >
+              Engineering Journal
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-[16px] md:text-[18px] text-gray-500 leading-relaxed max-w-2xl mx-auto opacity-70"
+            >
+              Documenting technical discoveries, engineering patterns, and data-driven insights.
+            </motion.p>
           </div>
         </section>
+
+        {/* ── Search / Filters ── */}
+        <div className="container mx-auto px-4 mb-16">
+          <div className="max-w-xl mx-auto relative group">
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-700 group-focus-within:text-red-500 transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search topics, patterns, or insights..."
+              className="w-full bg-white/[0.01] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[12px] text-white placeholder-gray-700 focus:outline-none focus:border-red-500/30 focus:bg-white/[0.02] transition-all"
+            />
+          </div>
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
