@@ -50,7 +50,6 @@ export interface CaseStudy {
   problem: string | null;
   solution: string | null;
   results: string | null;
-  metrics: CaseStudyMetric[] | null;
   featured: boolean;
   created_at: string;
   github_url: string | null;
@@ -59,19 +58,14 @@ export interface CaseStudy {
   cover_image: string | null;
   thumbnail: string | null;
   live_url: string | null;
-  tags: string[] | null;
   tools_array: string[] | null;
-  company_context: string | null;
   project_type: string | null;
   architecture: any | null;
   workflow: any | null;
   gallery: any | null;
-  impact_metrics: any | null;
   technical_learnings: any | null;
   challenges: any | null;
-  tech_stack: any | null;
   seo_config: any | null;
-  seo: any | null;
   published: boolean | null;
 }
 

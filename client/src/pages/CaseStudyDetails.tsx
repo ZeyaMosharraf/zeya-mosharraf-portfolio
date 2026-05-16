@@ -140,7 +140,7 @@ const CaseStudyDetails = () => {
             {renderFormattedText(data.summary)}
           </p>
 
-          <div className="pt-16 border-t border-white/5">
+          <div className="pt-16 border-t border-white/5 space-y-12">
             <div className="space-y-8">
               <div className="flex items-center gap-3">
                 <div className="w-1 h-4 bg-red-500 rounded-full" />
@@ -174,6 +174,44 @@ const CaseStudyDetails = () => {
                 })}
               </div>
             </div>
+
+            {/* Technical Access Links */}
+            {(data.github_url || data.live_url) && (
+              <div className="flex flex-wrap gap-6 items-center">
+                {data.github_url && (
+                  <a 
+                    href={data.github_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-white/60 hover:text-white transition-all group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-white/30 group-hover:bg-white/[0.05] transition-all">
+                      <Cpu className="w-4 h-4" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-gray-500 font-black uppercase tracking-[0.2em]">Source Code</span>
+                      <span className="text-[11px] font-bold uppercase tracking-widest">GitHub Repository</span>
+                    </div>
+                  </a>
+                )}
+                {data.live_url && (
+                  <a 
+                    href={data.live_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-white/60 hover:text-white transition-all group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center group-hover:border-red-500/40 group-hover:bg-red-500/20 transition-all">
+                      <ExternalLink className="w-4 h-4 text-red-500" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-red-500/60 font-black uppercase tracking-[0.2em]">Live View</span>
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-white">Interactive Case</span>
+                    </div>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </header>
 
@@ -271,6 +309,58 @@ const CaseStudyDetails = () => {
               </section>
             )}
 
+          {/* Production Showcase / Gallery - Only shown if no live dashboard exists */}
+          {!data.embed_url && data.gallery && data.gallery.length > 0 && (
+            <section className={SPACING.section}>
+              <div className="flex items-center justify-between mb-12">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-bold text-white tracking-tight">Production Showcase</h2>
+                  <p className="text-gray-500 text-sm tracking-widest uppercase font-black">Visual Evidence & Interface Walkthrough</p>
+                </div>
+                <div className="hidden md:flex gap-2">
+                  <div className="w-8 h-1 bg-red-500/20 rounded-full" />
+                  <div className="w-12 h-1 bg-red-500 rounded-full" />
+                </div>
+              </div>
+
+              <div className="flex gap-6 overflow-x-auto pb-8 no-scrollbar snap-x snap-mandatory">
+                {data.gallery.map((item: any, i: number) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="min-w-[85vw] md:min-w-[700px] aspect-video rounded-3xl overflow-hidden bg-white/[0.02] border border-white/5 snap-center relative group"
+                  >
+                    {item.type === 'video' ? (
+                      <video 
+                        src={item.url} 
+                        autoPlay 
+                        loop 
+                        muted 
+                        playsInline 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img 
+                        src={item.url} 
+                        alt={item.caption || "Showcase image"} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    )}
+                    
+                    {item.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent backdrop-blur-[2px]">
+                        <p className="text-white text-sm font-bold tracking-wide uppercase">{item.caption}</p>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Architecture Diagram */}
           {data.architecture && data.architecture.nodes && data.architecture.nodes.length > 0 && (
             <section className={`text-center ${SPACING.sectionTight}`}>
@@ -366,20 +456,6 @@ const CaseStudyDetails = () => {
                     </a>
                   </div>
                 )}
-              </div>
-            </section>
-          )}
-
-          {/* Impact Metrics */}
-          {data.impact_metrics?.stats && data.impact_metrics.stats.length > 0 && (
-            <section className="max-w-5xl mx-auto">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-                {data.impact_metrics.stats.map((m: any, i: number) => (
-                  <div key={i} className="p-8 rounded-3xl bg-white/[0.01] border border-white/[0.03] text-center group hover:bg-red-500/[0.02] hover:border-red-500/10 transition-all">
-                    <span className="block text-3xl md:text-4xl font-bold text-white mb-3 tracking-tighter group-hover:text-red-500 transition-colors">{m.v}</span>
-                    <span className="text-[10px] text-gray-600 font-black uppercase tracking-[0.2em]">{m.l}</span>
-                  </div>
-                ))}
               </div>
             </section>
           )}
