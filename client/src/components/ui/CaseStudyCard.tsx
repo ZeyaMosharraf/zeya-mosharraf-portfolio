@@ -60,7 +60,7 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
             <span className="text-[9px] font-bold uppercase tracking-widest">Impact</span>
           </div>
           <p className="text-[11px] text-gray-500 leading-relaxed italic line-clamp-2">
-            "{(caseStudy.results || '').split('.')[0]}."
+            {caseStudy.impact ? caseStudy.impact.replace(/"/g, '') : (caseStudy.results || '').split('.')[0] + '.'}
           </p>
         </div>
 

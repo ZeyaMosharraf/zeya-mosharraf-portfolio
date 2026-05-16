@@ -137,18 +137,20 @@ const FeaturedCaseStudySection = () => {
                 </p>
 
                 {/* Impact Highlight */}
-                <div 
-                  className="p-6 rounded-2xl mb-8 relative overflow-hidden"
-                  style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.06)" }}
-                >
-                  <div className="flex items-center gap-2 text-red-500/80 mb-3">
-                    <Target className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">Key Outcome</span>
+                {(active.impact || active.results) && (
+                  <div 
+                    className="p-6 rounded-2xl mb-8 relative overflow-hidden"
+                    style={{ background: "rgba(220,38,38,0.02)", border: "1px solid rgba(220,38,38,0.06)" }}
+                  >
+                    <div className="flex items-center gap-2 text-red-500/80 mb-3">
+                      <Target className="w-3.5 h-3.5" />
+                      <span className="text-[10px] text-red-500 font-black uppercase tracking-[0.3em]">Impact</span>
+                    </div>
+                    <p className="text-[13px] text-gray-400 leading-relaxed italic">
+                      {active.impact ? active.impact.replace(/"/g, '') : firstSentence(active.results)}
+                    </p>
                   </div>
-                  <p className="text-[13px] text-gray-400 leading-relaxed italic">
-                    "{firstSentence(active.results)}"
-                  </p>
-                </div>
+                )}
 
                 <button
                   onClick={() => setLocation(`/case-study/${active.slug}`)}
