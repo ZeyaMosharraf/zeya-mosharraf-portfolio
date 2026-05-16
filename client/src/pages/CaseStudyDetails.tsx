@@ -1,5 +1,5 @@
 import { useRoute } from "wouter";
-import { useEffect, useState } from "react";
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { SEO } from "@/components/SEO";
 import {
@@ -17,12 +17,14 @@ import {
   Target,
   BarChart3,
   Zap,
-  Clock
+  Clock,
+  Globe
 } from "lucide-react";
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabase";
 import { CaseStudy } from "@/types/supabase";
+import ArchitectureRenderer from "@/components/sections/ArchitectureRenderer";
 
 const SPACING = {
   hero: "pt-32 pb-24",
@@ -175,12 +177,16 @@ const CaseStudyDetails = () => {
 
           {/* Business Comparison */}
           {data.workflow && (
-            <section className={`grid ${
-              (data.workflow.legacy || data.workflow.before)?.length && (data.workflow.system || data.workflow.after)?.length 
-              ? 'md:grid-cols-2' 
-              : 'grid-cols-1'
-            } gap-8 max-w-6xl mx-auto`}>
-              
+            (data.workflow.legacy && data.workflow.legacy.length > 0) || 
+            (data.workflow.system && data.workflow.system.length > 0) ||
+            (data.workflow.before && data.workflow.before.length > 0) ||
+            (data.workflow.after && data.workflow.after.length > 0)
+          ) && (
+            <section className={`grid ${(data.workflow.legacy || data.workflow.before)?.length && (data.workflow.system || data.workflow.after)?.length
+                ? 'md:grid-cols-2'
+                : 'grid-cols-1'
+              } gap-8 max-w-6xl mx-auto`}>
+
               {/* Legacy / Before Section */}
               {(data.workflow.legacy || data.workflow.before)?.filter(Boolean).length > 0 && (
                 <div className="p-10 rounded-3xl bg-white/[0.01] border border-white/5">
@@ -238,35 +244,15 @@ const CaseStudyDetails = () => {
           )}
 
           {/* Architecture Diagram */}
-          {data.architecture && (
+          {data.architecture && data.architecture.nodes && data.architecture.nodes.length > 0 && (
             <section className={`text-center ${SPACING.sectionTight}`}>
-              <h2 className="text-2xl font-bold text-white mb-16 tracking-tight">Solution Architecture</h2>
-              <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-                {[
-                  { icon: Database, label: "Ingestion" },
-                  { icon: Cpu, label: "Middleware", active: true },
-                  { icon: Layout, label: "Interface" }
-                ].map((node, i) => (
-                  <div key={i} className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${node.active ? "bg-red-500/20 text-red-500 border border-red-500/30" : "bg-white/[0.03] text-gray-600 border border-white/5"}`}>
-                        <node.icon className="w-7 h-7" />
-                      </div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">{node.label}</span>
-                    </div>
-                    {i < 2 && (
-                      <div className="hidden md:block">
-                        <ArrowRight className="w-5 h-5 text-gray-800" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-16 tracking-tighter">Solution Architecture</h2>
+              <ArchitectureRenderer architecture={data.architecture} />
             </section>
           )}
 
           {/* Challenges / Decisions */}
-          {data.challenges && (
+          {data.challenges && data.challenges.length > 0 && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-12 tracking-tight">Engineering Decisions</h2>
               <div className="space-y-12">
@@ -322,6 +308,7 @@ const CaseStudyDetails = () => {
                         frameBorder="0"
                         allowFullScreen={true}
                         className="w-full h-full border-0"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; unload"
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                       />
                     ) : (
@@ -342,7 +329,7 @@ const CaseStudyDetails = () => {
           )}
 
           {/* Impact Metrics */}
-          {data.impact_metrics?.stats && (
+          {data.impact_metrics?.stats && data.impact_metrics.stats.length > 0 && (
             <section className="max-w-5xl mx-auto">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                 {data.impact_metrics.stats.map((m: any, i: number) => (
@@ -356,7 +343,7 @@ const CaseStudyDetails = () => {
           )}
 
           {/* Technical Learnings */}
-          {data.technical_learnings && (
+          {data.technical_learnings && data.technical_learnings.length > 0 && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Technical Learnings</h2>
               <div className="grid gap-4">

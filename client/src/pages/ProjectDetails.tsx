@@ -262,6 +262,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                     className="w-full h-full border-0"
                     src={embedUrl}
                     allowFullScreen
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; unload"
                     sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                   />
                 </div>
