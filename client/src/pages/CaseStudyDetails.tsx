@@ -82,6 +82,7 @@ const CaseStudyDetails = () => {
     );
   }
 
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-gray-100 selection:bg-red-500/30">
       <SEO title={`${data.title} | Case Study`} description={data.summary ?? ""} />
@@ -109,7 +110,7 @@ const CaseStudyDetails = () => {
             {data.title}
           </h1>
 
-          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-4xl mb-16 opacity-80">
+          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-4xl mb-16 opacity-80 whitespace-pre-line">
             {data.summary}
           </p>
 
@@ -134,16 +135,22 @@ const CaseStudyDetails = () => {
           {/* Executive Summary */}
           {data.problem && (
             <section className={SPACING.content}>
-              <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Executive Summary</h2>
+              <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Problem</h2>
               <div className="space-y-8">
-                <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80">
+                <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
                   {data.problem}
                 </p>
-                {data.solution && (
-                  <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80">
-                    {data.solution}
-                  </p>
-                )}
+              </div>
+            </section>
+          )}
+
+          {data.solution && (
+            <section className={SPACING.content}>
+              <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Solution</h2>
+              <div className="space-y-8">
+                <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
+                  {data.solution}
+                </p>
               </div>
             </section>
           )}
@@ -313,7 +320,7 @@ const CaseStudyDetails = () => {
           {data.results && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Engineering Reflection</h2>
-              <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80">
+              <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
                 {data.results}
               </p>
             </section>
