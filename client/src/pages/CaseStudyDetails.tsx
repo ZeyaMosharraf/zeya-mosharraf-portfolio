@@ -134,18 +134,40 @@ const CaseStudyDetails = () => {
             {renderFormattedText(data.summary)}
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-white/5">
-            {[
-              { l: "ROLE", v: data.project_type || "Senior Analytics Engineer" },
-              { l: "TIMELINE", v: data.sort_order ? "8 Weeks" : "Active" },
-              { l: "STACK", v: Array.isArray(data.tools_array) ? data.tools_array.join(" + ") : "Enterprise BI" },
-              { l: "IMPACT", v: data.impact_metrics?.headline || "Significant", c: "text-red-500" }
-            ].map((m, i) => (
-              <div key={i}>
-                <span className="block text-[10px] text-gray-600 font-black uppercase tracking-[0.2em] mb-3">{m.l}</span>
-                <span className={`text-[13px] font-bold uppercase tracking-widest ${m.c || "text-white"}`}>{m.v}</span>
+          <div className="pt-16 border-t border-white/5">
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-4 bg-red-500 rounded-full" />
+                <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.4em]">Engineered With</span>
               </div>
-            ))}
+              
+              <div className="flex flex-wrap gap-3">
+                {(data.tools_array || []).map((tool: string, idx: number) => {
+                  const ToolIcon = tool.toLowerCase().includes('sql') || tool.toLowerCase().includes('database') ? Database :
+                                  tool.toLowerCase().includes('power bi') || tool.toLowerCase().includes('report') ? BarChart3 :
+                                  tool.toLowerCase().includes('zap') || tool.toLowerCase().includes('automation') ? Zap :
+                                  tool.toLowerCase().includes('script') || tool.toLowerCase().includes('code') ? Cpu :
+                                  tool.toLowerCase().includes('architecture') || tool.toLowerCase().includes('layer') ? Layers : 
+                                  Activity;
+                  
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 + (idx * 0.1), duration: 0.5 }}
+                      whileHover={{ scale: 1.05, backgroundColor: "rgba(239, 68, 68, 0.05)", borderColor: "rgba(239, 68, 68, 0.2)" }}
+                      className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.02] border border-white/5 transition-all cursor-default"
+                    >
+                      <ToolIcon className="w-3.5 h-3.5 text-gray-600 group-hover:text-red-500 transition-colors" />
+                      <span className="text-[11px] text-gray-400 font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                        {tool}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </header>
 
