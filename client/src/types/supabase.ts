@@ -63,6 +63,7 @@ export interface CaseStudy {
   architecture: any | null;
   workflow: any | null;
   gallery: any | null;
+  impact: string | null;
   technical_learnings: any | null;
   challenges: any | null;
   seo_config: any | null;

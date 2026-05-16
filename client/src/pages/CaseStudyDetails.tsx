@@ -218,6 +218,28 @@ const CaseStudyDetails = () => {
         {/* ── CONTENT FLOW ── */}
         <div className={`${SPACING.section} ${SPACING.stack}`}>
 
+          {/* Engineering Reflection / Impact Statement */}
+          {data.impact && (
+            <section className={SPACING.content}>
+              <div className="p-12 rounded-[40px] bg-red-500/[0.02] border border-red-500/10 relative overflow-hidden group hover:bg-red-500/[0.04] transition-all duration-700">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/[0.03] blur-[100px] -mr-32 -mt-32" />
+                
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                      <Target className="w-5 h-5 text-red-500" />
+                    </div>
+                    <span className="text-[11px] text-red-500 font-black uppercase tracking-[0.3em]">Impact</span>
+                  </div>
+
+                  <p className="text-xl md:text-2xl text-gray-300 font-medium leading-relaxed italic opacity-90">
+                    "{renderFormattedText(data.impact)}"
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* Executive Summary */}
           {data.problem?.trim() && (
             <section className={SPACING.content}>
