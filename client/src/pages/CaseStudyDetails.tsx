@@ -105,7 +105,13 @@ const CaseStudyDetails = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-gray-100 selection:bg-red-500/30">
-      <SEO title={`${data.title} | Case Study`} description={data.summary ?? ""} />
+      <SEO 
+        title={data.seo_config?.title || `${data.title} | Case Study`}
+        description={data.seo_config?.description || data.summary || ""}
+        image={data.cover_image ?? undefined}
+        keywords={data.seo_config?.keywords || data.tools_array}
+        article={true}
+      />
 
       {/* ── AMBIENT DEPTH ── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">

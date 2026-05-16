@@ -70,6 +70,7 @@ export interface CaseStudy {
   technical_learnings: any | null;
   challenges: any | null;
   tech_stack: any | null;
+  seo_config: any | null;
   seo: any | null;
   published: boolean | null;
 }
