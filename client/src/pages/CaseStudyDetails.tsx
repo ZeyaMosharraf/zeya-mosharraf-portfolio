@@ -36,7 +36,7 @@ const SPACING = {
 const CaseStudyDetails = () => {
   const [, params] = useRoute("/case-study/:slug");
   const slug = params?.slug;
-  
+
   const [data, setData] = useState<CaseStudy | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -82,6 +82,24 @@ const CaseStudyDetails = () => {
     );
   }
 
+  const renderFormattedText = (text: string | undefined | null) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*|==.*?==)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} className="text-white font-bold">{part.slice(2, -2)}</strong>;
+      }
+      if (part.startsWith('==') && part.endsWith('==')) {
+        return (
+          <span key={i} className="text-red-500 font-bold bg-red-500/10 px-1.5 py-0.5 rounded-md border border-red-500/20 mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+            {part.slice(2, -2)}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-gray-100 selection:bg-red-500/30">
@@ -110,8 +128,8 @@ const CaseStudyDetails = () => {
             {data.title}
           </h1>
 
-          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-4xl mb-16 opacity-80 whitespace-pre-line">
-            {data.summary}
+          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-4xl mb-16 opacity-80 whitespace-pre-wrap">
+            {renderFormattedText(data.summary)}
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-white/5">
@@ -131,14 +149,14 @@ const CaseStudyDetails = () => {
 
         {/* ── CONTENT FLOW ── */}
         <div className={`${SPACING.section} ${SPACING.stack}`}>
-          
+
           {/* Executive Summary */}
           {data.problem && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Problem</h2>
               <div className="space-y-8">
                 <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
-                  {data.problem}
+                  {renderFormattedText(data.problem)}
                 </p>
               </div>
             </section>
@@ -149,7 +167,7 @@ const CaseStudyDetails = () => {
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Solution</h2>
               <div className="space-y-8">
                 <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
-                  {data.solution}
+                  {renderFormattedText(data.solution)}
                 </p>
               </div>
             </section>
@@ -218,12 +236,12 @@ const CaseStudyDetails = () => {
               <div className="space-y-12">
                 {data.challenges.map((d: any, i: number) => (
                   <div key={i} className="pl-8 border-l border-red-500/30 relative">
-                     <div className="absolute top-0 left-[-1px] w-[1px] h-full bg-red-500" />
-                     <h4 className="text-white text-[19px] font-bold mb-4">{d.title}</h4>
-                     <div className="space-y-4">
-                       <p className="text-gray-500 text-[15px] leading-relaxed"><span className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mr-2">Problem:</span> {d.problem}</p>
-                       <p className="text-gray-400 text-[15px] leading-relaxed"><span className="text-red-500/60 font-bold uppercase text-[10px] tracking-widest mr-2">Solution:</span> {d.solution}</p>
-                     </div>
+                    <div className="absolute top-0 left-[-1px] w-[1px] h-full bg-red-500" />
+                    <h4 className="text-white text-[19px] font-bold mb-4">{d.title}</h4>
+                    <div className="space-y-4">
+                      <p className="text-gray-500 text-[15px] leading-relaxed"><span className="text-gray-400 font-bold uppercase text-[10px] tracking-widest mr-2">Problem:</span> {d.problem}</p>
+                      <p className="text-gray-400 text-[15px] leading-relaxed"><span className="text-red-500/60 font-bold uppercase text-[10px] tracking-widest mr-2">Solution:</span> {d.solution}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -235,14 +253,14 @@ const CaseStudyDetails = () => {
             <section className="py-12">
               <div className="max-w-5xl mx-auto px-4 mb-10">
                 <div className="flex items-center gap-4 mb-2">
-                   <div className="h-px flex-1 bg-white/[0.05]" />
-                   <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 whitespace-nowrap">Interactive Operational Intelligence</span>
-                   <div className="h-px flex-1 bg-white/[0.05]" />
+                  <div className="h-px flex-1 bg-white/[0.05]" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600 whitespace-nowrap">Interactive Operational Intelligence</span>
+                  <div className="h-px flex-1 bg-white/[0.05]" />
                 </div>
               </div>
 
               <div className="relative group max-w-[1100px] mx-auto">
-                <div 
+                <div
                   className="overflow-hidden rounded-2xl border border-white/10 bg-[#080808]"
                   style={{ boxShadow: "0 48px 96px rgba(0,0,0,0.8)" }}
                 >
@@ -260,22 +278,22 @@ const CaseStudyDetails = () => {
 
                   <div className="aspect-video w-full bg-black">
                     {data.live_url ? (
-                    <iframe
-                      title="Ops Performance"
-                      width="100%"
-                      height="100%"
-                      src={data.live_url}
-                      frameBorder="0"
-                      allowFullScreen={true}
-                      className="w-full h-full border-0"
-                      sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                    />
+                      <iframe
+                        title="Ops Performance"
+                        width="100%"
+                        height="100%"
+                        src={data.live_url}
+                        frameBorder="0"
+                        allowFullScreen={true}
+                        className="w-full h-full border-0"
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                      />
                     ) : (
                       <img src={data.cover_image || ""} alt="System Preview" className="w-full object-cover" />
                     )}
                   </div>
                 </div>
-                
+
                 {data.github_url && (
                   <div className="mt-12 flex justify-center">
                     <a href={data.github_url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 px-10 py-5 bg-white/[0.03] border border-white/10 rounded-full text-gray-400 text-[11px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all hover:text-white">
@@ -321,7 +339,7 @@ const CaseStudyDetails = () => {
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Engineering Reflection</h2>
               <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
-                {data.results}
+                {renderFormattedText(data.results)}
               </p>
             </section>
           )}
