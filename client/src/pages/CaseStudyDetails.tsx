@@ -175,54 +175,65 @@ const CaseStudyDetails = () => {
 
           {/* Business Comparison */}
           {data.workflow && (
-            <section className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-              <div className="p-10 rounded-3xl bg-white/[0.01] border border-white/5">
-                <span className="block text-[10px] text-gray-600 font-black uppercase tracking-[0.2em] mb-8">THE LEGACY STATE</span>
-                <div className="space-y-5">
-                  {(data.workflow.legacy || data.workflow.before)?.map((item: any, i: number) => {
-                    const isString = typeof item === 'string';
-                    return (
-                      <div key={i} className="flex gap-4 items-center group">
-                        <div className="w-7 h-7 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/[0.05] transition-colors">
-                          <div className="w-1 h-1 rounded-full bg-gray-600" />
-                        </div>
-                        {isString ? (
-                          <p className="text-gray-500 text-sm leading-relaxed">{renderFormattedText(item)}</p>
-                        ) : (
-                          <div className="space-y-0.5">
-                            <h4 className="text-white text-sm font-bold tracking-tight">{item.title}</h4>
-                            <p className="text-gray-500 text-[13px] leading-relaxed">{renderFormattedText(item.description)}</p>
+            <section className={`grid ${
+              (data.workflow.legacy || data.workflow.before)?.length && (data.workflow.system || data.workflow.after)?.length 
+              ? 'md:grid-cols-2' 
+              : 'grid-cols-1'
+            } gap-8 max-w-6xl mx-auto`}>
+              
+              {/* Legacy / Before Section */}
+              {(data.workflow.legacy || data.workflow.before)?.filter(Boolean).length > 0 && (
+                <div className="p-10 rounded-3xl bg-white/[0.01] border border-white/5">
+                  <span className="block text-[10px] text-gray-600 font-black uppercase tracking-[0.2em] mb-8">THE LEGACY STATE</span>
+                  <div className="space-y-5">
+                    {(data.workflow.legacy || data.workflow.before).filter(Boolean).map((item: any, i: number) => {
+                      const isString = typeof item === 'string';
+                      return (
+                        <div key={i} className="flex gap-4 items-center group">
+                          <div className="w-7 h-7 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/[0.05] transition-colors">
+                            <div className="w-1 h-1 rounded-full bg-gray-600" />
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                          {isString ? (
+                            <p className="text-gray-500 text-sm leading-relaxed">{renderFormattedText(item)}</p>
+                          ) : (
+                            <div className="space-y-0.5">
+                              <h4 className="text-white text-sm font-bold tracking-tight">{item.title}</h4>
+                              <p className="text-gray-500 text-[13px] leading-relaxed">{renderFormattedText(item.description)}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="p-10 rounded-3xl bg-red-500/[0.01] border border-red-500/10">
-                <span className="block text-[10px] text-red-500 font-black uppercase tracking-[0.2em] mb-8">THE SYSTEM STATE</span>
-                <div className="space-y-5">
-                  {(data.workflow.system || data.workflow.after)?.map((item: any, i: number) => {
-                    const isString = typeof item === 'string';
-                    return (
-                      <div key={i} className="flex gap-4 items-center group">
-                        <div className="w-7 h-7 rounded-lg bg-red-500/5 border border-red-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/10 transition-colors">
-                          <Zap className="w-3 h-3 text-red-500" />
-                        </div>
-                        {isString ? (
-                          <p className="text-gray-400 text-sm font-medium leading-relaxed">{renderFormattedText(item)}</p>
-                        ) : (
-                          <div className="space-y-0.5">
-                            <h4 className="text-white text-sm font-bold tracking-tight">{item.title}</h4>
-                            <p className="text-gray-400 text-[13px] leading-relaxed">{renderFormattedText(item.description)}</p>
+              {/* System / After Section */}
+              {(data.workflow.system || data.workflow.after)?.filter(Boolean).length > 0 && (
+                <div className="p-10 rounded-3xl bg-red-500/[0.01] border border-red-500/10">
+                  <span className="block text-[10px] text-red-500 font-black uppercase tracking-[0.2em] mb-8">THE SYSTEM STATE</span>
+                  <div className="space-y-5">
+                    {(data.workflow.system || data.workflow.after).filter(Boolean).map((item: any, i: number) => {
+                      const isString = typeof item === 'string';
+                      return (
+                        <div key={i} className="flex gap-4 items-center group">
+                          <div className="w-7 h-7 rounded-lg bg-red-500/5 border border-red-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/10 transition-colors">
+                            <Zap className="w-3 h-3 text-red-500" />
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                          {isString ? (
+                            <p className="text-gray-400 text-sm font-medium leading-relaxed">{renderFormattedText(item)}</p>
+                          ) : (
+                            <div className="space-y-0.5">
+                              <h4 className="text-white text-sm font-bold tracking-tight">{item.title}</h4>
+                              <p className="text-gray-400 text-[13px] leading-relaxed">{renderFormattedText(item.description)}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
             </section>
           )}
 
