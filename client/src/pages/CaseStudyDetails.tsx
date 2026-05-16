@@ -151,7 +151,7 @@ const CaseStudyDetails = () => {
         <div className={`${SPACING.section} ${SPACING.stack}`}>
 
           {/* Executive Summary */}
-          {data.problem && (
+          {data.problem?.trim() && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Problem</h2>
               <div className="space-y-8">
@@ -162,7 +162,7 @@ const CaseStudyDetails = () => {
             </section>
           )}
 
-          {data.solution && (
+          {data.solution?.trim() && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Solution</h2>
               <div className="space-y-8">
@@ -371,7 +371,7 @@ const CaseStudyDetails = () => {
           )}
 
           {/* Results / Reflection */}
-          {data.results && (
+          {data.results?.trim() && (
             <section className={SPACING.content}>
               <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Engineering Reflection</h2>
               <p className="text-gray-400 text-[17px] leading-[1.8] font-medium opacity-80 whitespace-pre-wrap">
