@@ -7,6 +7,7 @@ import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { Project } from "@/types/supabase";
 import { SEO } from "@/components/SEO";
 import { getProjectSchema, getBreadcrumbSchema } from "@/lib/schema";
+import { optimizeImage } from "@/lib/utils/cloudinary";
 
 const getCategoryAccent = (category: string) => {
   switch (category) {
@@ -112,7 +113,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
           {project.thumbnail_url && (
             <div className="absolute inset-0">
               <img
-                src={project.thumbnail_url}
+                src={optimizeImage(project.thumbnail_url, 1200)}
                 alt=""
                 aria-hidden="true"
                 className="w-full h-full object-cover"
@@ -298,7 +299,7 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                   </div>
                 </div>
                 <img
-                  src={project.thumbnail_url}
+                  src={optimizeImage(project.thumbnail_url, 1200)}
                   alt={descriptiveAlt}
                   className="w-full"
                   style={{ opacity: 0.9 }}

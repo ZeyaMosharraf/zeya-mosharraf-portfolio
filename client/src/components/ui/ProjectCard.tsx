@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { FaGithub } from "react-icons/fa";
 import { ArrowUpRight, TrendingUp } from "lucide-react";
 import { Project } from "@/types/supabase";
+import { optimizeImage } from "@/lib/utils/cloudinary";
 
 interface ProjectCardProps {
   project: Project;
@@ -49,7 +50,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
       {project.thumbnail_url && (
         <div className="relative overflow-hidden" style={{ height: "168px", background: "#080808" }}>
           <img
-            src={project.thumbnail_url}
+            src={optimizeImage(project.thumbnail_url, 600)}
             alt={`Analytics project preview: ${project.title}`}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"

@@ -24,6 +24,7 @@ import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabase";
 import { CaseStudy } from "@/types/supabase";
+import { optimizeImage } from "@/lib/utils/cloudinary";
 import ArchitectureRenderer from "@/components/sections/ArchitectureRenderer";
 
 const SPACING = {
@@ -344,7 +345,7 @@ const CaseStudyDetails = () => {
                       />
                     ) : (
                       <img 
-                        src={item.url} 
+                        src={optimizeImage(item.url, 1000)} 
                         alt={item.caption || "Showcase image"} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
@@ -444,7 +445,7 @@ const CaseStudyDetails = () => {
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
                       />
                     ) : (
-                      <img src={data.cover_image || ""} alt="System Preview" className="w-full object-cover" />
+                      <img src={optimizeImage(data.cover_image || "", 1200)} alt="System Preview" className="w-full object-cover" />
                     )}
                   </div>
                 </div>
