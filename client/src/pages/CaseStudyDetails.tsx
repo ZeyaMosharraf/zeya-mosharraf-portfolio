@@ -461,21 +461,6 @@ const CaseStudyDetails = () => {
             </section>
           )}
 
-          {/* Technical Learnings */}
-          {data.technical_learnings && data.technical_learnings.length > 0 && (
-            <section className={SPACING.content}>
-              <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">Technical Learnings</h2>
-              <div className="grid gap-4">
-                {data.technical_learnings.map((l: string, i: number) => (
-                  <div key={i} className="flex gap-4 p-6 rounded-2xl bg-white/[0.01] border border-white/5 text-gray-400 text-[15px] font-medium hover:bg-white/[0.02] transition-colors">
-                    <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0 mt-1" />
-                    {l}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
           {/* Results / Reflection */}
           {data.results?.trim() && (
             <section className={SPACING.content}>
