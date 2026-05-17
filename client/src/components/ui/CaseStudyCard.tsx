@@ -46,8 +46,10 @@ const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
         </h3>
 
         {/* Description */}
-        <p className="text-[13px] text-gray-500 leading-relaxed mb-6 line-clamp-3">
-          {caseStudy.summary}
+        <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
+          {caseStudy.summary && caseStudy.summary.length > 500
+            ? `${caseStudy.summary.substring(0, 500)}...`
+            : caseStudy.summary}
         </p>
 
         {/* Outcome Snippet */}
