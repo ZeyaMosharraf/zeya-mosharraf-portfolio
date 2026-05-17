@@ -1,343 +1,132 @@
-# Zeya Mosharraf — Analytics Engineer
+# Zeya Mosharraf — Engineering Experience Platform
 
-![Live](https://img.shields.io/badge/Live-zeyamosharraf.vercel.app-blue?style=flat-square)
-![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript)
-![Supabase](https://img.shields.io/badge/Supabase-RealTime-3FCF8E?style=flat-square&logo=supabase)
-![Vercel](https://img.shields.io/badge/Vercel-Deployed-000?style=flat-square&logo=vercel)
+## Executive Summary
+This repository implements a **SaaS-inspired technical storytelling platform** built with React, TypeScript, Vite, Tailwind, Framer Motion, and Supabase-backed content. The application is structured as a product surface with route-level segmentation, reusable section systems, and a consistent dark-first visual language for engineering narratives, case-study flows, and project intelligence.
 
----
+## Product Vision
+The platform is designed as an **architecture-first frontend experience**: project and case-study content is data-driven, motion-enhanced, and organized to communicate engineering decision quality rather than static profile information.
 
-## The Difference
+## Engineering Philosophy
+- **Composition-first UI**: sections and primitives are modularized for reuse.
+- **Data-backed content surface**: Supabase tables power projects, case studies, skills, metrics, and profile metadata.
+- **Tokenized visual foundation**: theme variables and Tailwind extensions shape typography, spacing, color, and interaction rhythm.
+- **Editorial interaction model**: motion is used for hierarchy and narrative pacing.
 
-Most portfolios are static HTML with hardcoded content. This one operates like a **data system**.
+## Frontend Architecture
+- **App shell:** persistent `Navbar`, route body, `Footer`, assistant overlay, and toast system (`client/src/App.tsx`).
+- **Routing:** `wouter` route map with static + dynamic segments.
+- **Page boundaries:** home, catalog, detail, category, case-study, and editorial blog routes.
+- **Lazy loading:** non-home pages are lazy loaded to reduce initial route payload.
+- **Data access:** `useSupabaseTable<T>` standardizes Supabase query + query caching through TanStack Query.
+- **Prefetching:** critical homepage tables are prefetched in `main.tsx` before render.
 
-**Supabase powers every content section** — skills, metrics, projects. Change a value in the database, see it live instantly. No redeployment. No CI/CD overhead for content updates.
+## Design System Overview
+- **Tailwind extension:** custom font families, font sizes, spacing, gradients, semantic colors, shadow tokens (`tailwind.config.ts`).
+- **CSS token layers:** brand and semantic variables in `index.css` (including dark-first defaults and utility layers).
+- **UI primitives:** button, card, form, input, label, textarea, toast, and reusable composites.
+- **Section abstractions:** `SectionHeader`, `RevealSection`, `PageHero`, `ProjectCard`, `CaseStudyCard`, `SkillBar`, skeleton loaders.
 
-This portfolio demonstrates the **same architecture principles** I apply to production data engineering: separation of concerns, reusable patterns, real-time data flow, and scalable design.
+## Motion & Interaction System
+- Centralized animation presets in `lib/animations.ts`.
+- Framer Motion used for:
+  - route entry/fallback transitions,
+  - reveal-on-scroll orchestration,
+  - card hover and staged list animation,
+  - hero terminal simulation and metrics ticker,
+  - architecture visualization transitions.
+- Hero includes custom canvas particle interactions (`useHeroCanvas`) with mobile bypass for performance control.
 
----
+## Responsive Architecture
+- Grid/list/scroll-rail strategies adapt by breakpoint across sections and routes.
+- Experience section uses Embla carousel with responsive card width distribution.
+- Custom CSS media rules cap container/card growth on very large viewports.
+- Mobile-specific interaction simplifications are present in hero canvas and navigation.
 
-## System Architecture
+## Technical Stack
+- **Frontend:** React 18, TypeScript, Vite, Wouter
+- **Styling:** Tailwind CSS, CSS variables, shadcn/ui-compatible primitives
+- **Motion:** Framer Motion, AOS (initialized in `main.tsx`)
+- **Data:** Supabase client + TanStack Query
+- **Forms:** React Hook Form + Zod
+- **SEO:** react-helmet-async + JSON-LD schema helpers
+- **Build-time content indexing:** dynamic sitemap generation from Supabase slugs
 
-### High-Level Data Flow
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    User Browser                             │
-│  (React App + TypeScript + Framer Motion)                   │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Components (Hero, Skills, Projects)                │  │
-│  │  ↓                                                   │  │
-│  │  Custom useSupabaseTable<T> Hook                    │  │
-│  │  ├─ Fetch data from Supabase                        │  │
-│  │  ├─ Subscribe to real-time changes                  │  │
-│  │  └─ Handle errors + loading states                  │  │
-│  └──────────────────────────────────────────────────────┘  │
-└────────────┬────────────────────────────────────────────────┘
-             │ (WebSocket + REST API)
-             ↓
-┌─────────────────────────────────────────────────────────────┐
-│           Supabase (PostgreSQL + Real-Time)                │
-│                                                             │
-│  Tables:                                                    │
-│  ├─ skills (name, category, proficiency, sort_order)       │
-│  ├─ hero_metrics (label, value, icon, sort_order)          │
-│  └─ [Extensible for new content types]                     │
-│                                                             │
-│  Features:                                                  │
-│  ├─ Row Level Security (RLS) for access control            │
-│  ├─ Realtime subscriptions on INSERT/UPDATE/DELETE         │
-│  └─ Built-in REST API + GraphQL                            │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Real-Time Data Update Flow
-
-```
-1. Update Supabase database
-   ↓
-2. Supabase broadcasts change event via WebSocket
-   ↓
-3. useSupabaseTable hook receives event
-   ↓
-4. Hook calls fetchData() to refetch updated data
-   ↓
-5. Component re-renders with latest values
-   ↓
-6. No browser refresh needed — seamless live update
-```
-
----
-
-## Deployment & CI/CD Pipeline
-
-### GitHub → Vercel Flow
-
-```
-┌─────────────────┐
-│  Push to main   │
-│  on GitHub      │
-└────────┬────────┘
-         │ (Git webhook)
-         ↓
-┌──────────────────────────────────────┐
-│  Vercel Detects New Commit           │
-│                                      │
-│  1. Clone repository                 │
-│  2. Install dependencies (npm)       │
-│  3. Load env vars from Vercel config │
-│  4. Run npm run build                │
-│  5. Run type checking (TypeScript)   │
-│  6. Generate optimized bundle        │
-└────────┬─────────────────────────────┘
-         │
-         ↓
-┌──────────────────────────────────────┐
-│  Build Passes?                       │
-└────────┬──────────────────┬──────────┘
-         │ YES              │ NO
-         ↓                  ↓
-   Deploy to CDN      Notify (failure)
-   [Edge Network]     [Halt deployment]
-         ↓
-   Cache cleared
-   DNS updated
-   Live in ~60s
-```
-
-### Environment Variables Strategy
-
-**Local Development (.env file - NOT committed)**
-```
-VITE_SUPABASE_URL=https://[your-project].supabase.co
-VITE_SUPABASE_ANON_KEY=[your-anon-key]
-```
-
-**Production (Vercel Dashboard)**
-- Settings → Environment Variables
-- Same keys, production values
-- Automatically injected during build
-- Never visible in logs or code
-
-**Security Model**
-- `VITE_` prefix = public (embedded in frontend bundle)
-- Supabase RLS policies protect data access
-- Anon key is intentionally public
-- Service role key stays server-side (never exposed)
-
----
-
-## Build & Type Checking
-
-**Development**
-```bash
-npm run dev       # Vite + hot reload
-```
-
-**Production Build**
-```bash
-npm run build     # TypeScript type check + minify + optimize
-npm run preview   # Test production build locally
-```
-
-**Build Pipeline**
-1. TypeScript compilation (catches errors before deployment)
-2. Tailwind CSS generation (tree-shaking unused styles)
-3. React code splitting (lazy-loaded routes)
-4. Asset optimization (images, fonts, bundles)
-5. Sitemap generation (for SEO)
-
----
-
-## Architecture Components
-
-| Layer | Technology | Responsibility |
-|-------|-----------|-----------------|
-| **Presentation** | React 18 + TypeScript | UI rendering, state management, animations |
-| **Data Layer** | `useSupabaseTable` hook | Fetch, subscribe, error handling, caching |
-| **Backend** | Supabase PostgreSQL | Data storage, RLS policies, real-time events |
-| **API** | Supabase REST/WebSocket | Type-safe queries, real-time subscriptions |
-| **CDN/Hosting** | Vercel Edge Network | Global distribution, atomic deploys |
-
----
-
-## Features
-
-- **Real-Time Data Layer** — Supabase + custom `useSupabaseTable<T>` hook
-- **Animated Hero** — Terminal-style interface with live metrics
-- **Dynamic Skills Section** — Real-time category updates from database
-- **Live Metrics** — Hero section metrics update instantly
-- **Custom Hooks Pattern** — Reusable, type-safe data fetching
-- **Error Diagnostics** — Step-by-step console logging (never exposes credentials)
-- **Smooth Animations** — Framer Motion with AOS
-- **Dark/Light Mode** — Theme toggle with persistent preference
-- **SEO Optimized** — Meta tags, sitemap generation, Open Graph
-- **Responsive Design** — Mobile-first using Tailwind CSS
-- **Type Safety** — 100% TypeScript with strict mode
-
----
-
-## Tech Stack
-
-**Frontend**
-- React 18, TypeScript 5.0+, Vite
-- Tailwind CSS, Framer Motion, shadcn/ui
-
-**Data & Backend**
-- Supabase (PostgreSQL + real-time WebSocket)
-- REST APIs, OAuth2, Google Apps Script
-
-**DevOps & Deployment**
-- Git, GitHub, Vercel
-- Environment variable management, atomic deploys
-
-**Analytics**
-- Python, SQL, ETL pipelines
-- Real-time data validation
-
----
-
-## Project Structure
-
-```
+## Folder Structure
+```text
 client/src/
 ├── components/
-│   ├── sections/
-│   │   ├── Hero.tsx              # Real-time metrics from Supabase
-│   │   └── SkillsSection.tsx      # Dynamic categories + real-time
-│   └── ui/                        # Reusable components
-├── hooks/
-│   └── useSupabaseTable.ts        # Generic fetch + subscribe logic
-├── lib/
-│   ├── supabase.ts               # Supabase client + validation
-│   ├── errorLogger.ts            # Step-by-step error diagnostics
-│   └── animations.ts             # Framer Motion presets
-└── App.tsx
+│   ├── sections/           # Home + domain-specific storytelling sections
+│   ├── ui/                 # Reusable primitives/composites
+│   ├── forms/              # Form-specific modules
+│   ├── layout/             # Navbar + Footer shell
+│   └── SEO.tsx
+├── hooks/                  # Data and interaction hooks
+├── lib/                    # Animations, transforms, constants, schema, client utils
+├── pages/                  # Route-level page boundaries
+└── types/                  # Supabase-centered interfaces
+
+server/                     # Optional scaffold (minimal API usage in current frontend flow)
 ```
 
----
+## Component Systems
+- **Narrative sections:** Hero, Featured Case Studies, Medallion Architecture, Experience, Projects, Skills, About, Contact.
+- **Card systems:** Project and case-study cards with category accents, impact snippets, and progressive disclosure.
+- **Editorial systems:** PageHero, animated back button, terminal simulation, architecture renderer.
+- **Information systems:** social/contact cards, certification rails, skeleton loading states.
 
-## Local Setup
+## Performance Strategy (Static Analysis)
+- Route-level lazy loading in app router composition.
+- Query prefetch for top-level content tables.
+- Image lazy loading on project cards.
+- Mobile performance guard in hero canvas hook.
+- Caching via TanStack Query query keys and stale-time configuration.
 
-**Prerequisites:** Node 18+, npm 9+
+## Accessibility Considerations
+- Semantic form wiring through `FormField`, `FormControl`, and validation messaging.
+- Aria labels in key actions (e.g., chat trigger, scroll-to-top).
+- Keyboard escape handling in certificate modal.
+- Focus-visible styles available in utility layers and shadcn primitives.
 
-```bash
-# Clone
-git clone https://github.com/ZeyaMosharraf/zeya-mosharraf-portfolio.git
-cd zeya-mosharraf-portfolio
+## SEO Architecture
+- Centralized SEO component injects title, description, canonical, robots, OG/Twitter.
+- JSON-LD schemas for person, website, project creative work, blog posting, and breadcrumbs.
+- Sitemap generation script includes static routes and dynamic Supabase slugs.
 
-# Install dependencies
-npm install
+## Project Showcase Structure
+- **Home:** capability framing + selected engineering stories.
+- **Projects catalog:** searchable/filtered exploration.
+- **Project detail:** cinematic technical deep-dive with methods, results, tools, and optional embed.
+- **Case studies:** archive + deep-dive narrative with architecture render support.
+- **Blog:** editorial technical repository with list/detail rendering modes.
 
-# Create .env with Supabase credentials
-VITE_SUPABASE_URL=your_url
-VITE_SUPABASE_ANON_KEY=your_key
+## Engineering Highlights
+- Strong section modularization and reusable UI composition.
+- Cohesive visual/motion language with centralized presets.
+- Mature route and content segmentation.
+- Typed Supabase entities and table-driven rendering patterns.
 
-# Run development server
-npm run dev
-# → http://localhost:5173
+## Documentation Truthfulness Notes
+- Current `useSupabaseTable` implementation provides typed fetch + query caching; it does not currently implement realtime subscription wiring.
+- Server files are present, but current portfolio behavior is primarily frontend + Supabase + Formspree-driven.
+- This README intentionally describes implemented architecture and avoids planned/non-implemented runtime claims.
 
-# Build for production
-npm run build
+## Scalability Considerations
+- Current architecture scales well for additional routes/sections and table-driven content.
+- Main growth risk is **style governance drift** from heavy inline styling across premium card layouts.
+- Unified token/CVA expansion would improve long-term consistency and reduce duplication.
 
-# Test production build
-npm run preview
-```
+## Future Improvements
+- Add formal design-token governance and variant abstraction for inline-heavy components.
+- Consolidate duplicated card/hero style patterns into reusable variants.
+- Introduce structured error boundaries per route surface.
+- Expand motion-reduction handling for accessibility-first animation policies.
+- Align all docs with actual implementation details as features evolve.
 
-**Production:** Environment variables configured in Vercel dashboard. Settings → Environment Variables.
-
----
-
-## How It Works: Detailed Scenarios
-
-### Scenario 1: Adding a New Skill (Zero Redeployment)
-
-1. Content creator updates Supabase dashboard
-   - Adds: `{name: "Apache Spark", category: "Data Tools", proficiency: 85}`
-
-2. Database event triggered
-   - Supabase publishes `INSERT` event to real-time channel
-
-3. Frontend hook receives event
-   - `useSupabaseTable` detects change via WebSocket
-   - Calls `fetchData()` to refetch full skills table
-
-4. Component re-renders
-   - SkillsSection receives updated data
-   - Framer Motion animates new skill into view
-
-5. Result: Skill appears live with smooth animation (no page reload)
-
-### Scenario 2: Deployment Flow (Zero Downtime)
-
-1. Developer pushes code to main branch
-   - `npm run build` passes all checks
-   - Commits with meaningful message
-
-2. GitHub webhook notifies Vercel
-   - Vercel downloads latest code
-   - Loads production env vars
-
-3. Build validates
-   - TypeScript checks for errors
-   - Assets optimized
-   - Sitemap generated
-
-4. Deploy succeeds
-   - New build pushed to CDN
-   - Deployed across 300+ edge locations
-   - Live in ~60s
-
-5. Rollback ready
-   - Previous deployment remains active
-   - One-click rollback available
-
----
-
-## Monitoring & Debugging
-
-**Console Logs (Development)**
-- Step-by-step error diagnostics
-- Data fetch success/failure
-- Real-time subscription status
-- No credentials exposed
-
-**Error Handling**
-- Step 1: Check env vars exist
-- Step 2: Validate Supabase connection
-- Step 3: Handle fetch errors
-- Step 4: Check data retrieval
-- All errors logged to console only
-
----
-
-## Custom `useSupabaseTable` Hook
-
-```typescript
-const { data: skills, loading } = useSupabaseTable<Skill>("skills", {
-  column: "sort_order",
-  ascending: true
-});
-```
-
-**Features:**
-- ✅ Handles fetch, real-time subscription, error state in one call
-- ✅ Generic type `<T>` works with any table
-- ✅ Prevents memory leaks, orphaned subscriptions
-- ✅ Fires and forgets (no promise return in callbacks)
-- ✅ Mounted ref prevents state updates after unmount
-
----
-
-## Connect
-
-- **GitHub:** [github.com/ZeyaMosharraf](https://github.com/ZeyaMosharraf)
-- **LinkedIn:** [linkedin.com/in/zeya-mosharraf](https://www.linkedin.com/in/zeya-mosharraf)
-
----
-
-## License
-
-MIT
+## Documentation Links
+- [Frontend Architecture](docs/frontend-architecture.md)
+- [Design System](docs/design-system.md)
+- [UI/UX Engineering](docs/ui-ux-engineering.md)
+- [Performance Engineering](docs/performance.md)
+- [Engineering Decisions](docs/engineering-decisions.md)
+- [Case Study](docs/case-study.md)
+- [Architecture Diagrams](diagrams/)
