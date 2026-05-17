@@ -114,7 +114,7 @@ export const HeroTerminal = () => {
       setTypedCmd(COMMANDS["stack"].cmd);
       return;
     }
-    const t = setTimeout(() => runCommand("stack"), 600);
+    const t = setTimeout(() => runCommand("stack"), 1200);
     return () => clearTimeout(t);
   }, [runCommand]);
 

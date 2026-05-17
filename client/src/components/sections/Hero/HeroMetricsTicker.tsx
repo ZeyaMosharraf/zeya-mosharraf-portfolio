@@ -32,7 +32,7 @@ export const HeroMetricsTicker = () => {
       <motion.div 
         className="flex items-center gap-12 whitespace-nowrap"
         animate={{
-          x: [0, -1035], // Standardized loop distance
+          x: ["0%", "-50%"],
         }}
         transition={{
           duration: 40,

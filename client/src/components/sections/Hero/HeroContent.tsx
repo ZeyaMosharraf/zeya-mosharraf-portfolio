@@ -9,7 +9,7 @@ import { heroItemFadeUp, shimmerSlide, shimmerTransition } from "@/lib/animation
  */
 export const HeroContent = () => {
   return (
-    <div className="space-y-8">
+    <motion.div className="space-y-8">
       {/* Role Badge */}
       <motion.div variants={heroItemFadeUp}>
         <div 
@@ -62,6 +62,6 @@ export const HeroContent = () => {
           operational intelligence
         </span>.
       </motion.p>
-    </div>
+    </motion.div>
   );
 };

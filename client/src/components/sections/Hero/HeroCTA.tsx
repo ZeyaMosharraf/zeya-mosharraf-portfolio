@@ -18,7 +18,7 @@ export const HeroCTA = () => {
   };
 
   return (
-    <div className="space-y-14">
+    <motion.div className="space-y-14">
       {/* Primary Buttons */}
       <motion.div
         className="flex flex-wrap items-center gap-4 pt-8"
@@ -56,6 +56,6 @@ export const HeroCTA = () => {
           Connect
         </span>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
