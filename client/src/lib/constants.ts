@@ -106,12 +106,56 @@ export const SECTION_IDS = {
   contact: "contact",
 };
 
-export const PROJECT_CATEGORIES = [
-  "SQL",
-  "Python",
-  "Machine Learning",
-  "Power BI",
-  "Excel",
-  "Tableau",
-  "Looker Studio",
-];
+export interface CategoryConfig {
+  name: string;
+  color: string;
+  dot: string;
+  subBadge: string;
+}
+
+export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
+  "SQL": { 
+    name: "SQL", 
+    color: "#FBBF24", 
+    dot: "rgba(251,191,36,0.7)", 
+    subBadge: "DATAPREP PIPELINE" 
+  },
+  "Python": { 
+    name: "Python", 
+    color: "#60A5FA", 
+    dot: "rgba(59,130,246,0.7)", 
+    subBadge: "SYSTEM AUTOMATION" 
+  },
+  "Machine Learning": { 
+    name: "Machine Learning", 
+    color: "#C084FC", 
+    dot: "rgba(168,85,247,0.7)", 
+    subBadge: "PREDICTIVE MODELING" 
+  },
+  "Power BI": { 
+    name: "Power BI", 
+    color: "#FACC15", 
+    dot: "rgba(234,179,8,0.7)", 
+    subBadge: "OPERATIONAL SYSTEM" 
+  },
+  "Excel": { 
+    name: "Excel", 
+    color: "#4ADE80", 
+    dot: "rgba(34,197,94,0.7)", 
+    subBadge: "DECISION ENGINE" 
+  },
+  "Tableau": { 
+    name: "Tableau", 
+    color: "#818CF8", 
+    dot: "rgba(99,102,241,0.7)", 
+    subBadge: "ANALYTICS ENGINE" 
+  },
+  "Looker Studio": { 
+    name: "Looker Studio", 
+    color: "#2DD4BF", 
+    dot: "rgba(20,184,166,0.7)", 
+    subBadge: "METRICS WAREHOUSE" 
+  }
+};
+
+export const PROJECT_CATEGORIES = Object.keys(CATEGORY_CONFIGS);

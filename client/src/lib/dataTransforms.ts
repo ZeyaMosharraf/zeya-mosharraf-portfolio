@@ -1,4 +1,5 @@
 import { Project } from "@/types/supabase";
+import { PROJECT_CATEGORIES } from "./constants";
 
 /**
  * Project filtering and transformation utilities
@@ -18,11 +19,9 @@ export interface TechnologyStats {
  * Get all available project categories with their counts
  */
 export const getProjectCategories = (projects: Project[]): ProjectCategory[] => {
-  const categoryNames = ["SQL", "Python", "Machine Learning", "Power BI", "Excel", "Tableau", "Looker Studio"];
-  
   return [
     { id: "all", name: "All Projects", count: projects.length },
-    ...categoryNames.map(name => ({
+    ...PROJECT_CATEGORIES.map(name => ({
       id: name.toLowerCase().replace(/\s+/g, "-"),
       name,
       count: projects.filter(p => p.category === name).length

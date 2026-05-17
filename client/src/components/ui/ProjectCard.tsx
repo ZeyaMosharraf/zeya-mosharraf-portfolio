@@ -8,17 +8,10 @@ interface ProjectCardProps {
   project: Project;
 }
 
+import { CATEGORY_CONFIGS } from "@/lib/constants";
+
 const getCategoryAccent = (category: string) => {
-  switch (category) {
-    case "SQL":              return { color: "#FBBF24", dot: "rgba(251,191,36,0.7)" };
-    case "Python":           return { color: "#60A5FA", dot: "rgba(59,130,246,0.7)"  };
-    case "Machine Learning": return { color: "#C084FC", dot: "rgba(168,85,247,0.7)" };
-    case "Power BI":         return { color: "#FACC15", dot: "rgba(234,179,8,0.7)"   };
-    case "Excel":            return { color: "#4ADE80", dot: "rgba(34,197,94,0.7)"   };
-    case "Tableau":          return { color: "#818CF8", dot: "rgba(99,102,241,0.7)"  };
-    case "Looker Studio":    return { color: "#2DD4BF", dot: "rgba(20,184,166,0.7)"  };
-    default:                 return { color: "#9CA3AF", dot: "rgba(156,163,175,0.5)" };
-  }
+  return CATEGORY_CONFIGS[category] || { color: "#9CA3AF", dot: "rgba(156,163,175,0.5)", subBadge: "ENGINEERING SOLUTION" };
 };
 
 const ProjectCard = ({ project }: ProjectCardProps) => {

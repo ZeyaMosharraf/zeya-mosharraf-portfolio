@@ -19,6 +19,8 @@ interface SectionHeaderProps {
   highlight: string;
   /** Optional subtitle below the title */
   subtitle?: string;
+  /** Alignment of header content */
+  align?: "center" | "left";
   /** Extra content rendered after the subtitle (e.g. filter pills) */
   children?: ReactNode;
 }
@@ -29,10 +31,11 @@ const SectionHeader = ({
   title,
   highlight,
   subtitle,
+  align = "center",
   children,
 }: SectionHeaderProps) => {
   return (
-    <div className="text-center mb-10">
+    <div className={`${align === "left" ? "text-left" : "text-center"} mb-10`}>
       {/* Badge */}
       <motion.div
         className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase mb-5 relative overflow-hidden"
@@ -82,7 +85,7 @@ const SectionHeader = ({
       {/* Subtitle */}
       {subtitle && (
         <motion.p
-          className="text-[15px] text-gray-500 max-w-xl mx-auto leading-relaxed"
+          className={`text-[15px] text-gray-500 max-w-xl ${align === "left" ? "" : "mx-auto"} leading-relaxed`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}

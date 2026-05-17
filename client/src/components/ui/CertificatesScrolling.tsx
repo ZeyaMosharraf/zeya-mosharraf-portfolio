@@ -87,27 +87,6 @@ const CertificatesScrolling = ({
 
         {/* Horizontally scrollable container with navigation */}
         <div className="relative">
-          {/* Glassmorphism Navigation Buttons */}
-          {canScrollLeft && (
-            <Button
-              onClick={scrollLeft}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300 bg-white/5 border border-white/8 backdrop-blur-sm"
-              variant="ghost"
-            >
-              <ChevronLeft className="h-5 w-5 text-gray-400" />
-            </Button>
-          )}
-
-          {canScrollRight && (
-            <Button
-              onClick={scrollRight}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full p-0 hover:scale-110 transition-all duration-300 bg-white/5 border border-white/8 backdrop-blur-sm"
-              variant="ghost"
-            >
-              <ChevronRight className="h-5 w-5 text-gray-400" />
-            </Button>
-          )}
-
           {/* Gradient overlays */}
           <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #0d0d0d, transparent)' }} />
           <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, #0d0d0d, transparent)' }} />
