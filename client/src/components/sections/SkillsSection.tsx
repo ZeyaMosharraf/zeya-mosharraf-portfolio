@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { SkillBar } from "@/components/ui/common";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { Code2 } from "lucide-react";
 import { ease, fadeInLeft, fadeInRight } from "@/lib/animations";
@@ -121,14 +120,18 @@ const SkillsSection = () => {
                     <h3 className="text-[15px] font-semibold text-gray-300 mb-6 uppercase tracking-wider">
                       {category}
                     </h3>
-                    <div className="space-y-5">
+                    <div className="flex flex-wrap gap-3">
                       {categorySkills.map((skill) => (
-                        <SkillBar
+                        <div
                           key={skill.id}
-                          name={skill.name}
-                          percentage={skill.proficiency}
-                          color={color}
-                        />
+                          className="px-3.5 py-2 rounded-lg text-[13px] font-medium text-gray-400 transition-all duration-300"
+                          style={{
+                            background: "rgba(255,255,255,0.02)",
+                            border: "1px solid rgba(255,255,255,0.05)",
+                          }}
+                        >
+                          {skill.name}
+                        </div>
                       ))}
                     </div>
                   </motion.div>

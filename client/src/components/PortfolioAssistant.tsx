@@ -201,7 +201,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
     <>
       {/* Floating Chat Button */}
       <motion.div
-        className={`fixed bottom-6 right-6 z-50 ${className}`}
+        className={`fixed bottom-6 right-6 z-50 hidden md:block ${className}`}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 2, type: "spring", stiffness: 260, damping: 20 }}
@@ -224,7 +224,7 @@ const PortfolioAssistant: React.FC<PortfolioAssistantProps> = ({ className = '' 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-24 right-6 z-50 w-80 h-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+            className="fixed bottom-24 right-6 z-50 w-80 h-96 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden hidden md:block"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-red-600 to-orange-500 p-4 text-white">

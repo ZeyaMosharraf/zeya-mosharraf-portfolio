@@ -88,9 +88,9 @@ const FeaturedCaseStudySection = () => {
 
       <div
         ref={sectionRef}
-        className="container mx-auto max-w-7xl relative z-10 px-4 sm:px-6 lg:px-8 py-24"
+        className="container mx-auto max-w-7xl relative z-10 px-4 sm:px-6 lg:px-8 py-12 lg:py-24"
       >
-        <div className="mb-16">
+        <div className="mb-8 lg:mb-16">
           <SectionHeader
             icon={Sparkles}
             badge="Portfolio"
@@ -100,9 +100,9 @@ const FeaturedCaseStudySection = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* LEFT: Executive Summary */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 hidden lg:block">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
@@ -110,7 +110,7 @@ const FeaturedCaseStudySection = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.5, ease }}
-                className="rounded-3xl p-8 lg:p-10 relative overflow-hidden"
+                className="rounded-3xl p-6 lg:p-10 relative overflow-hidden"
                 style={{
                   background: "rgba(255,255,255,0.015)",
                   border: "1px solid rgba(255,255,255,0.04)",
@@ -132,8 +132,10 @@ const FeaturedCaseStudySection = () => {
                   {active.title}
                 </h3>
 
-                <p className="text-[14px] text-gray-500 leading-relaxed mb-8">
-                  {active.summary}
+                <p className="hidden md:block text-[14px] text-gray-500 leading-relaxed mb-8">
+                  {active.summary && active.summary.length > 300
+                    ? `${active.summary.substring(0, 300)}...`
+                    : active.summary}
                 </p>
 
                 {/* Impact Highlight */}
@@ -179,12 +181,12 @@ const FeaturedCaseStudySection = () => {
                   <div
                     key={cs.id}
                     ref={(el) => { cardRefs.current[i] = el; }}
-                    className="snap-center shrink-0 cursor-pointer"
-                    style={{ width: "min(80vw, 360px)" }}
+                    className="snap-start shrink-0 cursor-pointer"
+                    style={{ width: "min(85vw, 360px)" }}
                     onClick={() => setLocation(`/case-study/${cs.slug}`)}
                   >
                     <div
-                      className="group relative rounded-3xl p-8 h-full transition-all duration-500 overflow-hidden"
+                      className="group relative rounded-3xl p-6 lg:p-8 h-full transition-all duration-500 overflow-hidden"
                       style={{
                         background: isActive ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.015)",
                         border: isActive ? "1px solid rgba(220,38,38,0.2)" : "1px solid rgba(255,255,255,0.04)",

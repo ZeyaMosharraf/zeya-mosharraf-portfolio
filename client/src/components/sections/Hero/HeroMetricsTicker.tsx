@@ -35,7 +35,7 @@ export const HeroMetricsTicker = () => {
           x: ["0%", "-50%"],
         }}
         transition={{
-          duration: 40,
+          duration: 8,
           repeat: Infinity,
           ease: "linear",
         }}
