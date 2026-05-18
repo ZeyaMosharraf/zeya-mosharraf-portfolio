@@ -135,9 +135,16 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
     const update = () => {
       if (containerRef.current) {
         const w = containerRef.current.offsetWidth;
-        const s = Math.min(1, w / VIRTUAL_W);
+        
+        // Enforce a minimum scale on mobile so text remains readable (allows horizontal scroll)
+        const isMobile = window.innerWidth < 768;
+        const minScale = isMobile ? 0.55 : 0.3;
+        const s = Math.max(minScale, Math.min(1, w / VIRTUAL_W));
         setScale(s);
-        setOffsetX((w - VIRTUAL_W * s) / 2);
+        
+        // Only center if it fits in the container, otherwise left-align for scrolling
+        const scaledWidth = VIRTUAL_W * s;
+        setOffsetX(scaledWidth > w ? 0 : (w - scaledWidth) / 2);
       }
     };
     update();
@@ -187,7 +194,14 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
     <div className="w-full bg-[#050505] relative font-inter overflow-hidden border border-white/[0.04] rounded-[2rem] shadow-2xl">
       <style>{animStyles}</style>
 
-      <div ref={containerRef} className="relative w-full overflow-hidden" style={{ height: VIRTUAL_H * scale }}>
+      <div ref={containerRef} className="relative w-full overflow-x-auto scrollbar-hide" style={{ height: VIRTUAL_H * scale }}>
+        <div 
+          className="absolute"
+          style={{
+            width: VIRTUAL_W * scale, // Set actual width for scroll bounds
+            height: VIRTUAL_H * scale,
+          }}
+        >
         <div className="absolute inset-0 grid-pattern pointer-events-none opacity-40" />
         <div className="absolute inset-0 radial-vignette pointer-events-none" />
 
@@ -313,6 +327,13 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
             );
           })}
         </div>
+        </div>
+      </div>
+      
+      {/* Mobile scroll hint */}
+      <div className="md:hidden text-center py-3 bg-black/40 border-t border-white/5 flex items-center justify-center gap-2 text-gray-500 text-[10px] uppercase tracking-widest">
+        <span>Swipe to explore architecture</span>
+        <ChevronRight size={12} className="text-gray-600" />
       </div>
     </div>
   );

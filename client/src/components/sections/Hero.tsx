@@ -119,7 +119,7 @@ const Hero = () => {
         </div>
 
         {/* Ambient Editorial Ticker */}
-        <div className="mt-20 md:mt-24 pt-10 border-t border-white/5">
+        <div className="mt-12 md:mt-24 pt-10 border-t border-white/5">
           <HeroMetricsTicker />
         </div>
       </div>

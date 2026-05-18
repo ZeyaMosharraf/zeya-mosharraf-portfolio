@@ -126,9 +126,15 @@ export default function MedallionArchitectureUI() {
     const update = () => {
       if (wrapRef.current) {
         const w = wrapRef.current.offsetWidth;
-        const s = Math.min(1, w / 1200);
+        // Enforce a minimum scale on mobile so text remains readable (allows horizontal scroll)
+        const isMobile = window.innerWidth < 768;
+        const minScale = isMobile ? 0.65 : 0.4;
+        const s = Math.max(minScale, Math.min(1, w / 1200));
         setScale(s);
-        setOffsetX((w - 1200 * s) / 2);
+        
+        // Only center if it fits in the container, otherwise left-align for scrolling
+        const scaledWidth = 1200 * s;
+        setOffsetX(scaledWidth > w ? 0 : (w - scaledWidth) / 2);
       }
     };
     update();
@@ -175,7 +181,13 @@ export default function MedallionArchitectureUI() {
         </div>
 
         {/* ── DIAGRAM ── */}
-        <div ref={wrapRef} className="w-full relative" style={{ height: CANVAS_H * scale }}>
+        <div ref={wrapRef} className="w-full relative overflow-x-auto scrollbar-hide" style={{ height: CANVAS_H * scale }}>
+          <div
+            style={{
+              width: 1200 * scale, // Set actual width for scroll bounds
+              height: CANVAS_H * scale,
+            }}
+          >
           <div
             style={{
               width: 1200,
@@ -381,6 +393,13 @@ export default function MedallionArchitectureUI() {
             })}
 
           </div>
+          </div>
+        </div>
+
+        {/* Mobile scroll hint */}
+        <div className="md:hidden text-center mt-2 flex items-center justify-center gap-2 text-gray-500 text-[10px] uppercase tracking-widest">
+          <span>Swipe to explore architecture</span>
+          <ArrowRight size={10} />
         </div>
 
         {/* ── METRICS ROW ── */}

@@ -252,22 +252,33 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
                 : "A curated workspace of technical architecture and enterprise-grade data solutions — each built with operational precision."
             }
           >
-            {/* Category Filter Pills (centered beautifully) */}
+            {/* Segmented Command Bar Filter (Engineering Style) */}
             {!showFeaturedOnly && (
-              <div className="flex flex-wrap justify-center gap-2 mt-6">
+              <div className="flex flex-wrap justify-center gap-1 mt-8 mb-4 max-w-4xl mx-auto p-1.5 rounded-xl bg-black/40 border border-white/5 backdrop-blur-md">
                 {categories.map((category: ProjectCategory) => (
                   <button
                     key={category.id}
                     onClick={() => setActiveCategory(category.id)}
-                    className="px-4 py-2 rounded-lg text-[12px] font-medium transition-all duration-200"
-                    style={{
-                      background: activeCategory === category.id ? '#DC2626' : 'rgba(255,255,255,0.03)',
-                      color: activeCategory === category.id ? '#fff' : '#9CA3AF',
-                      border: `1px solid ${activeCategory === category.id ? '#DC2626' : 'rgba(255,255,255,0.06)'}`,
-                    }}
+                    className={`relative px-4 py-2.5 text-[12px] md:text-[13px] font-medium tracking-wide transition-all duration-300 rounded-lg ${
+                      activeCategory === category.id ? 'text-white' : 'text-gray-400 hover:text-gray-200'
+                    }`}
                   >
-                    {category.id === "all" && <FaFilter className="inline-block mr-1.5 text-[10px]" />}
-                    {category.name}
+                    {activeCategory === category.id && (
+                      <motion.div
+                        layoutId="activeFilterBg"
+                        className="absolute inset-0 bg-red-500/10 border border-red-500/20 rounded-lg"
+                        transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      {category.id === "all" && <FaFilter className="text-[10px] opacity-70" />}
+                      {category.name}
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded transition-colors ${
+                        activeCategory === category.id ? 'bg-red-500/20 text-red-300' : 'bg-white/5 text-gray-500'
+                      }`}>
+                        {category.count}
+                      </span>
+                    </span>
                   </button>
                 ))}
               </div>

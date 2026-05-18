@@ -1,5 +1,4 @@
 import { Project } from "@/types/supabase";
-import { PROJECT_CATEGORIES } from "./constants";
 
 /**
  * Project filtering and transformation utilities
@@ -19,9 +18,32 @@ export interface TechnologyStats {
  * Get all available project categories with their counts
  */
 export const getProjectCategories = (projects: Project[]): ProjectCategory[] => {
+  // Pre-defined preferred order for system categories
+  const preferredOrder = [
+    "Operational Analytics",
+    "Automation & ETL",
+    "Data Infrastructure",
+    "BI & Reporting",
+    "Machine Learning",
+    "Experimental Systems"
+  ];
+
+  // Dynamically extract unique categories from DB
+  const uniqueCategories = Array.from(new Set(projects.map(p => p.category))).filter(Boolean);
+  
+  // Sort based on preferred order if it exists, otherwise alphabetical
+  uniqueCategories.sort((a, b) => {
+    const idxA = preferredOrder.indexOf(a);
+    const idxB = preferredOrder.indexOf(b);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.localeCompare(b);
+  });
+
   return [
-    { id: "all", name: "All Projects", count: projects.length },
-    ...PROJECT_CATEGORIES.map(name => ({
+    { id: "all", name: "All Systems", count: projects.length },
+    ...uniqueCategories.map(name => ({
       id: name.toLowerCase().replace(/\s+/g, "-"),
       name,
       count: projects.filter(p => p.category === name).length
