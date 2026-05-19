@@ -289,10 +289,6 @@ const ProjectsSection = ({ showFeaturedOnly = false }: ProjectsSectionProps) => 
         {/* ── Featured Horizontal Scrolling View ── */}
         {showFeaturedOnly ? (
           <div className="relative">
-            {/* Edge fading gradient masks */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #0d0d0d, transparent)' }} />
-            <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, #0d0d0d, transparent)' }} />
-
             {/* Main Scrolling Row */}
             <div
               ref={scrollContainerRef}

@@ -8,17 +8,27 @@ interface CaseStudyCardProps {
   caseStudy: CaseStudy;
 }
 
-const getCategoryColor = (category: string) => {
-  const cat = category.toLowerCase();
-  if (cat.includes('marketing')) return '#f97316';
-  if (cat.includes('automation')) return '#a78bfa';
-  if (cat.includes('data analytics') || cat.includes('business intelligence')) return '#22d3ee';
-  return '#34d399';
+const CARD_COLORS = [
+  '#3B82F6', // Blue
+  '#8B5CF6', // Purple
+  '#10B981', // Green
+  '#F97316', // Orange
+  '#EF4444', // Red
+  '#EC4899', // Pink
+  '#22D3EE', // Cyan
+];
+
+const getStableColor = (id: string) => {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return CARD_COLORS[Math.abs(hash) % CARD_COLORS.length];
 };
 
 const CaseStudyCard = ({ caseStudy }: CaseStudyCardProps) => {
   const [, setLocation] = useLocation();
-  const catColor = getCategoryColor(caseStudy.category);
+  const catColor = getStableColor(caseStudy.id);
 
   return (
     <motion.div

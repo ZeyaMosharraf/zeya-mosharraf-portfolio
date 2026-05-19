@@ -136,15 +136,13 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
       if (containerRef.current) {
         const w = containerRef.current.offsetWidth;
         
-        // Enforce a minimum scale on mobile so text remains readable (allows horizontal scroll)
-        const isMobile = window.innerWidth < 768;
-        const minScale = isMobile ? 0.55 : 0.3;
-        const s = Math.max(minScale, Math.min(1, w / VIRTUAL_W));
+        // Scale down to fit perfectly without horizontal scroll
+        const s = Math.max(0.1, Math.min(1, w / VIRTUAL_W));
         setScale(s);
         
-        // Only center if it fits in the container, otherwise left-align for scrolling
+        // Center the scaled diagram
         const scaledWidth = VIRTUAL_W * s;
-        setOffsetX(scaledWidth > w ? 0 : (w - scaledWidth) / 2);
+        setOffsetX(Math.max(0, (w - scaledWidth) / 2));
       }
     };
     update();
@@ -191,36 +189,19 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
   }, [arch]);
 
   return (
-    <div className="w-full bg-[#050505] relative font-inter overflow-hidden border border-white/[0.04] rounded-[2rem] shadow-2xl">
+    <div className="w-full bg-[#050505] relative font-inter overflow-hidden border border-white/[0.04] rounded-xl shadow-2xl">
       <style>{animStyles}</style>
 
-      <div ref={containerRef} className="relative w-full overflow-x-auto scrollbar-hide" style={{ height: VIRTUAL_H * scale }}>
+      <div ref={containerRef} className="relative w-full overflow-hidden" style={{ height: VIRTUAL_H * scale }}>
         <div 
           className="absolute"
           style={{
-            width: VIRTUAL_W * scale, // Set actual width for scroll bounds
+            width: VIRTUAL_W * scale,
             height: VIRTUAL_H * scale,
           }}
         >
         <div className="absolute inset-0 grid-pattern pointer-events-none opacity-40" />
         <div className="absolute inset-0 radial-vignette pointer-events-none" />
-
-        {/* ── QUAD-CORNER METADATA ── */}
-        <div className="absolute top-10 left-10 flex items-center gap-3 z-50">
-          <div className="w-1.5 h-1.5 bg-red-600 rounded-sm shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-          <span className="metadata-text">{arch.metadata.topLeft}</span>
-        </div>
-        <div className="absolute top-10 right-10 z-50">
-          <span className="metadata-text opacity-40">{arch.metadata.topRight}</span>
-        </div>
-        <div className="absolute bottom-10 left-10 flex items-center gap-3 z-50">
-          <div className="w-1.5 h-1.5 bg-red-600 rounded-sm shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-          <span className="metadata-text">{arch.metadata.bottomLeft}</span>
-        </div>
-        <div className="absolute bottom-10 right-10 z-50 flex items-center gap-3">
-          <span className="metadata-text opacity-40">{arch.metadata.bottomRight}</span>
-          <div className="w-1.5 h-1.5 bg-red-600 rounded-sm shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-        </div>
 
         <div
           style={{
@@ -232,6 +213,22 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
             left: offsetX,
           }}
         >
+          {/* ── QUAD-CORNER METADATA ── */}
+          <div className="absolute top-10 left-10 flex items-center gap-4 z-50">
+            <div className="w-2.5 h-2.5 bg-red-600 rounded-sm shadow-[0_0_12px_rgba(220,38,38,0.8)]" />
+            <span className="metadata-text" style={{ fontSize: '14px' }}>{arch.metadata.topLeft}</span>
+          </div>
+          <div className="absolute top-10 right-10 z-50">
+            <span className="metadata-text opacity-40" style={{ fontSize: '14px' }}>{arch.metadata.topRight}</span>
+          </div>
+          <div className="absolute bottom-10 left-10 flex items-center gap-4 z-50">
+            <div className="w-2.5 h-2.5 bg-red-600 rounded-sm shadow-[0_0_12px_rgba(220,38,38,0.8)]" />
+            <span className="metadata-text" style={{ fontSize: '14px' }}>{arch.metadata.bottomLeft}</span>
+          </div>
+          <div className="absolute bottom-10 right-10 z-50 flex items-center gap-4">
+            <span className="metadata-text opacity-40" style={{ fontSize: '14px' }}>{arch.metadata.bottomRight}</span>
+            <div className="w-2.5 h-2.5 bg-red-600 rounded-sm shadow-[0_0_12px_rgba(220,38,38,0.8)]" />
+          </div>
           {/* ── CONNECTION LAYER ── */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" viewBox={`0 0 ${VIRTUAL_W} ${VIRTUAL_H}`}>
             <defs>
@@ -329,12 +326,7 @@ export default function ArchitectureRenderer({ architecture: dbArch }: { archite
         </div>
         </div>
       </div>
-      
-      {/* Mobile scroll hint */}
-      <div className="md:hidden text-center py-3 bg-black/40 border-t border-white/5 flex items-center justify-center gap-2 text-gray-500 text-[10px] uppercase tracking-widest">
-        <span>Swipe to explore architecture</span>
-        <ChevronRight size={12} className="text-gray-600" />
-      </div>
+
     </div>
   );
 }

@@ -8,17 +8,18 @@ import { Project } from "@/types/supabase";
 import { SEO } from "@/components/SEO";
 import { getProjectSchema, getBreadcrumbSchema } from "@/lib/schema";
 import { optimizeImage } from "@/lib/utils/cloudinary";
+import { DashboardEmbed } from "@/components/ui/DashboardEmbed";
 
 const getCategoryAccent = (category: string) => {
   switch (category) {
-    case "SQL":              return { color: "#FBBF24", glow: "rgba(251,191,36,0.12)" };
-    case "Python":           return { color: "#60A5FA", glow: "rgba(59,130,246,0.12)"  };
+    case "SQL": return { color: "#FBBF24", glow: "rgba(251,191,36,0.12)" };
+    case "Python": return { color: "#60A5FA", glow: "rgba(59,130,246,0.12)" };
     case "Machine Learning": return { color: "#C084FC", glow: "rgba(168,85,247,0.12)" };
-    case "Power BI":         return { color: "#FACC15", glow: "rgba(234,179,8,0.12)"   };
-    case "Excel":            return { color: "#4ADE80", glow: "rgba(34,197,94,0.12)"   };
-    case "Tableau":          return { color: "#818CF8", glow: "rgba(99,102,241,0.12)"  };
-    case "Looker Studio":    return { color: "#2DD4BF", glow: "rgba(20,184,166,0.12)"  };
-    default:                 return { color: "#9CA3AF", glow: "rgba(156,163,175,0.08)" };
+    case "Power BI": return { color: "#FACC15", glow: "rgba(234,179,8,0.12)" };
+    case "Excel": return { color: "#4ADE80", glow: "rgba(34,197,94,0.12)" };
+    case "Tableau": return { color: "#818CF8", glow: "rgba(99,102,241,0.12)" };
+    case "Looker Studio": return { color: "#2DD4BF", glow: "rgba(20,184,166,0.12)" };
+    default: return { color: "#9CA3AF", glow: "rgba(156,163,175,0.08)" };
   }
 };
 
@@ -232,42 +233,12 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.04)" }} />
               </div>
 
-              {/* Cinematic frame */}
-              <div
-                className="relative rounded-xl overflow-hidden"
-                style={{
-                  background: "#080808",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  boxShadow: "0 0 0 1px rgba(255,255,255,0.02), 0 32px 64px rgba(0,0,0,0.6)",
-                }}
-              >
-                {/* Title bar chrome */}
-                <div
-                  className="flex items-center gap-2 px-4 py-2.5"
-                  style={{ background: "#111", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-                >
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F57" }} />
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#28CA40" }} />
-                  </div>
-                  <span className="text-[10px] ml-2" style={{ color: "#374151", fontFamily: "'JetBrains Mono', monospace" }}>
-                    {project.title} — Live Preview
-                  </span>
-                </div>
-                <div className="aspect-video w-full">
-                  <iframe
-                    title={`${embedLabel} Report — ${project.title}`}
-                    width="100%"
-                    height="100%"
-                    className="w-full h-full border-0"
-                    src={embedUrl}
-                    allowFullScreen
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; unload"
-                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                  />
-                </div>
-              </div>
+              {/* Cinematic frame via DashboardEmbed */}
+              <DashboardEmbed
+                url={embedUrl || ""}
+                title={project.title}
+                isPowerBI={project.category === "Power BI"}
+              />
             </motion.div>
           )}
 
@@ -309,15 +280,18 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
           )}
 
           {/* ── TWO-COLUMN: Main + Sidebar ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16">
 
             {/* LEFT — narrative content */}
-            <div className="lg:col-span-2 space-y-12">
+            <div className="space-y-16">
 
               {/* Overview */}
               <motion.div {...fadeUp(0.15)}>
-                <SectionLabel icon={<Circle style={{ width: "10px", height: "10px" }} />} label="Overview" />
-                <p className="text-[14px] leading-[1.85]" style={{ color: "#6B7280" }}>
+                <h2 className="text-2xl font-bold text-white mb-6 tracking-tight flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full" style={{ background: accent.color, boxShadow: `0 0 10px ${accent.color}` }} />
+                  Project Overview
+                </h2>
+                <p className="text-[15px] leading-[1.8] text-gray-400 font-medium">
                   {project.description}
                 </p>
               </motion.div>
@@ -325,72 +299,82 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
               {/* Methodology */}
               {methodBullets.length > 0 && (
                 <motion.div {...fadeUp(0.2)}>
-                  <SectionLabel icon={<Code2 style={{ width: "10px", height: "10px" }} />} label="Methodology" />
-                  <ul className="space-y-3">
+                  <h2 className="text-2xl font-bold text-white mb-8 tracking-tight flex items-center gap-3">
+                    <Code2 className="w-5 h-5" style={{ color: accent.color }} />
+                    Technical Methodology
+                  </h2>
+                  <div className="space-y-4">
                     {methodBullets.map((bullet, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span
-                          className="mt-[6px] w-1 h-1 rounded-full flex-shrink-0"
-                          style={{ background: accent.color, opacity: 0.6 }}
-                        />
-                        <span className="text-[13px] leading-relaxed" style={{ color: "#6B7280" }}>
+                      <div
+                        key={i}
+                        className="flex items-start gap-4 p-5 rounded-xl border relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01]"
+                        style={{ background: accent.glow, borderColor: `${accent.color}40` }}
+                        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 8px 32px ${accent.color}22`; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+                      >
+                        <div className="absolute top-0 right-0 w-32 h-32 blur-[50px] opacity-10 pointer-events-none" style={{ background: accent.color }} />
+                        <div className="flex-shrink-0 mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center z-10" style={{ borderColor: accent.color }}>
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: accent.color }} />
+                        </div>
+                        <p className="text-[14px] leading-[1.7] text-gray-200 font-medium relative z-10">
                           {bullet}
-                        </span>
-                      </li>
+                        </p>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </motion.div>
               )}
 
               {/* Results & Impact */}
               {impactBullets.length > 0 && (
                 <motion.div {...fadeUp(0.25)}>
-                  <SectionLabel icon={<TrendingUp style={{ width: "10px", height: "10px" }} />} label="Results & Impact" accent />
-                  <ul className="space-y-3">
+                  <h2 className="text-2xl font-bold text-white mb-8 tracking-tight flex items-center gap-3">
+                    <TrendingUp className="w-5 h-5" style={{ color: accent.color }} />
+                    Business Impact & Results
+                  </h2>
+                  <div className="grid grid-cols-1 gap-4">
                     {impactBullets.map((bullet, i) => (
-                      <li
+                      <div
                         key={i}
-                        className="flex items-start gap-3 px-4 py-3 rounded-lg"
-                        style={{
-                          background: i === 0 ? "rgba(220,38,38,0.04)" : "transparent",
-                          border: i === 0 ? "1px solid rgba(220,38,38,0.08)" : "none",
-                        }}
+                        className="flex items-start gap-4 p-5 rounded-xl border relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01]"
+                        style={{ background: accent.glow, borderColor: `${accent.color}40` }}
+                        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 8px 32px ${accent.color}22`; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
                       >
+                        <div className="absolute top-0 right-0 w-32 h-32 blur-[50px] opacity-10 pointer-events-none" style={{ background: accent.color }} />
                         <CheckCircle2
-                          className="flex-shrink-0 mt-0.5"
-                          style={{ width: "13px", height: "13px", color: i === 0 ? "#DC2626" : "rgba(220,38,38,0.4)", opacity: 0.7 }}
+                          className="flex-shrink-0 mt-0.5 relative z-10"
+                          style={{ width: "18px", height: "18px", color: accent.color }}
                         />
-                        <span
-                          className="text-[13px] leading-relaxed"
-                          style={{ color: i === 0 ? "#9CA3AF" : "#6B7280" }}
-                        >
+                        <span className="text-[14px] leading-[1.7] font-medium relative z-10 text-gray-200">
                           {bullet}
                         </span>
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </motion.div>
               )}
             </div>
 
-            {/* RIGHT — sidebar */}
-            <div className="space-y-6">
+          {/* RIGHT — sidebar */}
+          <div>
+            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.05] space-y-8 sticky top-24">
 
-              {/* Skills/Tools */}
+              {/* Skills Applied */}
               {project.tools && project.tools.length > 0 && (
                 <motion.div {...fadeUp(0.2)}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: "#374151" }}>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-4" style={{ color: "#4B5563" }}>
                     Skills Applied
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-2">
                     {project.tools.map((tool, i) => (
                       <span
                         key={i}
-                        className="text-[11px] font-medium px-2.5 py-1 rounded-lg"
+                        className="text-[11px] font-medium px-3 py-1.5 rounded-lg"
                         style={{
                           background: "rgba(255,255,255,0.03)",
                           border: "1px solid rgba(255,255,255,0.06)",
-                          color: "#6B7280",
+                          color: "#9CA3AF",
                         }}
                       >
                         {tool}
@@ -400,24 +384,23 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                 </motion.div>
               )}
 
-              {/* Divider */}
               <div className="h-px" style={{ background: "rgba(255,255,255,0.04)" }} />
 
-              {/* Tools */}
+              {/* Tools Used */}
               {project.tools && project.tools.length > 0 && (
                 <motion.div {...fadeUp(0.25)}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: "#374151" }}>
-                    <Wrench style={{ width: "10px", height: "10px", display: "inline", marginRight: "6px" }} />
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-4 flex items-center gap-2" style={{ color: "#4B5563" }}>
+                    <Wrench className="w-3 h-3" />
                     Tools Used
                   </p>
-                  <div className="space-y-1.5">
+                  <div className="space-y-3">
                     {project.tools.map((tool, i) => (
-                      <div key={i} className="flex items-center gap-2.5">
+                      <div key={i} className="flex items-center gap-3">
                         <span
-                          className="w-1 h-1 rounded-full flex-shrink-0"
-                          style={{ background: accent.color, opacity: 0.5 }}
+                          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                          style={{ background: accent.color, opacity: 0.8, boxShadow: `0 0 6px ${accent.color}` }}
                         />
-                        <span className="text-[12px]" style={{ color: "#6B7280" }}>
+                        <span className="text-[13px] font-medium" style={{ color: "#D1D5DB" }}>
                           {tool}
                         </span>
                       </div>
@@ -426,12 +409,11 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                 </motion.div>
               )}
 
-              {/* Divider */}
               <div className="h-px" style={{ background: "rgba(255,255,255,0.04)" }} />
 
               {/* Links */}
               <motion.div className="space-y-2" {...fadeUp(0.3)}>
-                <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: "#374151" }}>
+                <p className="text-[10px] font-semibold uppercase tracking-widest mb-4" style={{ color: "#4B5563" }}>
                   Project Links
                 </p>
                 {project.github_url && (
@@ -439,22 +421,20 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
                     href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-[12px] font-medium transition-all duration-200 group"
-                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", color: "#6B7280" }}
+                    className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-[12px] font-bold uppercase tracking-wider transition-all duration-300 group"
+                    style={{ background: accent.glow, border: "1px solid rgba(255,255,255,0.05)", color: "#fff" }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                      e.currentTarget.style.color = "#9CA3AF";
+                      e.currentTarget.style.background = `color-mix(in srgb, ${accent.color} 20%, transparent)`;
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-                      e.currentTarget.style.color = "#6B7280";
+                      e.currentTarget.style.background = accent.glow;
                     }}
                   >
-                    <span className="flex items-center gap-2">
-                      <FaGithub className="text-sm opacity-50" />
-                      View source code
+                    <span className="flex items-center gap-3">
+                      <FaGithub className="text-base" />
+                      Source code
                     </span>
-                    <ArrowUpRight style={{ width: "11px", height: "11px", opacity: 0.3 }} />
+                    <ArrowUpRight className="w-4 h-4 opacity-50 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
                   </a>
                 )}
               </motion.div>
@@ -462,34 +442,9 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
           </div>
         </div>
       </div>
+    </div >
     </>
   );
 };
-
-// ── Section label helper ──────────────────────────────────────────────────────
-const SectionLabel = ({
-  icon,
-  label,
-  accent = false,
-}: {
-  icon?: React.ReactNode;
-  label: string;
-  accent?: boolean;
-}) => (
-  <div className="flex items-center gap-3 mb-5">
-    {icon && (
-      <span style={{ color: accent ? "#DC2626" : "#374151" }}>
-        {icon}
-      </span>
-    )}
-    <span
-      className="text-[10px] font-semibold uppercase tracking-widest"
-      style={{ color: accent ? "rgba(220,38,38,0.7)" : "#374151" }}
-    >
-      {label}
-    </span>
-    <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.04)" }} />
-  </div>
-);
 
 export default ProjectDetails;

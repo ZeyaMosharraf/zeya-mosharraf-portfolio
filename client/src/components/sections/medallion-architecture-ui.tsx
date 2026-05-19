@@ -126,15 +126,13 @@ export default function MedallionArchitectureUI() {
     const update = () => {
       if (wrapRef.current) {
         const w = wrapRef.current.offsetWidth;
-        // Enforce a minimum scale on mobile so text remains readable (allows horizontal scroll)
-        const isMobile = window.innerWidth < 768;
-        const minScale = isMobile ? 0.65 : 0.4;
-        const s = Math.max(minScale, Math.min(1, w / 1200));
+        // Scale down to fit perfectly without horizontal scroll
+        const s = Math.max(0.1, Math.min(1, w / 1200));
         setScale(s);
         
-        // Only center if it fits in the container, otherwise left-align for scrolling
+        // Center the scaled diagram
         const scaledWidth = 1200 * s;
-        setOffsetX(scaledWidth > w ? 0 : (w - scaledWidth) / 2);
+        setOffsetX(Math.max(0, (w - scaledWidth) / 2));
       }
     };
     update();
@@ -181,10 +179,10 @@ export default function MedallionArchitectureUI() {
         </div>
 
         {/* ── DIAGRAM ── */}
-        <div ref={wrapRef} className="w-full relative overflow-x-auto scrollbar-hide" style={{ height: CANVAS_H * scale }}>
+        <div ref={wrapRef} className="w-full relative overflow-hidden" style={{ height: CANVAS_H * scale }}>
           <div
             style={{
-              width: 1200 * scale, // Set actual width for scroll bounds
+              width: 1200 * scale,
               height: CANVAS_H * scale,
             }}
           >
@@ -396,14 +394,10 @@ export default function MedallionArchitectureUI() {
           </div>
         </div>
 
-        {/* Mobile scroll hint */}
-        <div className="md:hidden text-center mt-2 flex items-center justify-center gap-2 text-gray-500 text-[10px] uppercase tracking-widest">
-          <span>Swipe to explore architecture</span>
-          <ArrowRight size={10} />
-        </div>
+
 
         {/* ── METRICS ROW ── */}
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-8">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5 md:gap-2 mt-6">
           {METRICS.map((m, i) => {
             const Icon = m.icon;
             return (
@@ -412,21 +406,21 @@ export default function MedallionArchitectureUI() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.8 + i * 0.1 }}
-                className="flex flex-col p-3 md:p-4 rounded-xl"
+                className="flex flex-col p-2.5 md:p-3 rounded-lg"
                 style={{
                   background: '#111111',
                   border: '1px solid rgba(255,255,255,0.04)',
                 }}
               >
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <Icon size={12} className="text-gray-500 flex-shrink-0" />
-                  <span className="text-[10px] md:text-[11px] font-medium text-gray-400 truncate">{m.label}</span>
+                <div className="flex items-center gap-1 mb-1">
+                  <Icon size={10} className="text-gray-500 flex-shrink-0" />
+                  <span className="text-[9px] md:text-[10px] font-medium text-gray-400 truncate">{m.label}</span>
                 </div>
-                <div className="flex items-end gap-1">
-                  <span className="text-lg md:text-2xl font-semibold text-white leading-none">{m.value}</span>
-                  {m.unit && <span className="text-[11px] md:text-[13px] text-gray-500 mb-0.5">{m.unit}</span>}
+                <div className="flex items-baseline gap-0.5">
+                  <span className="text-base md:text-lg font-semibold text-white leading-none">{m.value}</span>
+                  {m.unit && <span className="text-[9px] md:text-[10px] text-gray-500">{m.unit}</span>}
                 </div>
-                <div className="mt-1.5 text-[10px] md:text-[11px] font-medium">
+                <div className="mt-1 text-[9px] font-medium">
                   <span className={m.up === true ? 'text-emerald-400' : m.up === false ? 'text-rose-400' : 'text-gray-500'}>
                     {m.change}
                   </span>

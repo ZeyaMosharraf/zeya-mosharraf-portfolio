@@ -23,8 +23,10 @@ import {
 import AnimatedBackButton from "@/components/ui/AnimatedBackButton";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabase";
+import { getCaseStudySchema, getBreadcrumbSchema } from "@/lib/schema";
 import { CaseStudy } from "@/types/supabase";
 import { optimizeImage } from "@/lib/utils/cloudinary";
+import { DashboardEmbed } from "@/components/ui/DashboardEmbed";
 import ArchitectureRenderer from "@/components/sections/ArchitectureRenderer";
 
 const SPACING = {
@@ -415,40 +417,17 @@ const CaseStudyDetails = () => {
               </div>
 
               <div className="relative group max-w-[1100px] mx-auto">
-                <div
-                  className="overflow-hidden rounded-2xl border border-white/10 bg-[#080808]"
-                  style={{ boxShadow: "0 48px 96px rgba(0,0,0,0.8)" }}
-                >
-                  {/* Title bar chrome */}
-                  <div className="flex items-center gap-2 px-5 py-3 bg-[#111] border-b border-white/[0.05]">
-                    <div className="flex gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#28CA40]" />
-                    </div>
-                    <span className="text-[11px] ml-4 text-gray-700 font-mono tracking-widest uppercase opacity-40">
-                      {data.title} — System Output
-                    </span>
+                {data.live_url ? (
+                  <DashboardEmbed url={data.live_url} title={data.title} />
+                ) : (
+                  <div
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-[#080808] aspect-video w-full relative"
+                    style={{ boxShadow: "0 48px 96px rgba(0,0,0,0.8)" }}
+                  >
+                    <img src={optimizeImage(data.cover_image || "", 1200)} alt="System Preview" className="w-full h-full object-cover" />
                   </div>
-
-                  <div className="aspect-video w-full bg-black">
-                    {data.live_url ? (
-                      <iframe
-                        title="Ops Performance"
-                        width="100%"
-                        height="100%"
-                        src={data.live_url}
-                        frameBorder="0"
-                        allowFullScreen={true}
-                        className="w-full h-full border-0"
-                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; unload"
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                      />
-                    ) : (
-                      <img src={optimizeImage(data.cover_image || "", 1200)} alt="System Preview" className="w-full object-cover" />
-                    )}
-                  </div>
-                </div>
+                )}
+              </div>
 
                 {data.github_url && (
                   <div className="mt-12 flex justify-center">
@@ -457,7 +436,6 @@ const CaseStudyDetails = () => {
                     </a>
                   </div>
                 )}
-              </div>
             </section>
           )}
 

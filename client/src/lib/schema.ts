@@ -67,6 +67,27 @@ export const getProjectSchema = (project: {
   "mainEntityOfPage": `${siteUrl}/project/${project.slug}`
 });
 
+export const getCaseStudySchema = (caseStudy: {
+  title: string;
+  description: string | null;
+  category: string;
+  cover_image?: string | null;
+  slug: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": caseStudy.title,
+  "description": caseStudy.description || "",
+  "genre": caseStudy.category,
+  "author": {
+    "@type": "Person",
+    "name": "Zeya Mosharraf"
+  },
+  "image": caseStudy.cover_image || `${siteUrl}/assets/og-image.png`,
+  "url": `${siteUrl}/case-studies/${caseStudy.slug}`,
+  "mainEntityOfPage": `${siteUrl}/case-studies/${caseStudy.slug}`
+});
+
 export const getBlogPostingSchema = (post: {
   title: string;
   short_description: string | null;

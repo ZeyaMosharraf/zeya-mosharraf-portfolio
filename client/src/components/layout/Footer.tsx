@@ -158,30 +158,31 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.2)' }}>
+        <div className="relative" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.2)' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <p className="text-gray-600 text-[12px]">
+            <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 md:gap-0 pr-12 md:pr-16">
+              <p className="text-gray-600 text-[12px] text-center md:text-left">
                 © {new Date().getFullYear()} Zeya Mosharraf. All rights reserved.
               </p>
 
-              <div className="flex items-center space-x-5">
-                <p className="text-gray-600 text-[12px] flex items-center">
+              <div className="flex items-center">
+                <p className="text-gray-600 text-[12px] flex items-center text-center">
                   Built with <FaHeart className="text-red-500 mx-1.5 animate-pulse text-[10px]" /> using modern web technologies
                 </p>
-
-                <motion.button
-                  onClick={scrollToTop}
-                  className="p-2.5 rounded-lg text-gray-500 hover:text-red-400 transition-all duration-300"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
-                  whileHover={{ y: -2, borderColor: 'rgba(220,38,38,0.2)' }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label="Scroll to top"
-                >
-                  <FaArrowUp className="text-xs" />
-                </motion.button>
               </div>
             </div>
+
+            {/* Floated Right Button */}
+            <motion.button
+              onClick={scrollToTop}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-2.5 rounded-lg text-gray-500 hover:text-white hover:bg-red-600/20 transition-all duration-300 z-10"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Scroll to top"
+            >
+              <FaArrowUp className="text-xs" />
+            </motion.button>
           </div>
         </div>
       </div>
