@@ -115,3 +115,16 @@ export const pageHeaderAnimation = {
   transition: { duration: 0.8, ease },
 };
 
+
+// -- Page Detail Animations (ProjectDetails, CaseStudyDetails) ------
+export const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number,number,number,number], delay },
+});
+
+export const fadeIn = (delay = 0) => ({
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { duration: 0.4, ease: 'easeOut', delay },
+});

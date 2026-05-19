@@ -3,16 +3,11 @@ import { FaGithub } from "react-icons/fa";
 import { ArrowUpRight, TrendingUp } from "lucide-react";
 import { Project } from "@/types/supabase";
 import { optimizeImage } from "@/lib/utils/cloudinary";
+import { getCategoryAccent } from "@/lib/utils/categoryAccent";
 
 interface ProjectCardProps {
   project: Project;
 }
-
-import { CATEGORY_CONFIGS } from "@/lib/constants";
-
-const getCategoryAccent = (category: string) => {
-  return CATEGORY_CONFIGS[category] || { color: "#9CA3AF", dot: "rgba(156,163,175,0.5)", subBadge: "ENGINEERING SOLUTION" };
-};
 
 const ProjectCard = ({ project }: ProjectCardProps) => {
   const [, setLocation] = useLocation();

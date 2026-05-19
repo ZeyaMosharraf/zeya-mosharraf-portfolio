@@ -39,7 +39,7 @@ async function generateSitemap() {
 
   // Fetch dynamic routes
   console.log("📡 Fetching dynamic slugs from Supabase...");
-  
+
   const [
     { data: projects },
     { data: blogs },
@@ -61,27 +61,27 @@ async function generateSitemap() {
     ...caseStudyRoutes,
   ];
 
-  console.log(`✅ Found ${allRoutes.length} total routes (${staticRoutes.length} static, ${allRoutes.length - staticRoutes.length} dynamic).`);
+  console.log(`Found ${allRoutes.length} total routes (${staticRoutes.length} static, ${allRoutes.length - staticRoutes.length} dynamic).`);
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${allRoutes
-    .map(
-      (url) => `
+      .map(
+        (url) => `
   <url>
     <loc>${baseUrl}${url}</loc>
     <changefreq>${url === '/' ? 'weekly' : 'monthly'}</changefreq>
     <priority>${url === '/' ? '1.0' : '0.8'}</priority>
   </url>`
-    )
-    .join("")}
+      )
+      .join("")}
 </urlset>`;
 
   const outDir = path.resolve("dist");
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }
-  
+
   // Also write to public for local dev preview if needed, but dist is for production
   fs.writeFileSync(path.resolve(outDir, "sitemap.xml"), sitemap);
   console.log("✨ Sitemap generated successfully at dist/sitemap.xml");

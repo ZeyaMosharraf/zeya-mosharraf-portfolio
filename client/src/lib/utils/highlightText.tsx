@@ -108,3 +108,45 @@ export function highlightText(text: string): JSX.Element {
 
   return <span>{processText(text)}</span>;
 }
+
+/**
+ * Splits a multi-line / bullet-separated string into an array of clean strings.
+ * Handles both newline-separated and "\u2022"-separated formats from the database.
+ */
+export const parseBullets = (text: string): string[] =>
+  text
+    .split(/\n|\u2022/)
+    .map((s) => s.replace(/^\s+|\s+$/g, "").replace(/^\s*\u2022\s*/, ""))
+    .filter((s) => s.length > 4);
+
+/**
+ * Renders a string with simple markdown-like formatting:
+ * - **text** \u2192 <strong>
+ * - ==text== \u2192 highlighted red span (for key metrics)
+ */
+export const renderFormattedText = (
+  text: string | undefined | null
+): React.ReactNode => {
+  if (!text) return null;
+  const parts = text.split(/(\*\*.*?\*\*|==.*?==)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} className="text-white font-bold">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("==") && part.endsWith("==")) {
+      return (
+        <span
+          key={i}
+          className="text-red-500 font-bold bg-red-500/10 px-1.5 py-0.5 rounded-md border border-red-500/20 mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
+        >
+          {part.slice(2, -2)}
+        </span>
+      );
+    }
+    return part;
+  });
+};

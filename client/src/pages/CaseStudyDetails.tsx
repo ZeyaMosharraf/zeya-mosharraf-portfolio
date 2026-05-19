@@ -28,6 +28,8 @@ import { CaseStudy } from "@/types/supabase";
 import { optimizeImage } from "@/lib/utils/cloudinary";
 import { DashboardEmbed } from "@/components/ui/DashboardEmbed";
 import ArchitectureRenderer from "@/components/sections/ArchitectureRenderer";
+import { renderFormattedText } from "@/lib/utils/highlightText";
+import { PageLoading, PageNotFound } from "@/components/ui/PageStates";
 
 const SPACING = {
   hero: "pt-32 pb-24",
@@ -68,42 +70,8 @@ const CaseStudyDetails = () => {
     fetchCaseStudy();
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-6">Report Not Found</h2>
-          <AnimatedBackButton label="Return to Archives" onClick={() => window.history.back()} />
-        </div>
-      </div>
-    );
-  }
-
-  const renderFormattedText = (text: string | undefined | null) => {
-    if (!text) return null;
-    const parts = text.split(/(\*\*.*?\*\*|==.*?==)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="text-white font-bold">{part.slice(2, -2)}</strong>;
-      }
-      if (part.startsWith('==') && part.endsWith('==')) {
-        return (
-          <span key={i} className="text-red-500 font-bold bg-red-500/10 px-1.5 py-0.5 rounded-md border border-red-500/20 mx-0.5 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-            {part.slice(2, -2)}
-          </span>
-        );
-      }
-      return part;
-    });
-  };
+  if (loading) return <PageLoading label="Loading Case Study..." />;
+  if (!data) return <PageNotFound label="Report Not Found" backLabel="Return to Archives" onBack={() => window.history.back()} />;
 
 
   return (

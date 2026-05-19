@@ -2,38 +2,17 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "wouter";
 import { motion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
-import { ArrowLeft, ArrowUpRight, ExternalLink, TrendingUp, Code2, Wrench, CheckCircle2, Circle } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, ExternalLink, TrendingUp, Code2, Wrench, CheckCircle2 } from "lucide-react";
 import { useSupabaseTable } from "@/hooks/useSupabaseTable";
 import { Project } from "@/types/supabase";
 import { SEO } from "@/components/SEO";
 import { getProjectSchema, getBreadcrumbSchema } from "@/lib/schema";
 import { optimizeImage } from "@/lib/utils/cloudinary";
 import { DashboardEmbed } from "@/components/ui/DashboardEmbed";
-
-const getCategoryAccent = (category: string) => {
-  switch (category) {
-    case "SQL": return { color: "#FBBF24", glow: "rgba(251,191,36,0.12)" };
-    case "Python": return { color: "#60A5FA", glow: "rgba(59,130,246,0.12)" };
-    case "Machine Learning": return { color: "#C084FC", glow: "rgba(168,85,247,0.12)" };
-    case "Power BI": return { color: "#FACC15", glow: "rgba(234,179,8,0.12)" };
-    case "Excel": return { color: "#4ADE80", glow: "rgba(34,197,94,0.12)" };
-    case "Tableau": return { color: "#818CF8", glow: "rgba(99,102,241,0.12)" };
-    case "Looker Studio": return { color: "#2DD4BF", glow: "rgba(20,184,166,0.12)" };
-    default: return { color: "#9CA3AF", glow: "rgba(156,163,175,0.08)" };
-  }
-};
-
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay },
-});
-
-const parseBullets = (text: string): string[] =>
-  text
-    .split(/\n|•/)
-    .map((s) => s.replace(/^\s+|\s+$/g, "").replace(/^\s*•\s*/, ""))
-    .filter((s) => s.length > 4);
+import { getCategoryAccent } from "@/lib/utils/categoryAccent";
+import { fadeUp } from "@/lib/animations";
+import { parseBullets } from "@/lib/utils/highlightText";
+import { PageLoading, PageNotFound } from "@/components/ui/PageStates";
 
 const ProjectDetails = ({ params }: { params: { slug: string } }) => {
   const [project, setProject] = useState<Project | null>(null);
@@ -50,33 +29,8 @@ const ProjectDetails = ({ params }: { params: { slug: string } }) => {
     }
   }, [allProjects, slug]);
 
-  if (loading && !project) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0d0d0d" }}>
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="w-12 h-12 rounded-full border-2 border-red-600/20 border-t-red-600 animate-spin mb-4" />
-          <p className="text-[11px] uppercase tracking-widest text-gray-600">Loading Case Study...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!project) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0d0d0d" }}>
-        <div className="text-center">
-          <p className="text-[13px] text-gray-600 mb-4">Project not found.</p>
-          <button
-            onClick={() => setLocation("/projects")}
-            className="h-9 px-5 rounded-lg text-[12px] font-medium text-white"
-            style={{ background: "#DC2626" }}
-          >
-            Back to Projects
-          </button>
-        </div>
-      </div>
-    );
-  }
+  if (loading && !project) return <PageLoading label="Loading Project..." />;
+  if (!project) return <PageNotFound label="Project not found." backLabel="Back to Projects" onBack={() => setLocation("/projects")} />;
 
   const accent = getCategoryAccent(project.category);
   const methodBullets = parseBullets(project.methodology || "");
