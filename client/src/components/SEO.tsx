@@ -27,26 +27,26 @@ export const SEO = ({
 }: SEOProps) => {
   const siteUrl = "https://zeyamosharraf.vercel.app"; // Production URL for canonical consistency
 
-  const defaultTitle = "Zeya Mosharraf | Data Analyst & Analytics Engineer";
+  const defaultTitle = "Zeya Mosharraf | Analytics Engineer, SQL & Python Automation Expert";
 
   const defaultDescription =
-    "Portfolio of Zeya Mosharraf — Data Analyst specializing in Python, SQL, Power BI, Google Cloud, and Machine Learning. Explore projects, certifications, and data-driven insights.";
+    "Zeya Mosharraf specializes in building scalable data systems, SQL database architecture, Python automation, and enterprise Power BI solutions. Transforming complex data into actionable business intelligence.";
 
   const defaultKeywords = [
     // Personal branding
-    "Zeya Mosharraf", "Zeya Mosharraf portfolio", "Zeya Mosharraf data analyst",
+    "Zeya Mosharraf", "Zeya Mosharraf portfolio", "Zeya Mosharraf analytics engineer",
     // Core role
-    "Data Analyst", "Analytics Engineer", "Data Analytics Portfolio",
+    "Analytics Engineer", "Systems Builder", "Automation Expert", "Data Engineering",
     // Tools & Technologies
     "Python", "SQL", "Power BI", "Tableau", "Looker Studio",
-    "Google Cloud", "BigQuery", "Excel", "R", "Pandas",
+    "Google Cloud", "BigQuery", "Excel", "Supabase", "Pandas",
     // Specializations
     "Machine Learning", "Predictive Modeling", "Data Visualization",
     "ETL", "Data Engineering", "Business Intelligence",
     // Long-tail phrases
-    "data analyst portfolio", "Python data analysis projects",
-    "SQL projects", "Power BI dashboards", "Google Cloud certified",
-    "data driven decision making", "data science projects",
+    "SQL database architecture", "Python automation pipelines",
+    "business intelligence solutions", "enterprise Power BI dashboards",
+    "data driven decision making", "data systems builder",
   ].join(", ");
 
   const defaultImage = `${siteUrl}/assets/og-image.png`;
@@ -81,7 +81,7 @@ export const SEO = ({
       <meta property="og:description" content={seo.description} />
       <meta property="og:image" content={seo.image} />
       <meta property="og:url" content={seo.url} />
-      <meta property="og:site_name" content="Zeya Mosharraf | Data Analyst Portfolio" />
+      <meta property="og:site_name" content="Zeya Mosharraf | Analytics Engineering Portfolio" />
       <meta property="og:locale" content="en_US" />
 
       {/* Twitter */}
