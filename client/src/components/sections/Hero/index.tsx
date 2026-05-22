@@ -2,12 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { heroLeftColumn, heroRightTerminal } from "@/lib/animations";
 
-/* Modular Sub-components */
-import { HeroContent } from "./Hero/HeroContent";
-import { HeroCTA } from "./Hero/HeroCTA";
-import { HeroTerminal } from "./Hero/HeroTerminal";
-import { HeroMetricsTicker } from "./Hero/HeroMetricsTicker";
-import { useHeroCanvas } from "./Hero/useHeroCanvas";
+/* Modular Sub-components (Simplified Paths) */
+import { HeroContent } from "./HeroContent";
+import { HeroCTA } from "./HeroCTA";
+import { HeroTerminal } from "./HeroTerminal";
+import { HeroMetricsTicker } from "./HeroMetricsTicker";
+import { useHeroCanvas } from "./useHeroCanvas";
 
 /**
  * Hero — Main Landing Section.
