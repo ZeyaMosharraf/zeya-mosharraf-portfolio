@@ -16,6 +16,7 @@ const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
   message: z.string().min(10, "Message must be at least 10 characters"),
+  website: z.string().optional(), // Honeypot field for spam prevention
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -28,15 +29,26 @@ const ContactForm = () => {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", subject: "", message: "" },
+    defaultValues: { name: "", email: "", subject: "", message: "", website: "" },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: FormValues) => {
+      // Spam honeypot detection: bots automatically fill hidden input fields.
+      // If the field is populated, we fake a successful response without calling the server.
+      if (data.website) {
+        console.warn("Spam submission detected and blocked via honeypot.");
+        await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate fake latency
+        return { success: true, spam: true };
+      }
+
+      // Exclude honeypot data from being sent to Formspree
+      const { website, ...cleanData } = data;
+
       const response = await fetch("https://formspree.io/f/movdjglr", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(cleanData),
       });
       return response.json();
     },
@@ -85,6 +97,18 @@ const ContactForm = () => {
             <FormMessage />
           </FormItem>
         )} />
+
+        {/* Honeypot field (hidden from users, filled by bots) */}
+        <div className="absolute opacity-0 pointer-events-none -z-10 w-0 h-0 overflow-hidden" aria-hidden="true">
+          <FormField control={form.control} name="website" render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="Your website" tabIndex={-1} autoComplete="off" {...field} />
+              </FormControl>
+            </FormItem>
+          )} />
+        </div>
 
         <Button
           type="submit"

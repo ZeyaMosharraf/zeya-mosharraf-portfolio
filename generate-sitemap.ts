@@ -13,9 +13,26 @@ const baseUrl = "https://zeyamosharraf.vercel.app";
 const loadEnv = () => {
   if (fs.existsSync('.env')) {
     const env = fs.readFileSync('.env', 'utf-8');
-    env.split('\n').forEach(line => {
-      const [key, value] = line.split('=');
-      if (key && value) process.env[key.trim()] = value.trim();
+    env.split(/\r?\n/).forEach(line => {
+      const cleanLine = line.trim();
+      // Skip empty lines or comment lines
+      if (!cleanLine || cleanLine.startsWith('#')) return;
+
+      const firstEquals = cleanLine.indexOf('=');
+      if (firstEquals === -1) return;
+
+      const key = cleanLine.substring(0, firstEquals).trim();
+      let value = cleanLine.substring(firstEquals + 1).trim();
+
+      // Strip enclosing single or double quotes
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.substring(1, value.length - 1);
+      }
+
+      process.env[key] = value;
     });
   }
 };
