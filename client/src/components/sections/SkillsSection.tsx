@@ -24,18 +24,17 @@ const getCategoryColor = (index: number): "primary" | "secondary" => {
 };
 
 const SkillBarSkeleton = () => (
-  <div className="space-y-5">
-    {[1, 2, 3, 4, 5, 6].map((i) => (
-      <div key={i} className="space-y-2">
-        <div
-          className="h-3.5 rounded w-2/3 animate-pulse"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
-        <div
-          className="h-2.5 rounded-full w-full animate-pulse"
-          style={{ background: "rgba(255,255,255,0.05)" }}
-        />
-      </div>
+  <div className="flex flex-wrap gap-3">
+    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+      <div
+        key={i}
+        className="h-[38px] rounded-lg animate-pulse"
+        style={{
+          width: `${50 + (i % 3) * 15}px`,
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.05)",
+        }}
+      />
     ))}
   </div>
 );

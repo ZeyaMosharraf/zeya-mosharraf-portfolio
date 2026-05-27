@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DC2626" />
+      <stop offset="100%" stop-color="#F97316" />
+    </linearGradient>
+  </defs>
+  <!-- Sleek rounded dark container -->
+  <rect width="32" height="32" rx="8" fill="#0D0D0D" />
+  <!-- Subtle glowing border -->
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7.5" fill="none" stroke="url(#g)" stroke-width="1.2" opacity="0.4" />
+  <!-- Crisp typography matching brand mark -->
+  <text x="50%" y="60%" font-family="'Inter', system-ui, sans-serif" font-weight="900" font-size="12" fill="url(#g)" text-anchor="middle" dominant-baseline="middle" letter-spacing="-0.5">ZM</text>
+</svg>

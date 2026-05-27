@@ -2,7 +2,6 @@ import { Route, Switch, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import PortfolioAssistant from "@/components/PortfolioAssistant";
 import React, { useEffect, useState, Suspense } from "react";
 
 import Home from "@/pages/Home";
@@ -54,9 +53,6 @@ function App() {
       <Footer />
       
       {/* Scroll to top button */}
-      
-      {/* Portfolio Assistant Chatbot */}
-      <PortfolioAssistant />
       
       <Toaster />
     </div>
