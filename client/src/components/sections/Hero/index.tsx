@@ -58,7 +58,7 @@ const Hero = () => {
       ref={sectionRef}
       id="home"
       className="relative pt-24 md:pt-32 pb-12 md:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #0d0d0d 0%, #0d0d0d 55%, #1a0a0a 100%)' }}
+      style={{ background: 'linear-gradient(180deg, #030303 0%, #08080C 100%)' }}
     >
       {/* Layer 1: Interactive canvas (full hero background) */}
       <canvas
@@ -67,18 +67,28 @@ const Hero = () => {
         style={{ zIndex: 1 }}
       />
 
-      {/* Layer 2: One-sided accent gradient glow (bottom-right) */}
+      {/* Layer 2a: Wide cool slate/blue ambient downlight (top-left) */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 55% 60% at 75% 65%, rgba(239,68,68,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle 60vw at 15% 15%, rgba(148,163,184,0.045) 0%, transparent 70%)',
+          zIndex: 2,
+        }}
+      />
+
+      {/* Layer 2b: Concentrated warm terracotta glow (bottom-right) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle 50vw at 85% 70%, rgba(200,35,21,0.02) 0%, transparent 60%)',
+          zIndex: 2,
         }}
       />
 
       {/* Layer 3: Engineering grid overlay */}
       <div 
         className="absolute inset-0 pointer-events-none hero-grid-overlay" 
-        style={{ opacity: 0.06, zIndex: 2 }} 
+        style={{ opacity: 0.05, zIndex: 3 }} 
       />
 
       <div className="container mx-auto max-w-7xl relative" style={{ zIndex: 10 }}>
@@ -107,10 +117,20 @@ const Hero = () => {
                 transition: 'transform 0.15s ease-out' 
               }}
             >
-              {/* Terminal Backdrop Glow */}
+              {/* Terminal Backdrop Glow Layer 1: Wide Soft */}
               <div
-                className="absolute -inset-12 -z-10 rounded-full blur-[120px] opacity-10"
+                className="absolute -inset-24 -z-10 rounded-full blur-[150px] opacity-[0.04] pointer-events-none"
                 style={{ background: 'var(--accent-primary)' }}
+              />
+              {/* Terminal Backdrop Glow Layer 2: Tight Core */}
+              <div
+                className="absolute -inset-10 -z-10 rounded-full blur-[75px] opacity-[0.08] pointer-events-none"
+                style={{ background: 'var(--accent-primary)' }}
+              />
+              {/* Terminal Backdrop Glow Layer 3: Bright Center Spark */}
+              <div
+                className="absolute w-[200px] h-[200px] left-[20%] top-[20%] -z-10 rounded-full blur-[35px] opacity-[0.10] pointer-events-none"
+                style={{ background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)' }}
               />
 
               <HeroTerminal />

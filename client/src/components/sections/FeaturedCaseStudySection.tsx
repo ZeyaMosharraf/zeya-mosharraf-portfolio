@@ -167,11 +167,15 @@ const FeaturedCaseStudySection = () => {
           </div>
 
           {/* RIGHT: Scroll Track */}
-          <div className="lg:col-span-7 relative">
+          <div className="lg:col-span-7 relative w-full overflow-hidden">
             <div
               ref={scrollRef}
-              className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 scrollbar-hide"
-              style={{ scrollbarWidth: "none" }}
+              className="flex gap-6 overflow-x-auto w-full snap-x snap-mandatory pb-8 scrollbar-hide"
+              style={{ 
+                scrollbarWidth: "none",
+                WebkitOverflowScrolling: "touch",
+                touchAction: "pan-x"
+              }}
             >
               {featuredStudies.map((cs: CaseStudy, i: number) => {
                 const isActive = activeIndex === i;

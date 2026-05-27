@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 
-interface Dot {
+interface GridTracer {
   x: number;
   y: number;
-  vx: number;
-  vy: number;
-  r: number;
-  isWhite: boolean;     // false = red accent
+  speed: number;
+  length: number;
+  direction: 'right' | 'down';
   baseAlpha: number;
+  lineCoord: number; // grid line coordinate (x for down, y for right)
 }
 
 /**
- * useHeroCanvas — hook to manage the interactive particle field in the Hero section.
- * Optimized with device-pixel-ratio awareness and mobile-bypass.
+ * useHeroCanvas — hook to manage the cinematic orthogonal ETL data stream tracers in the Hero section background grid.
+ * Optimized for HIGH-CONTRAST premium observability glows and peak 60fps GPU performance.
  */
 export function useHeroCanvas(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
@@ -30,114 +30,122 @@ export function useHeroCanvas(
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const cs = getComputedStyle(document.documentElement);
-    const accentPrimary = cs.getPropertyValue("--accent-primary").trim() || "#EF4444";
-
     let w = 0, h = 0;
 
-    /* ── Mouse tracking ── */
-    let mx = -9999, my = -9999;
-    const MOUSE_RADIUS = 140;         // interaction zone
-    const MOUSE_FORCE = 2.8;         // push strength
+    /* ── Telemetry Grid & Tracers ── */
+    const GRID_SPACING = 85;
+    const tracers: GridTracer[] = [];
+    const TRACER_COUNT = 10; // Faint, highly restrained cinematic tracers
 
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = section.getBoundingClientRect();
-      mx = e.clientX - rect.left;
-      my = e.clientY - rect.top;
-    };
-    const onMouseLeave = () => { mx = -9999; my = -9999; };
-
-    /* Listen on the section (not canvas) so hover works even over content */
-    section.addEventListener("mousemove", onMouseMove, { passive: true });
-    section.addEventListener("mouseleave", onMouseLeave, { passive: true });
-
-    /* ── Particles ── */
-    const COUNT = isMobile ? 35 : 85;
-    const CONNECT_DIST = isMobile ? 60 : 90;
-    const dots: Dot[] = [];
-
-    const initDots = () => {
-      dots.length = 0;
-      for (let i = 0; i < COUNT; i++) {
-        dots.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          r: 0.8 + Math.random() * 1.2,
-          isWhite: Math.random() < 0.35,
-          baseAlpha: 0.12 + Math.random() * 0.18,
-        });
-      }
-    };
-
-    /* ── Draw & update particles ── */
-    const drawDots = () => {
-      for (const d of dots) {
-        /* Mouse repulsion */
-        const dx = d.x - mx;
-        const dy = d.y - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < MOUSE_RADIUS && dist > 0) {
-          const force = (1 - dist / MOUSE_RADIUS) * MOUSE_FORCE;
-          d.vx += (dx / dist) * force * 0.15;
-          d.vy += (dy / dist) * force * 0.15;
-        }
-
-        /* Velocity damping */
-        d.vx *= 0.985;
-        d.vy *= 0.985;
-
-        /* Move */
-        d.x += d.vx;
-        d.y += d.vy;
-
-        /* Wrap edges */
-        if (d.x < -10) d.x = w + 10;
-        if (d.x > w + 10) d.x = -10;
-        if (d.y < -10) d.y = h + 10;
-        if (d.y > h + 10) d.y = -10;
-
-        /* Draw dot with glow effect */
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        // Create radial gradient for glow
-        const gradient = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 2.5);
-        if (d.isWhite) {
-          gradient.addColorStop(0, `rgba(255,255,255,${d.baseAlpha * 0.8})`);
-          gradient.addColorStop(0.5, `rgba(255,255,255,${d.baseAlpha * 0.4})`);
-          gradient.addColorStop(1, 'rgba(255,255,255,0)');
+    const initTracers = () => {
+      tracers.length = 0;
+      for (let i = 0; i < TRACER_COUNT; i++) {
+        const direction = Math.random() < 0.5 ? 'right' : 'down';
+        const length = 50 + Math.random() * 80;
+        const speed = 0.8 + Math.random() * 1.6;
+        const baseAlpha = 0.35 + Math.random() * 0.25; // High-contrast opacity range
+        
+        if (direction === 'right') {
+          // Select a random horizontal grid path row
+          const gridRows = Math.floor(h / GRID_SPACING);
+          const row = Math.floor(Math.random() * Math.max(1, gridRows));
+          const lineCoord = row * GRID_SPACING + GRID_SPACING / 2;
+          tracers.push({
+            x: Math.random() * w,
+            y: lineCoord,
+            speed,
+            length,
+            direction,
+            baseAlpha,
+            lineCoord,
+          });
         } else {
-          gradient.addColorStop(0, `rgba(239,68,68,${d.baseAlpha * 0.6})`);
-          gradient.addColorStop(0.5, `rgba(239,68,68,${d.baseAlpha * 0.3})`);
-          gradient.addColorStop(1, 'rgba(239,68,68,0)');
+          // Select a random vertical grid path column
+          const gridCols = Math.floor(w / GRID_SPACING);
+          const col = Math.floor(Math.random() * Math.max(1, gridCols));
+          const lineCoord = col * GRID_SPACING + GRID_SPACING / 2;
+          tracers.push({
+            x: lineCoord,
+            y: Math.random() * h,
+            speed,
+            length,
+            direction,
+            baseAlpha,
+            lineCoord,
+          });
         }
-        ctx.fillStyle = gradient;
-        ctx.fill();
       }
+    };
 
-      /* Connection lines between nearby particles */
-      for (let i = 0; i < dots.length; i++) {
-        for (let j = i + 1; j < dots.length; j++) {
-          const dx = dots[i].x - dots[j].x;
-          const dy = dots[i].y - dots[j].y;
-          const d = dx * dx + dy * dy;
-          if (d < CONNECT_DIST * CONNECT_DIST) {
-            const dist = Math.sqrt(d);
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            // mix: if either is white → white line, else red
-            const isW = dots[i].isWhite || dots[j].isWhite;
-            ctx.strokeStyle = isW ? "rgba(255,255,255,0.06)" : accentPrimary;
-            // Add subtle pulse animation to connections
-            const pulseAmount = Math.sin(performance.now() * 0.002) * 0.05;
-            ctx.globalAlpha = (1 - dist / CONNECT_DIST) * (0.14 + pulseAmount);
-            ctx.lineWidth = 0.4;
-            ctx.stroke();
-            ctx.globalAlpha = 1;
+    /* ── Draw & update telemetry tracers ── */
+    const drawTracers = () => {
+      // 1. Draw horizontal and vertical blueprint paths (barely visible for restrained depth)
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.003)";
+      ctx.lineWidth = 0.55;
+
+      // Horizontal paths
+      for (let y = GRID_SPACING / 2; y < h; y += GRID_SPACING) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+      }
+      // Vertical paths
+      for (let x = GRID_SPACING / 2; x < w; x += GRID_SPACING) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+      }
+      ctx.stroke();
+
+      // 2. Draw moving tracers
+      for (const t of tracers) {
+        if (t.direction === 'right') {
+          t.x += t.speed;
+          if (t.x - t.length > w) {
+            t.x = -t.length;
+            const gridRows = Math.floor(h / GRID_SPACING);
+            t.y = t.lineCoord = Math.floor(Math.random() * Math.max(1, gridRows)) * GRID_SPACING + GRID_SPACING / 2;
+          }
+        } else {
+          t.y += t.speed;
+          if (t.y - t.length > h) {
+            t.y = -t.length;
+            const gridCols = Math.floor(w / GRID_SPACING);
+            t.x = t.lineCoord = Math.floor(Math.random() * Math.max(1, gridCols)) * GRID_SPACING + GRID_SPACING / 2;
           }
         }
+
+        // Draw dynamic comet trail gradient
+        ctx.beginPath();
+        let grad;
+        if (t.direction === 'right') {
+          grad = ctx.createLinearGradient(t.x - t.length, t.y, t.x, t.y);
+          ctx.moveTo(t.x - t.length, t.y);
+          ctx.lineTo(t.x, t.y);
+        } else {
+          grad = ctx.createLinearGradient(t.x, t.y - t.length, t.x, t.y);
+          ctx.moveTo(t.x, t.y - t.length);
+          ctx.lineTo(t.x, t.y);
+        }
+
+        // Vibrant high-contrast gradient comets (restrained deep reactor red)
+        grad.addColorStop(0, "rgba(200, 35, 21, 0)");
+        grad.addColorStop(0.8, `rgba(200, 35, 21, ${t.baseAlpha * 0.12})`);
+        grad.addColorStop(1, `rgba(200, 35, 21, ${t.baseAlpha * 0.28})`);
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.1;
+        ctx.stroke();
+
+        // Sub-pixel glowing telemetry head spark
+        ctx.beginPath();
+        const px = t.direction === 'right' ? t.x : t.lineCoord;
+        const py = t.direction === 'down' ? t.y : t.lineCoord;
+        ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 35, 21, ${t.baseAlpha * 0.4})`;
+        ctx.shadowColor = "rgba(200, 35, 21, 0.3)";
+        ctx.shadowBlur = 3;
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset blur immediately to guarantee uncompromised 60fps performance
       }
     };
 
@@ -151,7 +159,7 @@ export function useHeroCanvas(
       canvas.style.width = w + "px";
       canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      initDots();
+      initTracers();
     };
     resize();
 
@@ -159,7 +167,7 @@ export function useHeroCanvas(
     let rafId: number;
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
-      drawDots();
+      drawTracers();
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
@@ -168,8 +176,6 @@ export function useHeroCanvas(
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resize);
-      section.removeEventListener("mousemove", onMouseMove);
-      section.removeEventListener("mouseleave", onMouseLeave);
     };
   }, [canvasRef, sectionRef]);
 }

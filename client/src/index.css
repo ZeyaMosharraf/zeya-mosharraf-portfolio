@@ -1,15 +1,22 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Import Google Fonts (Premium Geometric Editorial Selection) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ── Accent (locked: red) ── */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ── Refined Visual Accent (Unified Deep Reactor Crimson) ── */
 :root {
-  --accent-primary: #EF4444;
-  --accent-glow: rgba(239, 68, 68, 0.35);
-  --accent-soft: rgba(239, 68, 68, 0.15);
+  --accent-primary: #C82315; /* Deep, dangerous, restrained reactor crimson */
+  --accent-secondary: #C82315; /* Deep, dangerous, restrained reactor crimson */
+  --accent-glow: rgba(200, 35, 21, 0.12);
+  --accent-soft: rgba(200, 35, 21, 0.06);
 }
 
 /* Hero grid overlay */
@@ -37,28 +44,32 @@
 
 @layer base {
   :root {
+    /* Premium Typography */
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+
     /* Brand Colors */
-    --color-brand: #DC2626; /* red-600 */
-    --color-brand-contrast: #0B1B33; /* deep navy for dark text on brand tints */
-    --color-brand-hover: #B91C1C; /* red-700 */
+    --color-brand: #C82315; /* Deep Reactor Crimson */
+    --color-brand-contrast: #030303; /* Absolute deep obsidian */
+    --color-brand-hover: #9E170C; /* Deep reactor red hover */
     --color-brand-fg: #FFFFFF; /* text on brand surfaces */
 
     /* Neutrals */
-    --color-bg: #0d0d0d;
-    --color-surface: #111111;
-    --color-elevated: #1a1a1a;
-    --color-muted: #94A3B8; /* slate-400 */
-    --color-border: #334155; /* slate-700 */
+    --color-bg: #030303; /* Absolute black obsidian */
+    --color-surface: #09090C; /* Rich deep carbon black */
+    --color-elevated: #121217; /* Strong zinc elevated */
+    --color-muted: #CBD5E1; /* slate-300: much stronger text luminance! */
+    --color-border: rgba(255, 255, 255, 0.05); /* sub-pixel border */
 
     /* Semantic Colors */
     --color-success: #10B981; /* emerald-500 */
     --color-success-strong: #0F766E; /* teal-600 */
     --color-warning: #F59E0B; /* amber-500 */
-    --color-danger: #EF4444; /* red-500 */
+    --color-danger: #FF3B1F; /* laser-scarlet-500 */
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #DC2626 0%, #F97316 100%); /* red-600 → orange-500 */
-    --gradient-neutral: linear-gradient(135deg, #475569 0%, #374151 100%); /* slate-600 → gray-700 */
+    --gradient-primary: linear-gradient(135deg, #C82315 0%, #C82315 100%); /* deep reactor red */
+    --gradient-neutral: linear-gradient(135deg, #121217 0%, #09090C 100%); /* carbon dark */
     --gradient-success: linear-gradient(135deg, #10B981 0%, #0F766E 100%); /* emerald-500 → teal-600 */
 
     /* Shadows */
@@ -97,11 +108,11 @@
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #DC2626 0%, #F97316 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #EF4444 0%, #FB923C 100%);
+  background: var(--accent-primary);
 }
 
 /* Responsive container improvements */
@@ -211,7 +222,7 @@
 
 .gradient-border {
   position: relative;
-  background: linear-gradient(135deg, #DC2626 0%, #F97316 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   border-radius: 12px;
   padding: 2px;
 }
@@ -240,7 +251,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #DC2626 0%, #F97316 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -355,16 +366,16 @@
 
 /* Enhanced button styles */
 .gradient-button {
-  background: linear-gradient(135deg, #DC2626 0%, #F97316 50%, #DC2626 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-primary) 100%);
   background-size: 200% 200%;
   animation: gradient-shift 3s ease-in-out infinite;
-  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 59, 31, 0.3);
   transition: all 0.3s ease;
 }
 
 .gradient-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 59, 31, 0.4);
 }
 
 @keyframes gradient-shift {
@@ -409,7 +420,7 @@
 
 /* Enhanced text gradients */
 .text-gradient-rainbow {
-  background: linear-gradient(135deg, #DC2626 0%, #EF4444 25%, #F97316 50%, #FB923C 75%, #DC2626 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 25%, var(--accent-primary) 50%, var(--accent-secondary) 75%, var(--accent-primary) 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -473,18 +484,17 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    font-family: var(--font-body);
+    @apply antialiased bg-background text-foreground;
     font-feature-settings: 'cv11', 'ss01';
-    font-variation-settings: 'wght' 400;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.01em;
     line-height: 1.6;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-sans;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: var(--font-heading) !important;
+    letter-spacing: -0.012em;
+    line-height: 1.15;
   }
   
   code, pre {
@@ -664,5 +674,15 @@
   to {
     transform: translate(-50%, -50%) scale(20);
     opacity: 0;
+  }
+}
+
+/* Terminal border rotation animation */
+@keyframes border-rotate {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
   }
 }

@@ -144,7 +144,7 @@ const Navbar = () => {
         >
           <span
             className="w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-bold tracking-tight"
-            style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--accent-primary)', border: '1px solid rgba(239,68,68,0.25)' }}
+            style={{ background: 'rgba(255,255,255,0.03)', color: 'var(--accent-primary)', border: '1px solid rgba(200,35,21,0.15)' }}
           >
             ZM
           </span>
@@ -257,9 +257,9 @@ const Navbar = () => {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded transition-all duration-300 text-gray-400/60 hover:text-[var(--accent-primary)] hover:shadow-[0_0_8px_rgba(239,68,68,0.15)]"
+            className="flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded transition-all duration-300 text-gray-400/60 hover:text-[var(--accent-primary)] hover:shadow-none"
             style={{ border: '1px solid rgba(255,255,255,0.08)' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(200, 35, 21, 0.15)'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
           >
             <Download className="h-2.5 w-2.5" />

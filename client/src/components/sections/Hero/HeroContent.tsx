@@ -9,26 +9,26 @@ import { heroItemFadeUp, shimmerSlide, shimmerTransition } from "@/lib/animation
  */
 export const HeroContent = () => {
   return (
-    <motion.div className="space-y-8">
+    <motion.div className="space-y-10 md:space-y-12">
       {/* Role Badge */}
       <motion.div variants={heroItemFadeUp}>
         <div 
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-medium tracking-wider uppercase relative overflow-hidden"
+          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase relative overflow-hidden"
           style={{ 
-            background: 'rgba(220,38,38,0.08)', 
-            color: 'rgba(220,38,38,0.8)',
-            border: '1px solid rgba(220,38,38,0.12)'
+            background: 'rgba(200, 35, 21, 0.05)', 
+            color: '#E2E8F0',
+            border: '1px solid rgba(200, 35, 21, 0.15)'
           }}
         >
           <motion.div
             className="absolute inset-0"
-            style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)' }}
+            style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)' }}
             animate={shimmerSlide}
             transition={shimmerTransition}
           />
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: '#EF4444' }} />
-            <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#EF4444' }} />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-30" style={{ background: 'var(--accent-primary)' }} />
+            <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--accent-primary)' }} />
           </span>
           <span className="relative z-10">Analytics Engineer</span>
         </div>
@@ -36,7 +36,7 @@ export const HeroContent = () => {
 
       {/* Headline */}
       <motion.h1
-        className="text-[2.25rem] sm:text-4xl md:text-5xl lg:text-[3.6rem] font-bold leading-[1.1] tracking-tight text-white max-w-2xl"
+        className="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-semibold leading-[1.1] tracking-normal text-white max-w-2xl"
         variants={heroItemFadeUp}
       >
         <span className="sr-only">Zeya Mosharraf – </span>
@@ -44,8 +44,8 @@ export const HeroContent = () => {
         <RotatingWord />
         <br />
         <span
-          className="bg-clip-text text-transparent"
-          style={{ backgroundImage: 'linear-gradient(135deg, #DC2626 0%, #F97316 100%)' }}
+          className="text-[#C23125] font-semibold"
+          style={{ fontFamily: 'var(--font-heading)' }}
         >
           Data Systems
         </span>
@@ -53,12 +53,12 @@ export const HeroContent = () => {
 
       {/* Value Proposition */}
       <motion.p
-        className="text-[16px] md:text-lg text-gray-400 max-w-md leading-relaxed"
+        className="text-[16px] md:text-lg text-slate-300 max-w-md leading-relaxed"
         variants={heroItemFadeUp}
       >
         Architecting high-performance data infrastructure and automated 
         analytics workflows for{" "}
-        <span className="text-gray-200 font-medium">
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] font-semibold">
           operational intelligence
         </span>.
       </motion.p>
