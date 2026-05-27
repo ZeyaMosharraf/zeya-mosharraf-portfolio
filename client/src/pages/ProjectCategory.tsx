@@ -13,24 +13,20 @@ interface ProjectCategoryProps {
   };
 }
 
-type CategoryType = "SQL" | "Python" | "Machine Learning" | "Power BI" | "Excel" | "Tableau" | "Looker Studio";
+type CategoryType = "Data Infrastructure" | "Automation & ETL" | "Machine Learning" | "BI & Reporting" | "Operational Analytics";
 
 const getDisplayName = (category: string): string => {
   switch (category) {
-    case "SQL":
-      return "SQL Projects";
-    case "Python":
-      return "Python Projects";
+    case "Data Infrastructure":
+      return "Data Infrastructure Systems";
+    case "Automation & ETL":
+      return "Automation & ETL Pipelines";
     case "Machine Learning":
-      return "Machine Learning Projects";
-    case "Power BI":
-      return "Power BI Dashboards";
-    case "Excel":
-      return "Excel Projects";
-    case "Tableau":
-      return "Tableau Dashboards";
-    case "Looker Studio":
-      return "Looker Studio Reports";
+      return "Machine Learning Models";
+    case "BI & Reporting":
+      return "Business Intelligence & Reporting";
+    case "Operational Analytics":
+      return "Operational Analytics Systems";
     default:
       return "Projects";
   }
@@ -38,22 +34,18 @@ const getDisplayName = (category: string): string => {
 
 const getCategoryDescription = (category: string): string => {
   switch (category) {
-    case "SQL":
-      return "Advanced database projects using SQL to extract, transform, and analyze data for business insights.";
-    case "Python":
-      return "A curated portfolio of Python-driven solutions that solve real business or technical problems — from automating repetitive tasks and integrating external systems via APIs to processing and transforming data efficiently. Each project includes clear objectives, the technologies used, and measurable outcomes to show exactly how Python delivered value for each task.";
+    case "Data Infrastructure":
+      return "Scalable analytical databases, dimensional data modeling (star schemas), cloud data warehouses, and clean storage frameworks built for operational efficiency.";
+    case "Automation & ETL":
+      return "A curated workspace of custom Python-driven data integrations, robust API extraction scripts, and automated event syncing workflows built to keep analytics platforms accurate.";
     case "Machine Learning":
-      return "Projects implementing machine learning algorithms for predictive analytics and pattern recognition.";
-    case "Power BI":
-      return "Interactive dashboards and visualizations created with Microsoft Power BI.";
-    case "Excel":
-      return "Advanced Excel projects demonstrating data analysis, modeling, and visualization techniques.";
-    case "Tableau":
-      return "Interactive data visualizations and dashboards created with Tableau for comprehensive business intelligence.";
-    case "Looker Studio":
-      return "Dynamic reports and dashboards built with Looker Studio to monitor marketing performance and web analytics.";
+      return "Advanced analytical applications implementing statistical forecasting and machine learning algorithms for automated predictive logic.";
+    case "BI & Reporting":
+      return "High-performance enterprise dashboards and automated reporting systems built using advanced data modeling and visual intelligence engines.";
+    case "Operational Analytics":
+      return "End-to-end analytical engines designed to capture, transform, and sync core operational metrics to automate recurring business reporting.";
     default:
-      return "Collection of data analysis projects.";
+      return "A curated collection of technical data systems and operational intelligence assets.";
   }
 };
 

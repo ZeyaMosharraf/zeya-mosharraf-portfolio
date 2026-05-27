@@ -34,8 +34,8 @@ const AllProjects = () => {
     <>
       <SEO
         title="All Projects - Zeya Mosharraf"
-        description="Complete collection of data analysis projects showcasing skills in SQL, Python, Power BI, Machine Learning, Excel, Tableau, and Looker Studio."
-        keywords="Data Analytics Projects, SQL Projects, Python Projects, Power BI Dashboards, Machine Learning, Excel Analysis, Tableau Visualizations, Looker Studio Reports"
+        description="A complete technical repository of scalable data infrastructure, robust ETL automation pipelines, and modern visual analytics systems."
+        keywords="Analytics Engineering, Data Infrastructure, ETL automation, Python data pipelines, SQL database design, BI systems, dbt developer, BigQuery, PostgreSQL"
       />
 
       <div className="min-h-screen bg-[#0a0a0a]">

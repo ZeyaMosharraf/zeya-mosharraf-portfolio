@@ -27,26 +27,23 @@ export const SEO = ({
 }: SEOProps) => {
   const siteUrl = "https://zeyamosharraf.vercel.app"; // Production URL for canonical consistency
 
-  const defaultTitle = "Zeya Mosharraf | Analytics Engineer, SQL & Python Automation Expert";
+  const defaultTitle = "Zeya Mosharraf | Analytics Engineer | SQL & Python Data Systems";
 
   const defaultDescription =
-    "Zeya Mosharraf specializes in building scalable data systems, SQL database architecture, Python automation, and enterprise Power BI solutions. Transforming complex data into actionable business intelligence.";
+    "Zeya Mosharraf specializes in building scalable data systems, SQL database architecture, Python ETL pipelines, and business intelligence infrastructure. Transforming complex data into actionable operational intelligence.";
 
   const defaultKeywords = [
     // Personal branding
     "Zeya Mosharraf", "Zeya Mosharraf portfolio", "Zeya Mosharraf analytics engineer",
     // Core role
-    "Analytics Engineer", "Systems Builder", "Automation Expert", "Data Engineering",
+    "Analytics Engineer", "Systems Builder", "Data Infrastructure", "ETL Developer",
     // Tools & Technologies
     "Python", "SQL", "Power BI", "Tableau", "Looker Studio",
-    "Google Cloud", "BigQuery", "Excel", "Supabase", "Pandas",
+    "Google Cloud", "BigQuery", "Supabase", "Pandas", "PostgreSQL",
     // Specializations
-    "Machine Learning", "Predictive Modeling", "Data Visualization",
-    "ETL", "Data Engineering", "Business Intelligence",
-    // Long-tail phrases
-    "SQL database architecture", "Python automation pipelines",
-    "business intelligence solutions", "enterprise Power BI dashboards",
-    "data driven decision making", "data systems builder",
+    "Data Modeling", "ETL pipelines", "Business Intelligence Infrastructure",
+    "SQL database architecture", "Python data pipelines",
+    "analytics engineering solutions", "data systems builder",
   ].join(", ");
 
   const defaultImage = `${siteUrl}/assets/og-image.png`;

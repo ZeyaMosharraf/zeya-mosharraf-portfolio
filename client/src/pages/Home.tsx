@@ -15,9 +15,9 @@ const Home = () => {
   return (
     <>
       <SEO
-        title="Zeya Mosharraf | Data Analyst & Analytics Engineer"
-        description="Zeya Mosharraf is a Data Analyst specializing in SQL, Python automation, and Power BI dashboards. Helping businesses reduce manual work and improve reporting accuracy."
-        keywords="Zeya Mosharraf, Data Analyst, Analytics Engineer, Python Automation, SQL Developer, Power BI Consultant, Excel Automation, Business Analytics, Data Engineering"
+        title="Zeya Mosharraf | Analytics Engineer"
+        description="Zeya Mosharraf is an Analytics Engineer specializing in SQL database architecture, Python ETL automation, and scalable business intelligence workflows. Architecting high-performance systems for operational intelligence."
+        keywords="Zeya Mosharraf, Analytics Engineer, Data Modeling, Data Infrastructure, Python Data Pipelines, SQL Database Architecture, Business Intelligence Infrastructure, ETL Workflows, dbt developer"
         schemaData={[getPersonSchema(), getWebsiteSchema()]}
       />
 

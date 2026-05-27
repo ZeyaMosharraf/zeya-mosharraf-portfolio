@@ -14,6 +14,17 @@ export interface TechnologyStats {
   [key: string]: number;
 }
 
+// Frontend category translation adapter to enforce believable, professional engineering concepts
+export const CATEGORY_MAP: Record<string, string> = {
+  "SQL": "Data Infrastructure",
+  "Python": "Automation & ETL",
+  "Machine Learning": "Machine Learning",
+  "Power BI": "BI & Reporting",
+  "Excel": "Operational Analytics",
+  "Tableau": "BI & Reporting",
+  "Looker Studio": "BI & Reporting"
+};
+
 /**
  * Get all available project categories with their counts
  */
@@ -24,12 +35,13 @@ export const getProjectCategories = (projects: Project[]): ProjectCategory[] => 
     "Automation & ETL",
     "Data Infrastructure",
     "BI & Reporting",
-    "Machine Learning",
-    "Experimental Systems"
+    "Machine Learning"
   ];
 
-  // Dynamically extract unique categories from DB
-  const uniqueCategories = Array.from(new Set(projects.map(p => p.category))).filter(Boolean);
+  // Dynamically extract unique categories from DB through our translation adapter
+  const uniqueCategories = Array.from(
+    new Set(projects.map(p => CATEGORY_MAP[p.category] || p.category))
+  ).filter(Boolean);
   
   // Sort based on preferred order if it exists, otherwise alphabetical
   uniqueCategories.sort((a, b) => {
@@ -44,9 +56,9 @@ export const getProjectCategories = (projects: Project[]): ProjectCategory[] => 
   return [
     { id: "all", name: "All Systems", count: projects.length },
     ...uniqueCategories.map(name => ({
-      id: name.toLowerCase().replace(/\s+/g, "-"),
+      id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       name,
-      count: projects.filter(p => p.category === name).length
+      count: projects.filter(p => (CATEGORY_MAP[p.category] || p.category) === name).length
     }))
   ];
 };
@@ -58,13 +70,24 @@ export const filterProjectsByCategory = (
   projects: Project[],
   categoryId: string
 ): Project[] => {
-  if (categoryId === "all") return projects;
+  if (categoryId === "all") {
+    return projects.map(p => ({
+      ...p,
+      category: CATEGORY_MAP[p.category] || p.category
+    })) as Project[];
+  }
   
   const categories = getProjectCategories(projects);
   const selectedCategory = categories.find(cat => cat.id === categoryId);
   
   if (!selectedCategory) return projects;
-  return projects.filter(project => project.category === selectedCategory.name);
+
+  const mappedProjects = projects.map(p => ({
+    ...p,
+    category: CATEGORY_MAP[p.category] || p.category
+  }));
+
+  return mappedProjects.filter(project => project.category === selectedCategory.name) as Project[];
 };
 
 /**
@@ -102,7 +125,8 @@ export const filterProjects = (
  */
 export const calculateTechnologyStats = (projects: Project[]): TechnologyStats => {
   return projects.reduce((acc, project) => {
-    acc[project.category] = (acc[project.category] || 0) + 1;
+    const cat = CATEGORY_MAP[project.category] || project.category;
+    acc[cat] = (acc[cat] || 0) + 1;
     return acc;
   }, {} as TechnologyStats);
 };
@@ -113,27 +137,26 @@ export const calculateTechnologyStats = (projects: Project[]): TechnologyStats =
 export const selectFeaturedProjects = (
   projects: Project[]
 ): Project[] => {
-  return projects
+  const mapped = projects.map(p => ({
+    ...p,
+    category: CATEGORY_MAP[p.category] || p.category
+  }));
+
+  return mapped
     .filter(p => p.featured)
-    .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)) as Project[];
 };
 
 /**
- * Generic data transformation helpers
- */
-
-/**
- * Convert URL slug to category display name (e.g., "machine-learning" -> "Machine Learning")
+ * Convert URL slug to category display name (e.g., "automation-etl" -> "Automation & ETL")
  */
 export const slugToCategoryName = (slug: string): string => {
   const specialCases: Record<string, string> = {
-    "sql": "SQL",
-    "python": "Python",
-    "power-bi": "Power BI",
+    "data-infrastructure": "Data Infrastructure",
+    "automation-etl": "Automation & ETL",
     "machine-learning": "Machine Learning",
-    "excel": "Excel",
-    "tableau": "Tableau",
-    "looker-studio": "Looker Studio"
+    "bi-reporting": "BI & Reporting",
+    "operational-analytics": "Operational Analytics"
   };
   
   if (specialCases[slug]) {
@@ -150,6 +173,9 @@ export const slugToCategoryName = (slug: string): string => {
  * Filter projects by exact category name
  */
 export const filterProjectsByExactCategory = (projects: Project[], categoryName: string): Project[] => {
-  return projects.filter(project => project.category === categoryName);
+  const mapped = projects.map(p => ({
+    ...p,
+    category: CATEGORY_MAP[p.category] || p.category
+  }));
+  return mapped.filter(project => project.category === categoryName) as Project[];
 };
-

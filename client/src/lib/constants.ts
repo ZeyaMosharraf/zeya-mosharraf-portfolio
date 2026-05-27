@@ -114,47 +114,35 @@ export interface CategoryConfig {
 }
 
 export const CATEGORY_CONFIGS: Record<string, CategoryConfig> = {
-  "SQL": { 
-    name: "SQL", 
+  "Data Infrastructure": { 
+    name: "Data Infrastructure", 
     color: "#FBBF24", 
     dot: "rgba(251,191,36,0.7)", 
-    subBadge: "DATAPREP PIPELINE" 
+    subBadge: "WAREHOUSE & MODELING" 
   },
-  "Python": { 
-    name: "Python", 
+  "Automation & ETL": { 
+    name: "Automation & ETL", 
     color: "#60A5FA", 
     dot: "rgba(59,130,246,0.7)", 
-    subBadge: "SYSTEM AUTOMATION" 
+    subBadge: "INTEGRATION PIPELINE" 
   },
   "Machine Learning": { 
     name: "Machine Learning", 
     color: "#C084FC", 
     dot: "rgba(168,85,247,0.7)", 
-    subBadge: "PREDICTIVE MODELING" 
+    subBadge: "PREDICTIVE SYSTEMS" 
   },
-  "Power BI": { 
-    name: "Power BI", 
+  "BI & Reporting": { 
+    name: "BI & Reporting", 
     color: "#FACC15", 
     dot: "rgba(234,179,8,0.7)", 
-    subBadge: "OPERATIONAL SYSTEM" 
+    subBadge: "DECISION ENGINES" 
   },
-  "Excel": { 
-    name: "Excel", 
+  "Operational Analytics": { 
+    name: "Operational Analytics", 
     color: "#4ADE80", 
     dot: "rgba(34,197,94,0.7)", 
-    subBadge: "DECISION ENGINE" 
-  },
-  "Tableau": { 
-    name: "Tableau", 
-    color: "#818CF8", 
-    dot: "rgba(99,102,241,0.7)", 
-    subBadge: "ANALYTICS ENGINE" 
-  },
-  "Looker Studio": { 
-    name: "Looker Studio", 
-    color: "#2DD4BF", 
-    dot: "rgba(20,184,166,0.7)", 
-    subBadge: "METRICS WAREHOUSE" 
+    subBadge: "OPERATIONAL INSIGHTS" 
   }
 };
 

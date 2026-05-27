@@ -127,7 +127,7 @@ const Navbar = () => {
     </a>
   );
 
-  const categories = ["SQL", "Python", "Machine Learning", "Power BI", "Excel", "Tableau", "Looker Studio"];
+  const categories = ["Data Infrastructure", "Automation & ETL", "Machine Learning", "BI & Reporting", "Operational Analytics"];
 
   return (
     <motion.header

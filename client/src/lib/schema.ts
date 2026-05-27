@@ -13,7 +13,7 @@ export const getPersonSchema = () => ({
   "url": siteUrl,
   "image": `${siteUrl}/assets/avatar.png`,
   "jobTitle": "Analytics Engineer",
-  "description": "Data Analyst and Analytics Engineer specializing in SQL, Python automation, and Power BI dashboards.",
+  "description": "Analytics Engineer specializing in SQL database architecture, Python ETL automation, and scalable data workflows.",
   "sameAs": [
     "https://linkedin.com/in/zeyamosharraf",
     "https://github.com/ZeyaMosharraf",
