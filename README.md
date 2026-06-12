@@ -3,6 +3,10 @@
 ## Executive Summary
 This repository implements a **SaaS-inspired technical storytelling platform** built with React, TypeScript, Vite, Tailwind, Framer Motion, and Supabase-backed content. The application is structured as a product surface with route-level segmentation, reusable section systems, and a consistent dark-first visual language for engineering narratives, case-study flows, and project intelligence.
 
+## Portfolio Preview
+
+![Portfolio Demo](https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781237046/Portfolis-ezgif.com-video-to-gif-converter_uk9mkn.gif)
+
 ## Product Vision
 The platform is designed as an **architecture-first frontend experience**: project and case-study content is data-driven, motion-enhanced, and organized to communicate engineering decision quality rather than static profile information.
 
