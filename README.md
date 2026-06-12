@@ -5,7 +5,9 @@ This repository implements a **SaaS-inspired technical storytelling platform** b
 
 ## Portfolio Preview
 
-![Portfolio Demo](https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781237046/Portfolis-ezgif.com-video-to-gif-converter_uk9mkn.gif)
+<div align="center">
+  <img src="https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781237046/Portfolis-ezgif.com-video-to-gif-converter_uk9mkn.gif" alt="Portfolio Demo" width="800"/>
+</div>
 
 ## Product Vision
 The platform is designed as an **architecture-first frontend experience**: project and case-study content is data-driven, motion-enhanced, and organized to communicate engineering decision quality rather than static profile information.
