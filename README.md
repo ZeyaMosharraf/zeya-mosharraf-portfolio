@@ -6,7 +6,7 @@ This repository implements a **SaaS-inspired technical storytelling platform** b
 ## Portfolio Preview
 
 <div align="center">
-  <img src="https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781237046/Portfolis-ezgif.com-video-to-gif-converter_uk9mkn.gif" alt="Portfolio Demo" width="800"/>
+  <img src="https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781248291/portfolio-demo_cqm6ck.gif" alt="Portfolio Demo" width="1200"/>
 </div>
 
 ## Product Vision
