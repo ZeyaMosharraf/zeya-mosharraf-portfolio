@@ -1,4 +1,4 @@
-# Zeya Mosharraf — Enterprise Engineering Portfolio & Technical Showcase
+# Zeya Mosharraf - Enterprise Engineering Portfolio & Technical Showcase
 
 <div align="center">
 
@@ -140,5 +140,5 @@ npm run build
 ---
 
 <div align="center">
-  <sub>Built with precision by <b>Zeya Mosharraf</b> — Engineering Experience Platform</sub>
+  <sub>Built with precision by <b>Zeya Mosharraf</b> - Engineering Experience Platform</sub>
 </div>
