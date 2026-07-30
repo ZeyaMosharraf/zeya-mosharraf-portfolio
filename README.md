@@ -1,138 +1,144 @@
-# Zeya Mosharraf — Engineering Experience Platform
-
-## Executive Summary
-This repository implements a **SaaS-inspired technical storytelling platform** built with React, TypeScript, Vite, Tailwind, Framer Motion, and Supabase-backed content. The application is structured as a product surface with route-level segmentation, reusable section systems, and a consistent dark-first visual language for engineering narratives, case-study flows, and project intelligence.
-
-## Portfolio Preview
+# Zeya Mosharraf — Enterprise Engineering Portfolio & Technical Showcase
 
 <div align="center">
-  <img src="https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781248291/portfolio-demo_cqm6ck.gif" alt="Portfolio Demo" width="1200"/>
+
+  ![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+  ![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+  ![Supabase](https://img.shields.io/badge/Supabase-Database-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)
+  ![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+  ![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.18-0055FF?style=for-the-badge&logo=framer&logoColor=white)
+
+  <br />
+
+  <p align="center">
+    A <b>SaaS-inspired technical storytelling platform</b> engineered with React 18, TypeScript, Supabase, and TanStack Query. Features a dynamic data-driven content engine, modular architectural renderers, and zero-lag 60fps animations.
+  </p>
+
 </div>
 
-## Product Vision
-The platform is designed as an **architecture-first frontend experience**: project and case-study content is data-driven, motion-enhanced, and organized to communicate engineering decision quality rather than static profile information.
+---
 
-## Engineering Philosophy
-- **Composition-first UI**: sections and primitives are modularized for reuse.
-- **Data-backed content surface**: Supabase tables power projects, case studies, skills, metrics, and profile metadata.
-- **Tokenized visual foundation**: theme variables and Tailwind extensions shape typography, spacing, color, and interaction rhythm.
-- **Editorial interaction model**: motion is used for hierarchy and narrative pacing.
+## 🎬 Portfolio Preview
 
-## Frontend Architecture
-- **App shell:** persistent `Navbar`, route body, `Footer`, assistant overlay, and toast system (`client/src/App.tsx`).
-- **Routing:** `wouter` route map with static + dynamic segments.
-- **Page boundaries:** home, catalog, detail, category, case-study, and editorial blog routes.
-- **Lazy loading:** non-home pages are lazy loaded to reduce initial route payload.
-- **Data access:** `useSupabaseTable<T>` standardizes Supabase query + query caching through TanStack Query.
-- **Prefetching:** critical homepage tables are prefetched in `main.tsx` before render.
+<div align="center">
+  <img src="https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781248291/portfolio-demo_cqm6ck.gif" alt="Zeya Mosharraf Engineering Portfolio Showcase" width="100%"/>
+</div>
 
-## Design System Overview
-- **Tailwind extension:** custom font families, font sizes, spacing, gradients, semantic colors, shadow tokens (`tailwind.config.ts`).
-- **CSS token layers:** brand and semantic variables in `index.css` (including dark-first defaults and utility layers).
-- **UI primitives:** button, card, form, input, label, textarea, toast, and reusable composites.
-- **Section abstractions:** `SectionHeader`, `RevealSection`, `PageHero`, `ProjectCard`, `CaseStudyCard`, `SkillBar`, skeleton loaders.
+---
 
-## Motion & Interaction System
-- Centralized animation presets in `lib/animations.ts`.
-- Framer Motion used for:
-  - route entry/fallback transitions,
-  - reveal-on-scroll orchestration,
-  - card hover and staged list animation,
-  - hero terminal simulation and metrics ticker,
-  - architecture visualization transitions.
-- Hero includes custom canvas particle interactions (`useHeroCanvas`) with mobile bypass for performance control.
+## ✨ Key Architectural Highlights
 
-## Responsive Architecture
-- Grid/list/scroll-rail strategies adapt by breakpoint across sections and routes.
-- Experience section uses Embla carousel with responsive card width distribution.
-- Custom CSS media rules cap container/card growth on very large viewports.
-- Mobile-specific interaction simplifications are present in hero canvas and navigation.
+* **🗄️ Supabase Data Engine**: Completely data-driven via typed Supabase database tables (`projects`, `case_studies`, `blog_posts`, `skills`, `hero_metrics`, `portfolio_info`).
+* **🚀 Performance-First Animation**:
+  * **Offscreen Canvas Pause**: Custom `IntersectionObserver` halts background particle loops when out of view, saving 100% GPU/CPU resources during scroll.
+  * **Zero-Cost CSS Animation**: Replaced heavy state re-rendering timers with hardware-accelerated CSS keyframe animations.
+* **🎯 Viewport Center-Matching Carousel**: Custom linear distance algorithm ensuring smooth card selection (01 → 08) without skipping items or bounds issues.
+* **🔤 Flexible Category Normalization Adapter**: Case-insensitive mapping engine unifies raw database tags (`SQL`, `Python`, `Power BI`, `Tableau`, `Looker Studio`, `Machine Learning`) into professional engineering domain categories.
+* **🔍 Clean URI Routing**: Automatic URI decoding (`slugToCategoryName`) translating complex route slugs into clean category views (e.g., `/projects/bi-reporting`).
 
-## Technical Stack
-- **Frontend:** React 18, TypeScript, Vite, Wouter
-- **Styling:** Tailwind CSS, CSS variables, shadcn/ui-compatible primitives
-- **Motion:** Framer Motion, AOS (initialized in `main.tsx`)
-- **Data:** Supabase client + TanStack Query
-- **Forms:** React Hook Form + Zod
-- **SEO:** react-helmet-async + JSON-LD schema helpers
-- **Build-time content indexing:** dynamic sitemap generation from Supabase slugs
+---
 
-## Folder Structure
+## 🛠️ Tech Stack & Dependencies
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Core Framework** | React 18 + TypeScript 5.6 | Strict type safety & component architecture |
+| **Build Tooling** | Vite 6.2 | Fast HMR & optimized production bundling |
+| **Database & Auth** | Supabase JS (`@supabase/supabase-js`) | Relational PostgreSQL content backend |
+| **State & Caching** | TanStack React Query v5 | Data fetching, cache windows, & prefetched routes |
+| **Routing** | Wouter v3 | Lightweight, zero-dependency client routing |
+| **Styling & UI** | Tailwind CSS + Lucide Icons | Dark-first visual design system |
+| **Motion** | Framer Motion + AOS | Layout orchestration & reveal animations |
+| **SEO & Sitemap** | `react-helmet-async` + Custom TSX script | Build-time dynamic sitemap generator & JSON-LD schemas |
+
+---
+
+## 📁 Repository Structure
+
 ```text
-client/src/
-├── components/
-│   ├── sections/           # Home + domain-specific storytelling sections
-│   ├── ui/                 # Reusable primitives/composites
-│   ├── forms/              # Form-specific modules
-│   ├── layout/             # Navbar + Footer shell
-│   └── SEO.tsx
-├── hooks/                  # Data and interaction hooks
-├── lib/                    # Animations, transforms, constants, schema, client utils
-├── pages/                  # Route-level page boundaries
-└── types/                  # Supabase-centered interfaces
-
-server/                     # Optional scaffold (minimal API usage in current frontend flow)
+d:\zeya-mosharraf-portfolio/
+├── .env.example              # Environment variables template for Supabase & Database
+├── generate-sitemap.ts       # Dynamic sitemap generation script (Supabase slugs)
+├── drizzle.config.ts         # Drizzle ORM configuration
+├── tailwind.config.ts        # Custom theme variables, font extensions & design tokens
+├── tsconfig.json             # TypeScript compiler settings
+├── vercel.json               # Vercel deployment & routing config
+├── vite.config.ts            # Vite build setup & alias configurations
+├── client/
+│   ├── index.html            # Entry HTML document
+│   └── src/
+│       ├── App.tsx           # App Shell, wouter route switcher & suspense boundaries
+│       ├── main.tsx          # Application entry point & QueryClient provider
+│       ├── index.css         # Global CSS design tokens & Tailwind utilities
+│       ├── components/
+│       │   ├── layout/       # App Shell components (Navbar, Footer)
+│       │   ├── sections/     # Domain storytelling sections (Hero, Projects, CaseStudies, MedallionUI, Skills, Experience)
+│       │   └── ui/           # Reusable UI primitives (ProjectCard, CaseStudyCard, SectionHeader, Skeletons)
+│       ├── hooks/            # Data hooks (useSupabaseTable, use-toast, useCountUp)
+│       ├── lib/              # Core utilities (dataTransforms, animations, constants, utils)
+│       ├── pages/            # Route boundaries (Home, AllProjects, ProjectDetails, ProjectCategory, Blog, CaseStudies)
+│       └── types/            # Centralized TypeScript Supabase database schemas
+├── server/                   # Node/Express backend scaffolding
+├── docs/                     # Engineering architecture & design docs
+└── diagrams/                 # System architecture visual diagrams
 ```
 
-## Component Systems
-- **Narrative sections:** Hero, Featured Case Studies, Medallion Architecture, Experience, Projects, Skills, About, Contact.
-- **Card systems:** Project and case-study cards with category accents, impact snippets, and progressive disclosure.
-- **Editorial systems:** PageHero, animated back button, terminal simulation, architecture renderer.
-- **Information systems:** social/contact cards, certification rails, skeleton loading states.
+---
 
-## Performance Strategy (Static Analysis)
-- Route-level lazy loading in app router composition.
-- Query prefetch for top-level content tables.
-- Image lazy loading on project cards.
-- Mobile performance guard in hero canvas hook.
-- Caching via TanStack Query query keys and stale-time configuration.
+## ⚡ Quick Start & Setup
 
-## Accessibility Considerations
-- Semantic form wiring through `FormField`, `FormControl`, and validation messaging.
-- Aria labels in key actions (e.g., chat trigger, scroll-to-top).
-- Keyboard escape handling in certificate modal.
-- Focus-visible styles available in utility layers and shadcn primitives.
+### Prerequisites
+* **Node.js**: `>= 18.0.0`
+* **npm**: `>= 9.0.0`
 
-## SEO Architecture
-- Centralized SEO component injects title, description, canonical, robots, OG/Twitter.
-- JSON-LD schemas for person, website, project creative work, blog posting, and breadcrumbs.
-- Sitemap generation script includes static routes and dynamic Supabase slugs.
+### 1. Clone & Install Dependencies
+```bash
+git clone https://github.com/ZeyaMosharraf/zeya-mosharraf-portfolio.git
+cd zeya-mosharraf-portfolio
+npm install
+```
 
-## Project Showcase Structure
-- **Home:** capability framing + selected engineering stories.
-- **Projects catalog:** searchable/filtered exploration.
-- **Project detail:** cinematic technical deep-dive with methods, results, tools, and optional embed.
-- **Case studies:** archive + deep-dive narrative with architecture render support.
-- **Blog:** editorial technical repository with list/detail rendering modes.
+### 2. Environment Setup
+Create a `.env` file in the project root (reference [.env.example](.env.example)):
 
-## Engineering Highlights
-- Strong section modularization and reusable UI composition.
-- Cohesive visual/motion language with centralized presets.
-- Mature route and content segmentation.
-- Typed Supabase entities and table-driven rendering patterns.
+```env
+# Supabase Configuration
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key-here
 
-## Documentation Truthfulness Notes
-- Current `useSupabaseTable` implementation provides typed fetch + query caching; it does not currently implement realtime subscription wiring.
-- Server files are present, but current portfolio behavior is primarily frontend + Supabase + Formspree-driven.
-- This README intentionally describes implemented architecture and avoids planned/non-implemented runtime claims.
+# Database Connection (Optional / Migrations)
+DATABASE_URL=postgresql://postgres:password@db.your-project-ref.supabase.co:5432/postgres
+```
 
-## Scalability Considerations
-- Current architecture scales well for additional routes/sections and table-driven content.
-- Main growth risk is **style governance drift** from heavy inline styling across premium card layouts.
-- Unified token/CVA expansion would improve long-term consistency and reduce duplication.
+### 3. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## Future Improvements
-- Add formal design-token governance and variant abstraction for inline-heavy components.
-- Consolidate duplicated card/hero style patterns into reusable variants.
-- Introduce structured error boundaries per route surface.
-- Expand motion-reduction handling for accessibility-first animation policies.
-- Align all docs with actual implementation details as features evolve.
+### 4. Build & Type Check
+```bash
+# Type check TypeScript codebase
+npm run check
 
-## Documentation Links
-- [Frontend Architecture](docs/frontend-architecture.md)
-- [Design System](docs/design-system.md)
-- [UI/UX Engineering](docs/ui-ux-engineering.md)
-- [Performance Engineering](docs/performance.md)
-- [Engineering Decisions](docs/engineering-decisions.md)
-- [Case Study](docs/case-study.md)
-- [Architecture Diagrams](diagrams/)
+# Build production bundle & sitemap
+npm run build
+```
+
+---
+
+## 📚 Technical Documentation
+
+* 📖 [Frontend Architecture](docs/frontend-architecture.md)
+* 🎨 [Design System Overview](docs/design-system.md)
+* ⚡ [Performance Engineering Notes](docs/performance.md)
+* 🧠 [Engineering Decision Log](docs/engineering-decisions.md)
+* 🔬 [Case Study Architecture](docs/case-study.md)
+* 📐 [Architecture Diagrams](diagrams/)
+
+---
+
+<div align="center">
+  <sub>Built with precision by <b>Zeya Mosharraf</b> — Engineering Experience Platform</sub>
+</div>
