@@ -19,7 +19,7 @@
 
 ---
 
-## 🎬 Portfolio Preview
+## Portfolio Preview
 
 <div align="center">
   <img src="https://res.cloudinary.com/dsr5lxh4w/image/upload/v1781248291/portfolio-demo_cqm6ck.gif" alt="Zeya Mosharraf Engineering Portfolio Showcase" width="100%"/>
@@ -27,19 +27,19 @@
 
 ---
 
-## ✨ Key Architectural Highlights
+## Key Architectural Highlights
 
-* **🗄️ Supabase Data Engine**: Completely data-driven via typed Supabase database tables (`projects`, `case_studies`, `blog_posts`, `skills`, `hero_metrics`, `portfolio_info`).
-* **🚀 Performance-First Animation**:
+* **Supabase Data Engine**: Completely data-driven via typed Supabase database tables (`projects`, `case_studies`, `blog_posts`, `skills`, `hero_metrics`, `portfolio_info`).
+* **Performance-First Animation**:
   * **Offscreen Canvas Pause**: Custom `IntersectionObserver` halts background particle loops when out of view, saving 100% GPU/CPU resources during scroll.
   * **Zero-Cost CSS Animation**: Replaced heavy state re-rendering timers with hardware-accelerated CSS keyframe animations.
-* **🎯 Viewport Center-Matching Carousel**: Custom linear distance algorithm ensuring smooth card selection (01 → 08) without skipping items or bounds issues.
-* **🔤 Flexible Category Normalization Adapter**: Case-insensitive mapping engine unifies raw database tags (`SQL`, `Python`, `Power BI`, `Tableau`, `Looker Studio`, `Machine Learning`) into professional engineering domain categories.
-* **🔍 Clean URI Routing**: Automatic URI decoding (`slugToCategoryName`) translating complex route slugs into clean category views (e.g., `/projects/bi-reporting`).
+* **Viewport Center-Matching Carousel**: Custom linear distance algorithm ensuring smooth card selection (01 → 08) without skipping items or bounds issues.
+* **Flexible Category Normalization Adapter**: Case-insensitive mapping engine unifies raw database tags (`SQL`, `Python`, `Power BI`, `Tableau`, `Looker Studio`, `Machine Learning`) into professional engineering domain categories.
+* **Clean URI Routing**: Automatic URI decoding (`slugToCategoryName`) translating complex route slugs into clean category views (e.g., `/projects/bi-reporting`).
 
 ---
 
-## 🛠️ Tech Stack & Dependencies
+## Tech Stack & Dependencies
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
@@ -54,7 +54,7 @@
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 d:\zeya-mosharraf-portfolio/
@@ -86,7 +86,7 @@ d:\zeya-mosharraf-portfolio/
 
 ---
 
-## ⚡ Quick Start & Setup
+## Quick Start & Setup
 
 ### Prerequisites
 * **Node.js**: `>= 18.0.0`
@@ -128,14 +128,14 @@ npm run build
 
 ---
 
-## 📚 Technical Documentation
+## Technical Documentation
 
-* 📖 [Frontend Architecture](docs/frontend-architecture.md)
-* 🎨 [Design System Overview](docs/design-system.md)
-* ⚡ [Performance Engineering Notes](docs/performance.md)
-* 🧠 [Engineering Decision Log](docs/engineering-decisions.md)
-* 🔬 [Case Study Architecture](docs/case-study.md)
-* 📐 [Architecture Diagrams](diagrams/)
+* [Frontend Architecture](docs/frontend-architecture.md)
+* [Design System Overview](docs/design-system.md)
+* [Performance Engineering Notes](docs/performance.md)
+* [Engineering Decision Log](docs/engineering-decisions.md)
+* [Case Study Architecture](docs/case-study.md)
+* [Architecture Diagrams](diagrams/)
 
 ---
 
