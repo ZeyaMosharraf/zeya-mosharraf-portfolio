@@ -163,19 +163,36 @@ export function useHeroCanvas(
     };
     resize();
 
-    /* ── Animation loop ── */
-    let rafId: number;
+    /* ── Animation loop with IntersectionObserver pause ── */
+    let rafId: number | null = null;
+    let isVisible = true;
+
     const tick = () => {
+      if (!isVisible) return;
       ctx.clearRect(0, 0, w, h);
       drawTracers();
       rafId = requestAnimationFrame(tick);
     };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible && !rafId) {
+        rafId = requestAnimationFrame(tick);
+      } else if (!isVisible && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }, { threshold: 0.1 });
+
+    observer.observe(section);
     rafId = requestAnimationFrame(tick);
     window.addEventListener("resize", resize, { passive: true });
 
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, [canvasRef, sectionRef]);
 }
+

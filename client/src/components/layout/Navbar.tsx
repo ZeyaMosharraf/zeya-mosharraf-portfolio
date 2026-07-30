@@ -72,7 +72,8 @@ const Navbar = () => {
   const handleProjectCategoryClick = (category: string) => {
     setIsProjectsDropdownOpen(false);
     closeMenu();
-    setLocation(`/projects/${category.toLowerCase().replace(' ', '-')}`);
+    const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    setLocation(`/projects/${slug}`);
   };
 
   const navigateToPage = (path: string) => {

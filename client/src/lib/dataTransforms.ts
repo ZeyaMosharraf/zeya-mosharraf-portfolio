@@ -25,11 +25,45 @@ export const CATEGORY_MAP: Record<string, string> = {
   "Looker Studio": "BI & Reporting"
 };
 
+export const getCategoryDisplayName = (rawCategory: string | undefined | null): string => {
+  if (!rawCategory) return "Operational Analytics";
+  const trimmed = rawCategory.trim();
+  const lower = trimmed.toLowerCase();
+
+  const lookup: Record<string, string> = {
+    "sql": "Data Infrastructure",
+    "data infrastructure": "Data Infrastructure",
+    "data-infrastructure": "Data Infrastructure",
+    
+    "python": "Automation & ETL",
+    "automation & etl": "Automation & ETL",
+    "automation-etl": "Automation & ETL",
+    "etl": "Automation & ETL",
+
+    "machine learning": "Machine Learning",
+    "machine-learning": "Machine Learning",
+    "ml": "Machine Learning",
+
+    "power bi": "BI & Reporting",
+    "powerbi": "BI & Reporting",
+    "tableau": "BI & Reporting",
+    "looker studio": "BI & Reporting",
+    "bi & reporting": "BI & Reporting",
+    "bi-reporting": "BI & Reporting",
+    "bi": "BI & Reporting",
+
+    "excel": "Operational Analytics",
+    "operational analytics": "Operational Analytics",
+    "operational-analytics": "Operational Analytics"
+  };
+
+  return lookup[lower] || CATEGORY_MAP[trimmed] || trimmed;
+};
+
 /**
  * Get all available project categories with their counts
  */
 export const getProjectCategories = (projects: Project[]): ProjectCategory[] => {
-  // Pre-defined preferred order for system categories
   const preferredOrder = [
     "Operational Analytics",
     "Automation & ETL",
@@ -38,12 +72,10 @@ export const getProjectCategories = (projects: Project[]): ProjectCategory[] => 
     "Machine Learning"
   ];
 
-  // Dynamically extract unique categories from DB through our translation adapter
   const uniqueCategories = Array.from(
-    new Set(projects.map(p => CATEGORY_MAP[p.category] || p.category))
+    new Set(projects.map(p => getCategoryDisplayName(p.category)))
   ).filter(Boolean);
   
-  // Sort based on preferred order if it exists, otherwise alphabetical
   uniqueCategories.sort((a, b) => {
     const idxA = preferredOrder.indexOf(a);
     const idxB = preferredOrder.indexOf(b);
@@ -58,7 +90,7 @@ export const getProjectCategories = (projects: Project[]): ProjectCategory[] => 
     ...uniqueCategories.map(name => ({
       id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       name,
-      count: projects.filter(p => (CATEGORY_MAP[p.category] || p.category) === name).length
+      count: projects.filter(p => getCategoryDisplayName(p.category) === name).length
     }))
   ];
 };
@@ -73,7 +105,7 @@ export const filterProjectsByCategory = (
   if (categoryId === "all") {
     return projects.map(p => ({
       ...p,
-      category: CATEGORY_MAP[p.category] || p.category
+      category: getCategoryDisplayName(p.category)
     })) as Project[];
   }
   
@@ -84,7 +116,7 @@ export const filterProjectsByCategory = (
 
   const mappedProjects = projects.map(p => ({
     ...p,
-    category: CATEGORY_MAP[p.category] || p.category
+    category: getCategoryDisplayName(p.category)
   }));
 
   return mappedProjects.filter(project => project.category === selectedCategory.name) as Project[];
@@ -125,7 +157,7 @@ export const filterProjects = (
  */
 export const calculateTechnologyStats = (projects: Project[]): TechnologyStats => {
   return projects.reduce((acc, project) => {
-    const cat = CATEGORY_MAP[project.category] || project.category;
+    const cat = getCategoryDisplayName(project.category);
     acc[cat] = (acc[cat] || 0) + 1;
     return acc;
   }, {} as TechnologyStats);
@@ -139,7 +171,7 @@ export const selectFeaturedProjects = (
 ): Project[] => {
   const mapped = projects.map(p => ({
     ...p,
-    category: CATEGORY_MAP[p.category] || p.category
+    category: getCategoryDisplayName(p.category)
   }));
 
   return mapped
@@ -148,22 +180,32 @@ export const selectFeaturedProjects = (
 };
 
 /**
- * Convert URL slug to category display name (e.g., "automation-etl" -> "Automation & ETL")
+ * Convert URL slug or URI param to category display name (e.g., "bi-&%20reporting" or "bi-reporting" -> "BI & Reporting")
  */
 export const slugToCategoryName = (slug: string): string => {
+  if (!slug) return "BI & Reporting";
+  const decoded = decodeURIComponent(slug).trim();
+  const cleaned = decoded.replace(/&/g, " ").replace(/-/g, " ").replace(/\s+/g, " ").trim();
+
+  const normalized = getCategoryDisplayName(cleaned);
+  if (normalized && normalized !== cleaned) {
+    return normalized;
+  }
+  
   const specialCases: Record<string, string> = {
     "data-infrastructure": "Data Infrastructure",
     "automation-etl": "Automation & ETL",
     "machine-learning": "Machine Learning",
     "bi-reporting": "BI & Reporting",
+    "bi reporting": "BI & Reporting",
     "operational-analytics": "Operational Analytics"
   };
   
-  if (specialCases[slug]) {
-    return specialCases[slug];
+  if (specialCases[slug.toLowerCase()]) {
+    return specialCases[slug.toLowerCase()];
   }
   
-  return slug
+  return decoded
     .split("-")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
@@ -175,7 +217,9 @@ export const slugToCategoryName = (slug: string): string => {
 export const filterProjectsByExactCategory = (projects: Project[], categoryName: string): Project[] => {
   const mapped = projects.map(p => ({
     ...p,
-    category: CATEGORY_MAP[p.category] || p.category
+    category: getCategoryDisplayName(p.category)
   }));
   return mapped.filter(project => project.category === categoryName) as Project[];
 };
+
+
